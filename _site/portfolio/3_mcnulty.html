@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Project McNulty</title>
+  <meta name="description" content=" ">
+
+
+  <link rel="stylesheet" href="/css/tufte.css">	
+  
+
+  <!-- Google Fonts loaded here -->
+  <link href='//fonts.googleapis.com/css?family=Lato:400,400italic' rel='stylesheet' type='text/css'>
+
+  <!-- Load up MathJax script if needed ... specify in /_data/options.yml file-->
+  
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+  <link rel="canonical" href="/portfolio/3_mcnulty.html">
+  <link rel="alternate" type="application/rss+xml" title="Against Data" href="/feed.xml" />
+
+  <link rel="shortcut icon" type="image/x-icon" href="/LMDC32.png">
+</head>
+
+  <body>
+    <!--- Header and nav template site-wide -->
+<header>
+    <nav class="group">
+		<a href="/"><img class="badge" src="/assets/img/againstdata.JPG" alt="CH"></a>
+		<a href="/portfolio">Portfolio</a>
+		<a href="/about">About</a>
+	</nav>
+</header>
+    <article>
+      <h1>Project mcnulty</h1>
+<p>May 15, 2015</p>
+
+
+<p>My third project at the spring 2015 Metis data science bootcamp involved estimating the probability of heart disease for patients admitted to a hospital emergency room with symptoms of chest pain.  I used the so-called Cleveland heart disease data set available from the <a href="https://archive.ics.uci.edu/ml/datasets/Heart+Disease">UC Irvine Machine Learning Repository</a>.</p>
+
+<p>The original Cleveland data set was donated in 1988 and contained 303 instances with 75 attributes each.  Unfortunately these data became <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/WARNING">corrupted</a> after the loss of a computing node, and the surviving data set contains only 14 attributes per instance.  These attributes are described in the table below.<br />
+<span class="marginnote">Table 1: Attributes of the heart disease patients in the Cleveland data set; the last row (heart disease status) is the response variable; the type column indicates whether an attribute is binary (bin), integer (int), categorical (cat), or continuous (con).</span> </p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: left">attribute</th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: left">description</th>
+      <th style="text-align: left">type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">1.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">age</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">age in years</td>
+      <td style="text-align: left">int</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">sex</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">0 = female, 1 = male</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">3.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">cp</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">chest pain type (1,2,3, or 4)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">4.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">trestbps</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">resting blood pressure (mm Hg)</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">5.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">chol</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">serum cholesterol (mg/dl)</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">6.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">fbs</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">fasting blood sugar (1 if &gt; 120 mg/dl, 0 otherwise)</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">7.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">restecg</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">resting electrocardiography results (0,1, or 2)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">8.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">thalach</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">maximum heart rate achieved during thalium stress test</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">9.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">exang</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">exercise induced angina (1 = yes, 0 = no)</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">10.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">oldpeak</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">ST depression induced by exercise relative to rest</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">11.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">slope</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">slope of peak exercise ST segment (1,2, or 3)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">12.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">ca</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">number of major vessels colored by fluoroscopy</td>
+      <td style="text-align: left">int</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">13.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">thal</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">thalium stress test result (3,6, or 7)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">14.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">num</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">heart disease status: number of major vessels with &gt;50% narrowing (0,1,2,3, or 4)</td>
+      <td style="text-align: left">int</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Since I am interested in estimating a probability, it seems appropriate to use logistic regression.  The question is: What is the optimal set of attributes that should be used?  And how should we define optimality? Before answering these questions, it may be useful to look at how some of the attributes are distributed over the data set. <br />
+<span class="marginnote">Figure 1: Histograms of age, resting blood pressure, serum cholesterol, and thalium test maximum heart rate for patients in the Cleveland data set, with and without heart disease.  All histograms are normalized to unit area.</span><img class="fullwidth" src="/assets/img/mcnulty_fig1.jpg" /><br />
+The plots show with various degrees of “obviousness” that people with heart disease tend to be older, have higher blood pressure, higher cholesterol levels, and lower maximum heart rate under stress than people without the disease.  Therefore, if we fit the simplest logistic model (log-odds linear in both the parameters and the features) to the Cleveland data, we would expect the coefficients of the age, blood pressure, and serum cholesterol features to be positive, and the coefficient of the maximum heart rate feature to be negative.  Here is what we actually find:<br />
+<span class="marginnote">Table 2: Partial results of a fit to the Cleveland data of a logistic model with the thirteen features and one response variable of Table 1.  For each of the four features listed in the first column, the table shows the values of the fitted coefficient and standard error (columns 2 and 3), as well as their ratio (the z-value in column 4).</span> </p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Feature</th>
+      <th style="text-align: right">Coefficient</th>
+      <th style="text-align: right">Standard Error</th>
+      <th style="text-align: right">Z-Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">age</td>
+      <td style="text-align: right">-0.12</td>
+      <td style="text-align: right">0.22</td>
+      <td style="text-align: right">-0.55</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">trestbps</td>
+      <td style="text-align: right">0.43</td>
+      <td style="text-align: right">0.20</td>
+      <td style="text-align: right">2.17</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">chol</td>
+      <td style="text-align: right">0.22</td>
+      <td style="text-align: right">0.21</td>
+      <td style="text-align: right">1.06</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">thalach</td>
+      <td style="text-align: right">-0.42</td>
+      <td style="text-align: right">0.26</td>
+      <td style="text-align: right">-1.63</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The great surprise is that the coefficient of the age feature is negative, as if older people had a lower risk of heart disease<sup class="sidenote-number">1</sup><span class="sidenote"><sup class="sidenote-number">1</sup> Note that in describing Figure 1 I wrote that “people with heart disease tend to be older”, whereas here I write that “older people [have] a lower risk of heart disease”.  The first statement is mapped into the second via Bayes' theorem, and this is taken care of by the logistic classifier.</span>!  This is not the whole story however.  The standard error on the age coefficient is quite large; it certainly allows for the true value of that coefficient to be zero or even positive: <script type="math/tex"> -0.12 \pm 0.22 </script> means that, with 68% confidence, the true age coefficient is between -0.34 and 0.10.  This is also indicated by the z-value of -0.55, which is too small to provide convincing evidence against the null hypothesis that we don’t need the age feature to account for the heart disease status of patients in the Cleveland data set.</p>
+
+<p>The technical reason for this glitch is two-fold: the features in the Cleveland data set are correlated, and the sample size is too small to determine all the feature coefficients with sufficient precision.  This means that we need to be extra careful in selecting features for the final model.  One approach is to loop over all combinations<sup class="sidenote-number">2</sup><span class="sidenote"><sup class="sidenote-number">2</sup> The Cleveland data set provides thirteen features per patient, four of which are categorical (not including binary ones). When the categorical features are converted into binary “dummies” for fitting purposes, the total list of features expands to eighteen.  This yields 2<sup>18</sup>=262,144 possible combinations to check!</span> of features and select the one that yields the highest accuracy (defined as the fraction of times the logistic regression classifier correctly predicts the heart disease status of a patient).  Unfortunately this approach does not take precision into account: It simply assumes that we have a large enough sample to determine precisely the coefficient of any selected feature.  Sure enough, when I tried this approach, the age feature was included with a negative coefficient!</p>
+
+<p>A better approach for this problem is the following:</p>
+
+<pre><code>1. Start by including all the features in the model.
+2. Fit the model and extract the deviance.
+3. Does any feature have a coefficient with z-value less than 2?
+4. If yes: 
+5.     Loop over all features still in the model:
+6.         Remove the feature, refit, and extract the deviance.
+7.         Replace the feature.
+8.     Find the feature whose removal caused the smallest change in deviance and leave it out.
+9.     Go back to 2
+10.If no:
+11.    You are done.  
+</code></pre>
+
+<p>The output of this algorithm is the largest subset of features whose fit coefficients are at least two standard deviations away from zero, and such that the total change in fit deviance is the smallest possible.  When applied to the logistic regression model for the Cleveland data, seven features are selected, three of which are categorical.  This is the fit result:<br />
+<span class="marginnote">Table 3: Final results of a fit to the Cleveland data of a logistic regression model with the optimal subset of features.  The cp_1, cp_2, and cp_3 features refer to the categorical variable cp (chest pain type) of Table 1.  For example, cp_1 is a binary feature indicating presence or absence of chest pain type 1.  Similar comments apply to slope_1 and thal_7.</span> </p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Feature</th>
+      <th style="text-align: right">Coefficient</th>
+      <th style="text-align: right">Standard Error</th>
+      <th style="text-align: right">Z-Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">sex</td>
+      <td style="text-align: right">1.44</td>
+      <td style="text-align: right">0.39</td>
+      <td style="text-align: right">3.69</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">trestbps</td>
+      <td style="text-align: right">0.44</td>
+      <td style="text-align: right">0.18</td>
+      <td style="text-align: right">2.48</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">thalach</td>
+      <td style="text-align: right">-0.44</td>
+      <td style="text-align: right">0.22</td>
+      <td style="text-align: right">-2.04</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ca</td>
+      <td style="text-align: right">3.80</td>
+      <td style="text-align: right">0.74</td>
+      <td style="text-align: right">5.17</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cp_1</td>
+      <td style="text-align: right">-2.23</td>
+      <td style="text-align: right">0.62</td>
+      <td style="text-align: right">-3.58</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cp_2</td>
+      <td style="text-align: right">-1.27</td>
+      <td style="text-align: right">0.51</td>
+      <td style="text-align: right">-2.49</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cp_3</td>
+      <td style="text-align: right">-2.11</td>
+      <td style="text-align: right">0.44</td>
+      <td style="text-align: right">-4.86</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">slope_1</td>
+      <td style="text-align: right">-1.47</td>
+      <td style="text-align: right">0.38</td>
+      <td style="text-align: right">-3.84</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">thal_7</td>
+      <td style="text-align: right">1.50</td>
+      <td style="text-align: right">0.38</td>
+      <td style="text-align: right">3.93</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Age is not part of the optimal set of features, and the coefficients of all selected features have a z-value of at least 2 (in absolute value).</p>
+
+<p>The coefficients listed in Table 3 allow us to construct a simple heart disease predictor.  For a graphical illustration based on D3.js, see <a href="/assets/img/heart_disease_predictor.html">here</a>.</p>
+
+
+
+    </article>
+    <span class="print-footer">Project McNulty - May 15, 2015 - luc demortier</span>
+    <footer>
+  <ul class="footer-links group">
+<!--    <li><a href="mailto:hate@spam.net"><span class="icon-mail"></span></a></li>  -->  
+    
+      <li>
+        <a href="//github.com/LucDemortier"><span class="icon-github"></span></a>
+      </li>
+      
+  </ul>
+<div class="credits">
+<span>&copy; 2015 &nbsp;&nbsp;LUC DEMORTIER</span></br> 
+<span>This site created with the <a href="//github.com/clayh53/tufte-jekyll">Tufte theme for Content-centric blogging </a> in <a href="//jekyllrb.com">Jekyll</a>.</span> 
+</div>  
+</footer>
+  </body>
+</html>
