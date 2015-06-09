@@ -9,12 +9,12 @@ author: luc demortier
 simple_search: http://google.com/search
 
 # This is the default title that shows up on the browser tab of each page.
-title: postSocratic
+title: Against Data
 subtitle: Content-centric blogging
 # Short description (goes below the title; it will also be used in the RSS feed)
 description: A blog by a physicist turned data scientist
 # Name of your blog (this will show up at the top of your page and in the RSS feed)
-name: postSocratic
+name: Against Data
 
 # Turn on recognition of Github Flavored Markdown
 markdown: Kramdown
