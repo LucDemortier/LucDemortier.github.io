@@ -107,23 +107,23 @@ task :draft, :title do |t, args|
 end
 
 # rake publish
-desc "Move a post from _drafts to _posts"
-task :publish do
-  extension = CONFIG["post"]["extension"]
-  files = Dir["#{DRAFTS}/*.#{extension}"]
-  files.each_with_index do |file, index|
-    puts "#{index + 1}: #{file}".sub("#{DRAFTS}/", "")
-  end
-  print "> "
-  number = $stdin.gets
-  if number =~ /\D/
-    filename = files[number.to_i - 1].sub("#{DRAFTS}/", "")
-    FileUtils.mv("#{DRAFTS}/#{filename}", "#{POSTS}/#{DATE}-#{filename}")
-    puts "#{filename} was moved to '#{POSTS}'."
-  else
-    puts "Please choose a draft by the assigned number."
-  end
-end
+#desc "Move a post from _drafts to _posts"
+#task :publish do
+#  extension = CONFIG["post"]["extension"]
+#  files = Dir["#{DRAFTS}/*.#{extension}"]
+#  files.each_with_index do |file, index|
+#    puts "#{index + 1}: #{file}".sub("#{DRAFTS}/", "")
+#  end
+#  print "> "
+#  number = $stdin.gets
+#  if number =~ /\D/
+#    filename = files[number.to_i - 1].sub("#{DRAFTS}/", "")
+#    FileUtils.mv("#{DRAFTS}/#{filename}", "#{POSTS}/#{DATE}-#{filename}")
+#    puts "#{filename} was moved to '#{POSTS}'."
+#  else
+#    puts "Please choose a draft by the assigned number."
+#  end
+#end
 
 # rake page["Title"]
 # rake page["Title","Path/to/folder"]
@@ -220,5 +220,38 @@ task :transfer do
     puts "Your site was transfered."
   else
     raise "#{command} isn't a valid file transfer command."
+  end
+end
+
+require 'rubygems'
+require 'rake'
+require 'rdoc'
+require 'date'
+require 'yaml'
+require 'tmpdir'
+require 'jekyll'
+
+desc "Generate blog files"
+task :generate do
+  Jekyll::Site.new(Jekyll.configuration({
+    "source"      => ".",
+    "destination" => "_site"
+  })).process
+end
+
+
+desc "Generate from source and publish blog to master"
+task :publish => [:generate] do
+  Dir.mktmpdir do |tmp|
+    system "mv _site/* #{tmp}"
+    system "git checkout -B master"
+    system "rm -rf *"
+    system "mv #{tmp}/* ."
+    message = "Site updated at #{Time.now.utc}"
+    system "git add ."
+    system "git commit -am #{message.shellescape}"
+    system "git push origin master --force"
+    system "git checkout source"
+    system "echo YOLO"
   end
 end
