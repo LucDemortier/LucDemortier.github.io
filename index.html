@@ -1,18 +1,18 @@
 ---
 layout: default
+title: Luc Demortier
 ---
 
-<div class="posts">
-  {% for post in site.posts %}
-    <article class="post">
+<p>Welcome to my web pages! You can read about some of my data science projects in the portfolio section, and I plan occasionally to blog on a topic of interest - please stay tuned...</p>
 
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
-
-      <div class="entry">
-        {{ post.excerpt }}
-      </div>
-
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
-  {% endfor %}
-</div>
+  <ul class="content">
+    {% for post in site.posts %}
+      <li class="listing">
+      	<hr class="slender">
+      	<a href="{{ post.url }}"><h4 class="contrast">{{ post.title }}</h4></a>
+      	<span class="smaller">{{ post.date | date: "%B %-d, %Y" }}</span>  <br/>
+		<div>{{ post.excerpt }}</div>
+		
+      </li>
+    {% endfor %}
+  </ul>
