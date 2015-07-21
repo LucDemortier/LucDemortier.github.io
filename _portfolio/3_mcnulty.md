@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Project McNulty"
+title:  "Project McNulty: Estimating the Risk of Heart Disease"
 date: 15-May-2015
 excerpt: " "
 ---
