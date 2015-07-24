@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Yoga in NYC!</title>
+    <style type="text/css">body {background-color: lightyellow}</style>
+    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="yoga_studio_map.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="leaflet/leaflet.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+    <script src="NYC_yoga_studios.js"></script>
+
+    <script>
+        function codeAddress(address,callback) {
+          geocoder = new google.maps.Geocoder();
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                for (i=0;i<results.length;i++) {
+                    message = "Result "+String(i)+": "+results[i].formatted_address;
+                    console.log(message);
+                }
+                var lat = results[0].geometry.location.A;
+                var lon = results[0].geometry.location.F;
+                callback(lat,lon);
+            } else {
+                alert('Geocode was not successful for the following reason: ' + 
+                    status);
+                var lat = 40.7442036;
+                var lon = -73.9853586;
+                callback(lat,lon);
+            }
+          });
+        }
+    </script>
+
+    <script>
+        var map;
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+        function initmap() {
+            // set up the map
+            map = new L.Map('map');
+        }
+    </script>
+    <script>
+        function distanceTo(lat1, lon1, lat2, lon2, unit) {
+        var rlat1 = Math.PI * lat1/180;
+        var rlat2 = Math.PI * lat2/180;
+        var rlon1 = Math.PI * lon1/180;
+        var rlon2 = Math.PI * lon2/180;
+        var theta = lon1-lon2;
+        var rtheta = Math.PI * theta/180;
+        var dist = Math.sin(rlat1) * Math.sin(rlat2) + Math.cos(rlat1) * Math.cos(rlat2) * Math.cos(rtheta);
+        dist = Math.acos(dist) * (180/Math.PI) * 60 * 1.515; // in miles
+        if (unit=="K") { dist = dist * 1.609344 };           // in kilometers
+        if (unit=="N") { dist = dist * 0.8684 };             // in nautical miles
+        return dist
+        }
+    </script>
+
+<div id="header">
+
+    <center>
+    <h1 style="color: maroon">Yoga Businesses in the New York City Area</h1>
+    </center>
+
+</div>
+
+<div id="container">
+
+<div id="first">
+    <p>
+    <label for="nCenter" 
+           style="display: inline-block; width: 240px; text-align: left">
+           Address at center of search circle: <span id="nCenter-value"></span>
+    </label>
+    <input type="text" value="80 Madison Ave, New York, NY 10016" size="35" 
+            id="nCenter">
+    </p>
+
+    <p>
+    <label for="nRadius" 
+           style="display: inline-block; width: 240px; text-align: left">
+           Radius of search circle [miles]: <span id="nRadius-value"></span>
+    </label>
+    <input type="number" min="0" max="50" step="0.1" value="1" id="nRadius">
+    </p>
+
+    <p>
+    <label for="nStyle"
+           style="text_align: left">
+           Yoga style: <span id="nStyle-value"></span>
+    </label>
+    <select name="yogaStyleList" id="nStyle">
+        <option value="Any">Any</option>
+        <option value="Anusara">Anusara</option>
+        <option value="Ashtanga">Ashtanga</option>
+        <option value="Bikram">Bikram/Hot</option>
+        <option value="Hatha">Hatha</option>
+        <option value="Iyengar">Iyengar</option>
+        <option value="Jivamukti">Jivamukti</option>
+        <option value="Kripalu">Kripalu</option>
+        <option value="Kundalini">Kundalini</option>
+        <option value="Prenatal">Prenatal</option>
+        <option value="Sivananda">Sivananda</option>
+        <option value="Viniyoga">Viniyoga</option>
+        <option value="Vinyasa">Vinyasa</option>
+        <option value="Yogafit">Yogafit</option>
+        <option value="Yoga Nidra">Yoga Nidra</option>
+    </select>
+    </p>
+
+    <p>
+    <label for="nChallenging" style="text_align: left">"Challenging": </label>
+    <input type="checkbox" id="nChallenging">
+    </p>
+
+    <p>
+    <label for="nMeditation" style="text_align: left">"Relaxing": </label>
+    <input type="checkbox" id="nMeditation">
+    </p>
+
+    <p>
+    <label for="nCompetent" style="text_align: left">"Competent": </label>
+    <input type="checkbox" id="nCompetent">
+    </p>
+
+    <p>
+    <label for="nPersonal" style="text_align: left">"One on one": </label>
+    <input type="checkbox" id="nPersonal">
+    </p>
+
+    <p>
+    <label for="nApparel" style="text_align: left">"Yoga Apparel": </label>
+    <input type="checkbox" id="nApparel">
+    </p>
+
+    <p>
+    <label for="nUpdate"
+           style="text-align: left">
+    </label>
+    <input type="button" value="Update" id="nUpdate">
+    </p>
+
+</div>
+
+<div id="second">
+    <div id="map" style="height:500px;">
+
+        <script>
+
+            // initialize
+            val01 = document.getElementById("nCenter").value;
+            val02 = document.getElementById("nRadius").value;
+            val03 = document.getElementById("nStyle").value;
+            val04 = document.getElementById("nChallenging").checked;
+            val05 = document.getElementById("nMeditation").checked;
+            val06 = document.getElementById("nCompetent").checked;
+            val07 = document.getElementById("nPersonal").checked;
+            val08 = document.getElementById("nApparel").checked;
+            initmap();
+            updateAll(val01,val02,val03,val04,val05,val06,val07,val08);
+
+            // update button click
+            var button = document.getElementById("nUpdate");
+            button.onclick = function() {
+                val01 = document.getElementById("nCenter").value;
+                val02 = document.getElementById("nRadius").value;
+                val03 = document.getElementById("nStyle").value;
+                val04 = document.getElementById("nChallenging").checked;
+                val05 = document.getElementById("nMeditation").checked;
+                val06 = document.getElementById("nCompetent").checked;
+                val07 = document.getElementById("nPersonal").checked;
+                val08 = document.getElementById("nApparel").checked;
+                updateAll(val01,val02,val03,val04,val05,val06,val07,val08);
+            };
+
+            // Update the display
+            var markerList = new Array();
+            var circle = new Object();
+            var yogaStyles = ["Vinyasa","Anusara","Ashtanga","Jivamukti","Hatha","Iyengar","Kripalu","Bikram","Sivananda","Viniyoga","Yogafit","Kundalini","Yoga Nidra","Prenatal"];
+            function updateAll(center_val,radius_val,style_val,challenging,meditation,competent,personal,apparel) {
+                if (markerList) {
+                    for (i=0; i<markerList.length; i++) {
+                        map.removeLayer(markerList[i]);
+                    }
+                    markerList = [];
+                }
+                if (circle) {
+                    map.removeLayer(circle);
+                }
+                if (style_val == "Any") {
+                    ys_index = -1;
+                } else {
+                    ys_index = yogaStyles.indexOf(style_val);
+                }
+
+                codeAddress(center_val,function(lat1,lon1) {
+                    var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});     
+                    map.setView(new L.LatLng(lat1, lon1),14);
+                    map.addLayer(osm);
+                    circle = L.circle([lat1, lon1], 50, {
+                                color: 'red',
+                                fillColor: '#f03',
+                                fillOpacity: 0.5
+                            }).addTo(map);
+
+                    for (i=0, len=nyc_yoga.businesses.length; i<len; i++) {
+                        var lat    = nyc_yoga.businesses[i].lat;
+                        var lon    = nyc_yoga.businesses[i].lon;
+                        var unit   = "M";
+                        var dist   = distanceTo(lat1, lon1, lat, lon, unit);
+                        var topic1 = 1;
+                        if (ys_index != -1) {
+                            topic1 = nyc_yoga.businesses[i].topics[ys_index];
+                        }
+                        var topic2 = !challenging || nyc_yoga.businesses[i].topics[14]==1;
+                        var topic3 = !meditation || nyc_yoga.businesses[i].topics[15]==1;
+                        var topic4 = !competent || nyc_yoga.businesses[i].topics[17]==1;
+                        var topic5 = !personal || nyc_yoga.businesses[i].topics[23]==1;
+                        var topic6 = !apparel || nyc_yoga.businesses[i].topics[28]==1;
+                        if (dist < radius_val && topic1==1 && topic2 && topic3 && topic4 && topic5 && topic6) {
+                            var name    = nyc_yoga.businesses[i].name;
+                            var address = nyc_yoga.businesses[i].address;
+                            var website = nyc_yoga.businesses[i].website;
+                            var message = "<b>"+name+"</b><br/><b>"+address+"</b><br/><b>"+website+"</b>";
+                            var marker = L.marker([lat, lon]).addTo(map);
+                            markerList.push(marker);
+                            marker.bindPopup(message).openPopup();
+                        }
+                    }
+                    var group = new L.featureGroup(markerList);
+                    map.fitBounds(group.getBounds());
+                });
+
+            }
+        </script>
+
+    </div>
+</div>
+
+<div id="clear"></div>
+
+</div>
+
+</body>

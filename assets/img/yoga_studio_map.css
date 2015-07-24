@@ -1,0 +1,28 @@
+#header {
+    width: 100%;
+    background-color: lightyellow;
+    height: 40px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+#container {
+    width: 100%;
+    background-color: lightyellow;
+    margin: auto;
+}
+#first {
+    width: 20%;
+    float: left;
+    height: 510px;
+    background-color: lightyellow;
+}
+#second {
+    width: 80%;
+    float: left;
+    height: 510px;
+    background-color: lightyellow;
+}
+#clear {
+    clear: both;
+}
