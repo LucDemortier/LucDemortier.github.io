@@ -2,7 +2,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Yoga in LA!</title>
-    <style type="text/css">body {background-color: lightyellow}</style>
+    <style type="text/css">body {background-color: #fffff8}</style>
     <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="yoga_studio_map.css" />
 </head>
@@ -64,7 +64,7 @@
 <div id="header">
 
     <center>
-    <h1 style="color: maroon">Yoga Businesses in the Los Angeles Area</h1>
+    <h1 style="color: #111111">Yoga Businesses in the Los Angeles Area</h1>
     </center>
 
 </div>
@@ -72,9 +72,19 @@
 <div id="container">
 
 <div id="first">
+
+    <center>
+        <label for="nUpdate"
+               style="text-align: left">
+        </label>
+        <input type="button" value="Update" id="nUpdate">
+    </center>
+
+    <hr>
+
     <p>
     <label for="nCenter" 
-           style="display: inline-block; width: 240px; text-align: left">
+           style="display: inline-block; width: 260px; text-align: left">
            Address at center of search circle: <span id="nCenter-value"></span>
     </label>
     <input type="text" value="515 S Flower St, Los Angeles, CA 90071" size="35" 
@@ -83,15 +93,35 @@
 
     <p>
     <label for="nRadius" 
-           style="display: inline-block; width: 240px; text-align: left">
+           style="display: inline-block; width: 260px; text-align: left">
            Radius of search circle [miles]: <span id="nRadius-value"></span>
     </label>
     <input type="number" min="0" max="50" step="0.1" value="1" id="nRadius">
     </p>
 
+    <hr>
+
+    <p>
+    <label for="nLSIsim"
+           style="display: inline-block; width: 260px; text-align: left">
+           Minimum LSI cosine similarity: <span id="nLSIsim-value"></span>
+    </label>
+    <input type="number" min="-1" max="1" step="0.01" value="0.10" id="nLSIsim">
+    </p>
+
+    <p>
+    <label for="nBKM"
+           style="display: inline-block; width: 260px; text-align: left">
+           Minimum number of keyword matches: <span id="nBKM-value"></span>
+    </label>
+    <input type="number" min="0" max="100" step="1" value="0" id="nBKM">
+    </p>
+
+    <hr>
+
     <p>
     <label for="nStyle"
-           style="text_align: left">
+           style="display: inline-block; width: 260px; text_align: left">
            Yoga style: <span id="nStyle-value"></span>
     </label>
     <select name="yogaStyleList" id="nStyle">
@@ -107,43 +137,48 @@
         <option value="Prenatal">Prenatal</option>
         <option value="Sivananda">Sivananda</option>
         <option value="Viniyoga">Viniyoga</option>
-        <option value="Vinyasa">Vinyasa</option>
+        <option selected="selected" value="Vinyasa">Vinyasa</option>
         <option value="Yogafit">Yogafit</option>
         <option value="Yoga Nidra">Yoga Nidra</option>
     </select>
     </p>
 
     <p>
-    <label for="nChallenging" style="text_align: left">"Challenging": </label>
+    <label for="nChallenging" 
+           style="display: inline-block; width: 260px; text_align: left">
+           "Strenuous": </label>
     <input type="checkbox" id="nChallenging">
     </p>
 
     <p>
-    <label for="nMeditation" style="text_align: left">"Relaxing": </label>
+    <label for="nMeditation" 
+           style="display: inline-block; width: 260px; text_align: left">
+           "Meditation": </label>
     <input type="checkbox" id="nMeditation">
     </p>
 
     <p>
-    <label for="nCompetent" style="text_align: left">"Competent": </label>
+    <label for="nCompetent" 
+           style="display: inline-block; width: 260px; text_align: left">
+           "Competent": </label>
     <input type="checkbox" id="nCompetent">
     </p>
 
     <p>
-    <label for="nPersonal" style="text_align: left">"One on one": </label>
+    <label for="nPersonal" 
+           style="display: inline-block; width: 260px; text_align: left">
+           "Personalized": </label>
     <input type="checkbox" id="nPersonal">
     </p>
 
     <p>
-    <label for="nApparel" style="text_align: left">"Yoga Apparel": </label>
+    <label for="nApparel" 
+           style="display: inline-block; width: 260px; text_align: left">
+           "Yoga Apparel": </label>
     <input type="checkbox" id="nApparel">
     </p>
 
-    <p>
-    <label for="nUpdate"
-           style="text-align: left">
-    </label>
-    <input type="button" value="Update" id="nUpdate">
-    </p>
+    <hr>
 
 </div>
 
@@ -153,36 +188,43 @@
         <script>
 
             // initialize
-            val01 = document.getElementById("nCenter").value;
-            val02 = document.getElementById("nRadius").value;
-            val03 = document.getElementById("nStyle").value;
-            val04 = document.getElementById("nChallenging").checked;
-            val05 = document.getElementById("nMeditation").checked;
-            val06 = document.getElementById("nCompetent").checked;
-            val07 = document.getElementById("nPersonal").checked;
-            val08 = document.getElementById("nApparel").checked;
+            var old_center_val = "";
+            var clat = 0.0;
+            var clon = 0.0;
+            var markerList = new Array();
+            var circle = new Object();
+            var yogaStyles = ["Vinyasa","Anusara","Ashtanga","Jivamukti","Hatha","Iyengar","Kripalu","Bikram","Sivananda","Viniyoga","Yogafit","Kundalini","Yoga Nidra","Prenatal"];
+            var center_val  = document.getElementById("nCenter").value;
+            var radius_val  = document.getElementById("nRadius").value;
+            var LSIsim_val  = document.getElementById("nLSIsim").value;
+            var BKM_val     = document.getElementById("nBKM").value;
+            var style_val   = document.getElementById("nStyle").value;
+            var challenging = document.getElementById("nChallenging").checked;
+            var meditation  = document.getElementById("nMeditation").checked;
+            var competent   = document.getElementById("nCompetent").checked;
+            var personal    = document.getElementById("nPersonal").checked;
+            var apparel     = document.getElementById("nApparel").checked;
             initmap();
-            updateAll(val01,val02,val03,val04,val05,val06,val07,val08);
+            updateAll();
 
             // update button click
             var button = document.getElementById("nUpdate");
             button.onclick = function() {
-                val01 = document.getElementById("nCenter").value;
-                val02 = document.getElementById("nRadius").value;
-                val03 = document.getElementById("nStyle").value;
-                val04 = document.getElementById("nChallenging").checked;
-                val05 = document.getElementById("nMeditation").checked;
-                val06 = document.getElementById("nCompetent").checked;
-                val07 = document.getElementById("nPersonal").checked;
-                val08 = document.getElementById("nApparel").checked;
-                updateAll(val01,val02,val03,val04,val05,val06,val07,val08);
+                center_val  = document.getElementById("nCenter").value;
+                radius_val  = document.getElementById("nRadius").value;
+                LSIsim_val  = document.getElementById("nLSIsim").value;
+                BKM_val     = document.getElementById("nBKM").value;
+                style_val   = document.getElementById("nStyle").value;
+                challenging = document.getElementById("nChallenging").checked;
+                meditation  = document.getElementById("nMeditation").checked;
+                competent   = document.getElementById("nCompetent").checked;
+                personal    = document.getElementById("nPersonal").checked;
+                apparel     = document.getElementById("nApparel").checked;
+                updateAll();
             };
 
-            // Update the display
-            var markerList = new Array();
-            var circle = new Object();
-            var yogaStyles = ["Vinyasa","Anusara","Ashtanga","Jivamukti","Hatha","Iyengar","Kripalu","Bikram","Sivananda","Viniyoga","Yogafit","Kundalini","Yoga Nidra","Prenatal"];
-            function updateAll(center_val,radius_val,style_val,challenging,meditation,competent,personal,apparel) {
+            // Clear display and update it
+            function updateAll() {
                 if (markerList) {
                     for (i=0; i<markerList.length; i++) {
                         map.removeLayer(markerList[i]);
@@ -192,51 +234,90 @@
                 if (circle) {
                     map.removeLayer(circle);
                 }
+                if (center_val == old_center_val) {
+                    updateMap(clat,clon);
+                } else {
+                    old_center_val = center_val;
+                    codeAddress(center_val,updateMap);
+                }
+            };
+
+            function updateMap(lat1,lon1) {
+                // Save latitute and longitude of center of search area
+                // for map updates that don't involve a new center.
+                clat   = lat1;
+                clon   = lon1;
+                // Find index of selected yoga style  
                 if (style_val == "Any") {
                     ys_index = -1;
                 } else {
                     ys_index = yogaStyles.indexOf(style_val);
                 }
-
-                codeAddress(center_val,function(lat1,lon1) {
-                    var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});     
-                    map.setView(new L.LatLng(lat1, lon1),14);
-                    map.addLayer(osm);
-                    circle = L.circle([lat1, lon1], 50, {
-                                color: 'red',
-                                fillColor: '#f03',
-                                fillOpacity: 0.5
-                            }).addTo(map);
-
-                    for (i=0, len=la_yoga.businesses.length; i<len; i++) {
-                        var lat    = la_yoga.businesses[i].lat;
-                        var lon    = la_yoga.businesses[i].lon;
-                        var unit   = "M";
-                        var dist   = distanceTo(lat1, lon1, lat, lon, unit);
-                        var topic1 = 1;
-                        if (ys_index != -1) {
-                            topic1 = la_yoga.businesses[i].topics[ys_index];
-                        }
-                        var topic2 = !challenging || la_yoga.businesses[i].topics[14]==1;
-                        var topic3 = !meditation || la_yoga.businesses[i].topics[15]==1;
-                        var topic4 = !competent || la_yoga.businesses[i].topics[17]==1;
-                        var topic5 = !personal || la_yoga.businesses[i].topics[23]==1;
-                        var topic6 = !apparel || la_yoga.businesses[i].topics[28]==1;
-                        if (dist < radius_val && topic1==1 && topic2 && topic3 && topic4 && topic5 && topic6) {
-                            var name    = la_yoga.businesses[i].name;
-                            var address = la_yoga.businesses[i].address;
-                            var website = la_yoga.businesses[i].website;
-                            var message = "<b>"+name+"</b><br/><b>"+address+"</b><br/><b>"+website+"</b>";
-                            var marker = L.marker([lat, lon]).addTo(map);
-                            markerList.push(marker);
-                            marker.bindPopup(message).openPopup();
-                        }
+                // Find all businesses satisfying user requirements
+                var mlist       = [[clat,clon]];
+                var messageList = [];
+                for (i=0, len=la_yoga.businesses.length; i<len; i++) {
+                    var lat    = la_yoga.businesses[i].lat;
+                    var lon    = la_yoga.businesses[i].lon;
+                    var unit   = "M";
+                    var dist   = distanceTo(lat1, lon1, lat, lon, unit);
+                    var topic1 = true;
+                    if (ys_index != -1) {
+                        topic1 = (la_yoga.businesses[i].lsi_scores[ys_index]>=LSIsim_val) && 
+                                 (la_yoga.businesses[i].bkm_scores[ys_index]>=BKM_val);
                     }
-                    var group = new L.featureGroup(markerList);
-                    map.fitBounds(group.getBounds());
-                });
-
-            }
+                    var topic2 = !challenging || 
+                                 ((la_yoga.businesses[i].lsi_scores[14]>=LSIsim_val) && 
+                                  (la_yoga.businesses[i].bkm_scores[14]>=BKM_val));
+                    var topic3 = !meditation || 
+                                 ((la_yoga.businesses[i].lsi_scores[15]>=LSIsim_val) && 
+                                  (la_yoga.businesses[i].bkm_scores[15]>=BKM_val));
+                    var topic4 = !competent || 
+                                 ((la_yoga.businesses[i].lsi_scores[17]>=LSIsim_val) && 
+                                  (la_yoga.businesses[i].bkm_scores[17]>=BKM_val));
+                    var topic5 = !personal || 
+                                 ((la_yoga.businesses[i].lsi_scores[23]>=LSIsim_val) && 
+                                  (la_yoga.businesses[i].bkm_scores[23]>=BKM_val));
+                    var topic6 = !apparel || 
+                                 ((la_yoga.businesses[i].lsi_scores[28]>=LSIsim_val) && 
+                                  (la_yoga.businesses[i].bkm_scores[28]>=BKM_val));
+                    if (dist < radius_val && topic1 && topic2 && topic3 && topic4 && topic5 && topic6) {
+                        var name    = la_yoga.businesses[i].name;
+                        var address = la_yoga.businesses[i].address;
+                        var website = la_yoga.businesses[i].website;
+                        var message = "<b>"+name+"</b><br/><b>"+address+"</b><br/><b>"+website+"</b>";
+                        messageList.push(message);
+                        var marker = L.marker([lat, lon]);
+                        markerList.push(marker);
+                        mlist.push([lat,lon]);
+                    }
+                }
+                // Extend the map boundaries
+                var group = new L.latLngBounds(mlist);
+                var a1 = group.getWest();
+                var b1 = group.getSouth();
+                var c1 = group.getEast();
+                var d1 = group.getNorth();
+                var alpha = 1.40;
+                var a2 = 0.5*((1.0+alpha)*a1+(1.0-alpha)*c1);
+                var b2 = 0.5*((1.0+alpha)*b1+(1.0-alpha)*d1);
+                var c2 = 0.5*((1.0+alpha)*c1+(1.0-alpha)*a1);
+                var d2 = 0.5*((1.0+alpha)*d1+(1.0-alpha)*b1);
+                // Create the map
+                map.fitBounds([[b2,a2],[d2,c2]]);
+                var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});     
+                map.addLayer(osm);
+                circle = L.circle([lat1, lon1], 50, {
+                            color: 'red',
+                            fillColor: '#f03',
+                            fillOpacity: 0.5
+                        }).addTo(map);
+                for (i=0, len=markerList.length; i<len; i++) {
+                    var marker = markerList[i].addTo(map);
+                    var message = messageList[i];
+                    marker.bindPopup(message).openPopup();
+                }
+            };
         </script>
 
     </div>

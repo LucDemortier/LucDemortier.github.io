@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title:  "Project McNulty: Estimating the Risk of Heart Disease"
 date: 15-May-2015
 excerpt: " "
@@ -45,17 +45,19 @@ The technical reason for this glitch is two-fold: the features in the Cleveland 
 
 A better approach for this problem is the following:
 
-    1. Start by including all the features in the model.
-    2. Fit the model and extract the deviance.
-    3. Does any feature have a coefficient with z-value less than 2?
-    4. If yes: 
-    5.     Loop over all features still in the model:
-    6.         Remove the feature, refit, and compute the deviance.
-    7.         Replace the feature.
-    8.     Remove the feature whose removal caused the smallest change in deviance.
-    9.     Go back to 2
-    10.If no:
-    11.    Exit.  
+```
+    1.  Start by including all the features in the model.
+    2.  Fit the model and extract the deviance.
+    3.  Does any feature have a coefficient with z-value less than 2?
+    4.  If yes: 
+    5.      Loop over all features still in the model:
+    6.          Remove the feature, refit, and compute the deviance.
+    7.          Replace the feature.
+    8.      Remove the feature whose removal caused the smallest change in deviance.
+    9.      Go back to 2
+    10. If no:
+    11.     Exit.
+```
 
 The output of this algorithm is the largest subset of features whose fit coefficients are at least two standard deviations away from zero, and such that the total change in fit deviance is the smallest possible.  When applied to the logistic regression model for the Cleveland data, seven features are selected, three of which are categorical.  This is the fit result:
 {% marginnote 'Table 3: Final results of a fit to the Cleveland data of a logistic regression model with the optimal subset of features.  The cp_1, cp_2, and cp_3 features refer to the categorical variable cp (chest pain type) of Table 1.  For example, cp_1 is a binary feature indicating presence or absence of chest pain type 1.  Similar comments apply to slope_1 and thal_7.' %}
