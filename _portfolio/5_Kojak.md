@@ -2,7 +2,10 @@
 layout: page
 title:  "Project Kojak: The Practice of Yoga in the City"
 date: 25 June 2015
-excerpt: "Compares yoga businesses in New York City and Los Angeles."
+excerpt: See how yoga businesses compare in New York City and Los Angeles ...or go straight to the maps&#58; 
+excerpt_urls: 
+  NYC: NYC_yoga_studios.html 
+  LA: LA_yoga_studios.html
 ---
 
 Yoga is a centuries-old practice {% marginfigure /assets/img/aum.jpg 'Sanskrit character for the "Aum" sound. In his "Autobiography of a Yogi", Paramahansa Yogananda writes "The potencies of sound and of the human voice have nowhere else been so profoundly investigated as in India.  The Aum vibration that reverberates throughout the universe has three manifestations, those of creation, preservation, and destruction.  Each time a man utters a word he puts into operation one of the three qualities of Aum."' %} that was started in India by ascetics who needed to maintain good physical health during their long meditation sessions.  While it declined in its country of origin, over the past fifty years yoga took off in the West.  In fact, one of the founders of the modern yoga movement, B.K.S. Iyengar, is reported to have said that yoga was saved by the West.  How did Westerners do this?  Simply: they turned this revered practice into a business!  And now that it is a business, we can ask some pointed questions about it, and as data scientists maybe we can come up with some quantitative answers.

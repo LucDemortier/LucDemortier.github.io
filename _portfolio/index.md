@@ -11,6 +11,11 @@ layout: page
         <a href="{{ project.url }}"><h4 class="contrast">{{ project.title }}</h4></a>
         <span class="smaller">{{project.date | date: "%B %-d, %Y"}}</span>  <br/>
         {{ project.excerpt }}
+        {% if project.excerpt_urls %}
+          {% for excerpt_url in project.excerpt_urls %}
+            <a href="{{site.url}}/assets/img/{{excerpt_url[1]}}">{{excerpt_url[0]}}</a>{% if forloop.last %}.{% else %}, {% endif %}
+          {% endfor %}
+        {% endif %}
         <hr class="slender">
       </li>
     {% endfor %}
