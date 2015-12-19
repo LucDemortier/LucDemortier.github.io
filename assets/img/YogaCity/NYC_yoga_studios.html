@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Yoga in LA!</title>
+    <title>Yoga in NYC!</title>
     <style type="text/css">body {background-color: #fffff8}</style>
-    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="../leaflet/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="yoga_studio_map.css" />
 </head>
 
 <body>
-    <script type="text/javascript" src="leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="../leaflet/leaflet.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-    <script src="LA_yoga_studios.js"></script>
+    <script src="NYC_yoga_studios.js"></script>
 
     <script>
         function codeAddress(address,callback) {
@@ -28,8 +28,8 @@
             } else {
                 alert('Geocode was not successful for the following reason: ' + 
                     status);
-                var lat = 34.0514139;
-                var lon = -118.2567698;
+                var lat = 40.7442036;
+                var lon = -73.9853586;
                 callback(lat,lon);
             }
           });
@@ -64,7 +64,7 @@
 <div id="header">
 
     <center>
-    <h1 style="color: #111111">Yoga Businesses in the Los Angeles Area</h1>
+    <h1 style="color: #111111">Yoga Businesses in the New York City Area</h1>
     </center>
 
 </div>
@@ -87,7 +87,7 @@
            style="display: inline-block; width: 260px; text-align: left">
            Address at center of search circle: <span id="nCenter-value"></span>
     </label>
-    <input type="text" value="515 S Flower St, Los Angeles, CA 90071" size="35" 
+    <input type="text" value="80 Madison Ave, New York, NY 10016" size="35" 
             id="nCenter">
     </p>
 
@@ -256,35 +256,35 @@
                 // Find all businesses satisfying user requirements
                 var mlist       = [[clat,clon]];
                 var messageList = [];
-                for (i=0, len=la_yoga.businesses.length; i<len; i++) {
-                    var lat    = la_yoga.businesses[i].lat;
-                    var lon    = la_yoga.businesses[i].lon;
+                for (i=0, len=nyc_yoga.businesses.length; i<len; i++) {
+                    var lat    = nyc_yoga.businesses[i].lat;
+                    var lon    = nyc_yoga.businesses[i].lon;
                     var unit   = "M";
                     var dist   = distanceTo(lat1, lon1, lat, lon, unit);
                     var topic1 = true;
                     if (ys_index != -1) {
-                        topic1 = (la_yoga.businesses[i].lsi_scores[ys_index]>=LSIsim_val) && 
-                                 (la_yoga.businesses[i].bkm_scores[ys_index]>=BKM_val);
+                        topic1 = (nyc_yoga.businesses[i].lsi_scores[ys_index]>=LSIsim_val) && 
+                                 (nyc_yoga.businesses[i].bkm_scores[ys_index]>=BKM_val);
                     }
                     var topic2 = !challenging || 
-                                 ((la_yoga.businesses[i].lsi_scores[14]>=LSIsim_val) && 
-                                  (la_yoga.businesses[i].bkm_scores[14]>=BKM_val));
+                                 ((nyc_yoga.businesses[i].lsi_scores[14]>=LSIsim_val) && 
+                                  (nyc_yoga.businesses[i].bkm_scores[14]>=BKM_val));
                     var topic3 = !meditation || 
-                                 ((la_yoga.businesses[i].lsi_scores[15]>=LSIsim_val) && 
-                                  (la_yoga.businesses[i].bkm_scores[15]>=BKM_val));
+                                 ((nyc_yoga.businesses[i].lsi_scores[15]>=LSIsim_val) && 
+                                  (nyc_yoga.businesses[i].bkm_scores[15]>=BKM_val));
                     var topic4 = !competent || 
-                                 ((la_yoga.businesses[i].lsi_scores[17]>=LSIsim_val) && 
-                                  (la_yoga.businesses[i].bkm_scores[17]>=BKM_val));
+                                 ((nyc_yoga.businesses[i].lsi_scores[17]>=LSIsim_val) && 
+                                  (nyc_yoga.businesses[i].bkm_scores[17]>=BKM_val));
                     var topic5 = !personal || 
-                                 ((la_yoga.businesses[i].lsi_scores[23]>=LSIsim_val) && 
-                                  (la_yoga.businesses[i].bkm_scores[23]>=BKM_val));
+                                 ((nyc_yoga.businesses[i].lsi_scores[23]>=LSIsim_val) && 
+                                  (nyc_yoga.businesses[i].bkm_scores[23]>=BKM_val));
                     var topic6 = !apparel || 
-                                 ((la_yoga.businesses[i].lsi_scores[28]>=LSIsim_val) && 
-                                  (la_yoga.businesses[i].bkm_scores[28]>=BKM_val));
+                                 ((nyc_yoga.businesses[i].lsi_scores[28]>=LSIsim_val) && 
+                                  (nyc_yoga.businesses[i].bkm_scores[28]>=BKM_val));
                     if (dist < radius_val && topic1 && topic2 && topic3 && topic4 && topic5 && topic6) {
-                        var name    = la_yoga.businesses[i].name;
-                        var address = la_yoga.businesses[i].address;
-                        var website = la_yoga.businesses[i].website;
+                        var name    = nyc_yoga.businesses[i].name;
+                        var address = nyc_yoga.businesses[i].address;
+                        var website = nyc_yoga.businesses[i].website;
                         var message = "<b>"+name+"</b><br/><b>"+address+"</b><br/><b>"+website+"</b>";
                         messageList.push(message);
                         var marker = L.marker([lat, lon]);
