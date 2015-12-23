@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Project Benson"
+title:  "Project Benson: MTA Data"
 date: 10 April 2015
 excerpt: MTA data help a green-energy company deploy sign-up teams in the city...
 ---
