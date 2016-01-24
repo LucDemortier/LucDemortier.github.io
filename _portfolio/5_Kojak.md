@@ -2,6 +2,7 @@
 layout: page
 title:  "Project Kojak: The Practice of Yoga in the City"
 date: 25 June 2015
+avatar: Kojak.jpg
 excerpt: See how yoga businesses compare in New York City and Los Angeles ...or go straight to the maps&#58; 
 excerpt_urls: 
   NYC: YogaCity/NYC_yoga_studios.html 
@@ -121,7 +122,7 @@ Among all yoga styles, Vinyasa is clearly the most popular, especially in NYC.  
 
 For this analysis we used Boolean keyword matching and Latent Semantic Indexing (LSI).  A more sophisticated version of keyword matching consists in ranking documents according to the sum of the TF-IDF values of the words in the query.  We did not try this approach.  However, we did try Latent Dirichlet Allocation (LDA), which is based on a statistical model of corpora and documents (as opposed to LSI, which, as pointed out above, is a purely algebraic method).  LDA is typically used to identify topics in a corpus of documents, where a topic is a bona fide probability distribution over terms.  Unfortunately it gives different results depending on the number of topics one believes to be present in the corpus (this is again different from LSI, which always yields the same latent topics, regardless of how many of those one decides to use.)  In addition, LDA topics are very sensitive to the procedure used to trim the dictionary of terms (very rare and very common terms are eliminated from the dictionary, but there is no unique way of defining "very rare" and "very common".)  We were not able to obtain useful results from LDA.  For example, the LDA topics failed the so-called "word intrusion" test{% sidenote 8 'Jonathan Chang, Jordan Boyd-Graber, Chong Wang, Sean Gerrish, and David M. Blei, ["Reading tea leaves: How humans interpret topic models"](http://www.umiacs.umd.edu/~jbg/docs/nips2009-rtl.pdf)' %}.
 
-The figure below shows the analysis flow and data science tools used.  The analysis code can be found on [my GitHub repository](https://github.com/LucDemortier/YogaCity).
+The figure below shows the analysis flow and data science tools used.  The analysis code can be found in [my GitHub repository](https://github.com/LucDemortier/YogaCity).
 
 {% maincolumn /assets/img/YogaCity/YogaCityAnalysisFlow.png 'Figure 10: Analysis flow and data science tools used for the analysis presented in this post.' %}
 

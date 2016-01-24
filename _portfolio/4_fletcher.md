@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Project Fletcher"
+title:  "Project Fletcher: What Tweets Tell Us about Yoga"
 date: 29 May 2015
-excerpt:
+avatar: MurderSheWrote.jpg
+excerpt: How to identify topics by clustering documents and vice-versa...
 ---
-More to come shortly...
+More to come soon...

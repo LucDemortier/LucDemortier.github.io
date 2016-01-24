@@ -2,6 +2,7 @@
 layout: post
 title:  "Project Luther: Movies and Stars"
 date: 24 April 2015
+avatar: Luther.png
 excerpt: Can we use the star value of a movie's cast to predict revenue?
 ---
 
@@ -68,6 +69,6 @@ When deciding whether or not to invest in a movie's production, one should of co
 
 ## Technical Note
 
-The diagram below shows the analysis flow of the present study together with the data science tools that I used.  The analysis code can be found on [my GitHub repository](https://github.com/LucDemortier/MoviesAndStars).
+The diagram below shows the analysis flow of the present study together with the data science tools that I used.  The analysis code can be found in [my GitHub repository](https://github.com/LucDemortier/MoviesAndStars).
 
 {% maincolumn /assets/img/MoviesAndStars/LutherAnalysisFlow.jpg 'Figure 9: Analysis flow for the Movies and Stars study.' %}
