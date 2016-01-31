@@ -3,7 +3,7 @@ layout: page
 ---
 
   <h1 class="content-listing-header sans">Data Science Projects</h1>
-  {% newthought 'Pages in this section' %} describe projects I worked on while enrolled in the spring 2015 data science bootcamp at [Metis](http://www.thisismetis.com). The project names are taken from famous detectives on TV shows: Theo Kojak, Jessica Fletcher, Jimmy McNulty, John Luther, and Olivia Benson, but the projects themselves are not related to the shows.  Why, the idea is to suggest commonalities between good data scientists and good detectives, and I certainly prefer this to being compared to a unicorn!
+  {% newthought 'Pages in this section' %} describe projects I worked on while enrolled in the spring 2015 data science bootcamp at [Metis](http://www.thisismetis.com). The project names are taken from famous detectives on TV shows: Theo Kojak, Jessica Fletcher, Jimmy McNulty, John Luther, and Olivia Benson, but the projects themselves are not related to the shows.  Why, the idea is to suggest commonalities between good data scientists and good detectives, and I certainly prefer this to being compared to a unicorn! 
   <ul class="content">
     {% for project in site.portfolio reversed %}
       <li class="listing">
