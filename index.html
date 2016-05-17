@@ -1,18 +1,22 @@
 ---
-layout: default
-title: Luc Demortier
+layout: full-width
+title: blog
 ---
 
-<p>Welcome to my web pages! You can read about some of my data science projects in the portfolio section, and I plan occasionally to blog on a topic of interest - please stay tuned...</p>
+<h1 class="content-listing-header sans">Blog</h1>
+<p>
+  Welcome to my web pages! There is a portfolio of data science projects,
+  some papers on statistical issues, and here an occasional post on a topic of 
+  interest...
+</p>
 
-  <ul class="content">
-    {% for post in site.posts %}
+<ul class="content-listing ">
+  {% for post in site.posts %}
       <li class="listing">
-      	<hr class="slender">
-      	<a href="{{ post.url }}"><h4 class="contrast">{{ post.title }}</h4></a>
-      	<span class="smaller">{{ post.date | date: "%B %-d, %Y" }}</span>  <br/>
-		<div>{{ post.excerpt }}</div>
-		
+        <hr class="slender">
+        <a href="{{ post.url | prepend: site.baseurl }}"><h3 class="contrast">{{ post.title }}</h3></a>
+        <br><span class="smaller">{{ post.date | date: "%B %-d, %Y" }}</span>  <br/>
+        <div>{{ post.excerpt }}</div>
       </li>
-    {% endfor %}
-  </ul>
+  {% endfor %}
+</ul>

@@ -1,14 +1,14 @@
 <footer>
-  <ul class="footer-links group">
-    <li><a href="mailto:luc.demortier@gmail.com"><span class="icon-mail"></span></a></li> 
+  <hr class="slender">
+  <ul class="footer-links">
+    <li><a href="mailto:luc.demortier@gmail.com"><span class="icon-mail"></span></a></li>
     {% for entry in site.data.social %}
       <li>
         <a href="{{ entry.link }}"><span class="{{ entry.icon }}"></span></a>
       </li>
-    {% endfor %}  
+    {% endfor %}
   </ul>
 <div class="credits">
-<span>&copy; {{ site.time | date: '%Y' }} &nbsp;&nbsp;{{site.author | upcase }}</span></br> 
-<span>This site created with the <a href="//github.com/clayh53/tufte-jekyll">Tufte theme for {{site.subtitle}} </a> in <a href="//jekyllrb.com">Jekyll</a>.</span> 
-</div>  
+<span>&copy; {{ site.time | date: '%Y' }} &nbsp;&nbsp;{{site.author | upcase }}</span>
+</div>
 </footer>

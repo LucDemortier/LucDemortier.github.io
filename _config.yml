@@ -1,25 +1,26 @@
 # Uncomment if you are planning to run the blog in a subdirectory
 # Note - if you enable this, and attempt to view your site locally you have to use the baseurl in your local path.
 # Example, you must use http://localhost:4000/path/to/blog
-#baseurl: /path/to/blog 
-baseurl: 
+#baseurl: /path/to/blog
+baseurl:
 
 # Your name, as you want it to appear underneath each post and in the footer
 author: luc demortier
 simple_search: http://google.com/search
 
 # This is the default title that shows up on the browser tab of each page.
-title: Up Against Data
+title: Light on Data
 subtitle: Content-centric blogging
 # Short description (goes below the title; it will also be used in the RSS feed)
 description: A blog by a physicist turned data scientist
 # Name of your blog (this will show up at the top of your page and in the RSS feed)
-name: Up Against Data
+name: Light On Data
 
 # Turn on recognition of Github Flavored Markdown
 markdown: Kramdown
-kramdown:  
+kramdown:
   input: GFM
+  syntax_highlighter: rouge
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 highlighter: rouge
 external_link: true
@@ -40,8 +41,10 @@ page:
 collections:
   portfolio:
     output: true
+  papers:
+    output: true
 
-editor: subl
+editor: atom
 git:
   branch: master
 transfer:
