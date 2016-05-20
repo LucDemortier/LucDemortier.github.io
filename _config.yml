@@ -39,7 +39,7 @@ page:
   extension: md
 
 collections:
-  portfolio:
+  projects:
     output: true
   papers:
     output: true

@@ -1,14 +1,14 @@
 ---
 layout: full-width
-title: portfolio
+title: projects
 ---
 
 <h1 class="content-listing-header sans">Data Science Projects</h1>
 {% newthought 'Pages in this section' %} describe projects I worked on while enrolled in the spring 2015 data science bootcamp at [Metis](http://www.thisismetis.com). The project names were taken from famous detectives on TV shows: Theo Kojak, Jessica Fletcher, Jimmy McNulty, John Luther, and Olivia Benson, but the projects themselves were not related to the shows.  I reckon the idea was to suggest commonalities between good data scientists and good detectives...
 
 <ul class="content-listing">
-  {% for project in site.portfolio reversed %}
-      {% unless project.title == 'portfolio' %}
+  {% for project in site.projects reversed %}
+      {% unless project.title == 'projects' %}
           <li class="listing">
           <hr class="slender">
           <a href="{{ project.url }}"><h3 class="contrast">{{ project.title }}</h3></a>

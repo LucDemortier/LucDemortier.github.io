@@ -151,7 +151,8 @@ h1 code, h2 code, h3 code { font-size: 0.80em; } //left in for no real reason
 
 /*-- Table styling section - For Tufte-Jekyll, booktabs style is default for Markdown tables  --*/
 
-table, table.booktabs { width: auto;  //making booktabs style tables the unstyled default in case someone uses Markdown styling
+table, table.booktabs { width: auto;
+                 word-wrap: break-word;
                  margin-top: 1em;
                  margin-bottom: 1em;
                  margin-left: 0px;
