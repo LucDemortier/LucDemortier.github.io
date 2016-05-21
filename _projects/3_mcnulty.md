@@ -16,22 +16,134 @@ The 14 attributes are described in the table below; the last row ("num") is the 
 
 {% marginnote "TB-1" "Table 1: Attributes of the heart disease patients in the Cleveland data set; the last row (heart disease status) is the response variable; the type column indicates whether an attribute is binary (bin), integer (int), categorical (cat), or continuous (con)." %}
 
-|     || attribute||description                                       | type|
-|----:|:-:|:---------|:-:|:-------------------------------------------|:-----|
-|  1. ||age      || Age in years                                       | int  |
-|  2. ||sex      || Female or male                                    | bin  |
-|  3. ||cp       || Chest pain type (typical angina, atypical angina, non-angina, or asymptomatic angina)                     | cat  |
-|  4. ||trestbps || Resting blood pressure (mm Hg)                     | con  |
-|  5. ||chol     || Serum cholesterol (mg/dl)                          | con  |
-|  6. ||fbs      || Fasting blood sugar (< 120 mg/dl or > 120 mg/dl)   | bin  |
-|  7. ||restecg  || Resting electrocardiography results (normal, ST-T wave abnormality, or left ventricular hypertrophy)    | cat  |
-|  8. ||thalach  || Max. heart rate achieved during thalium stress test| con  |
-|  9. ||exang    || Exercise induced angina (yes or no)                | bin  |
-| 10. ||oldpeak  || ST depression induced by exercise relative to rest | con  |
-| 11. ||slope    || Slope of peak exercise ST segment (upsloping, flat, or downsloping)      | cat  |
-| 12. ||ca       || Number of major vessels colored by fluoroscopy     | int  |
-| 13. ||thal     || Thalium stress test result (normal, fixed defect, or reversible defect)             | cat  |
-| 14. ||num      || Heart disease status: number of major vessels with >50% narrowing (0,1,2,3, or 4)| int |
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: left">attribute</th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: left">description</th>
+      <th style="text-align: left">type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">1.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">age</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Age in years</td>
+      <td style="text-align: left">int</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">sex</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Female or male</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">3.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">cp</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Chest pain type (typical angina, atypical angina, non-angina, or asymptomatic angina)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">4.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">trestbps</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Resting blood pressure (mm Hg)</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">5.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">chol</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Serum cholesterol (mg/dl)</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">6.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">fbs</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Fasting blood sugar (&lt; 120 mg/dl or &gt; 120 mg/dl)</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">7.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">restecg</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Resting electrocardiography results (normal, ST-T wave abnormality, or left ventricular hypertrophy)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">8.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">thalach</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Max. heart rate achieved during thalium stress test</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">9.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">exang</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Exercise induced angina (yes or no)</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">10.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">oldpeak</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">ST depression induced by exercise relative to rest</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">11.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">slope</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Slope of peak exercise ST segment (upsloping, flat, or downsloping)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">12.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">ca</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Number of major vessels colored by fluoroscopy</td>
+      <td style="text-align: left">int</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">13.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">thal</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Thalium stress test result (normal, fixed defect, or reversible defect)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">14.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">num</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Heart disease status: number of major vessels with &gt;50% narrowing (0,1,2,3, or 4)</td>
+      <td style="text-align: left">int</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 To gain some insight into the power of these attributes to discriminate between disease (num>0) and no disease (num=0), let's look at their distributions over the corresponding subsamples (139 patients with disease, 160 without).  This is shown in Figure 1 below:
 
