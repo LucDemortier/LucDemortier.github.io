@@ -4,6 +4,7 @@ title: papers
 ---
 
 <h1 class="content-listing-header sans">Papers on Statistical Issues</h1>
+{% newthought 'Pages in this section' %} summarize papers I wrote on various statistical problems. While this work was mainly intended for an audience of experimental particle physicists, its scope is more general.  The topics investigated cover hypothesis testing, confidence interval construction, fitting techniques, nuisance parameters, frequentist versus Bayesian statistics, and more.
 
 <ul class="content-listing">
   {% for paper in site.papers reversed %}
