@@ -4,50 +4,55 @@ title: "The Eternal Sunshine of Causal Thinking"
 date: 9 May 2016
 excerpt: "A review of Samantha Kleinberg's latest book, \"WHY: A Guide to Finding and Using Causes\"."
 ---
-<a name="top"></a>
 
-On February 11 of this year, a collaboration of physicists known by the acronym [LIGO](http://www.ligo.org/) announced a remarkable discovery, that of gravitational waves.  Physicists had been searching for such waves since the 1960s, so it was a great relief to see confirmed one more prediction of Einstein's theory of general relativity.  However the real significance of the discovery was much more than historical, it was a breakthrough on three levels: the observation of a gravitational wave interacting with an apparatus on earth, the surmised origin of the wave as a merger of two black holes, and the advent of a new subfield,  gravitational-wave astronomy.
-
-When physicists claim discoveries, they talk about evidence.  Evidence requires statistics, but what is statistical reasoning based on?  The underlying beliefs are that observations have causes, that we have methods to identify those causes, that we are not easily fooled by misleading evidence or cognitive biases, etc. These are difficult issues about which few scientists are truly knowledgeable, but they now have two new books to educate themselves.  Both were written by Samantha Kleinberg: ["Causality, Probability, and Time," Cambridge University Press (2013)](http://www.amazon.com/dp/1107026482), and ["Why: A Guide to Finding and Using Causes," O'Reilly Media (2016)](http://www.amazon.com/dp/1491949643).  The first book was written for an audience with knowledge of statistics and probability theory, whereas the second has no mathematics in it, only text and graphs.  This is the one I'm reviewing here.
+When scientists claim discoveries, they talk about evidence. Evidence requires statistical reasoning, but what is this reasoning actually trying to accomplish? The underlying beliefs are that observations have causes, that we have methods to identify those causes, and that we can avoid being fooled by misleading evidence and cognitive biases. These are strong beliefs, involving difficult issues about which few scientists are truly knowledgeable. Fortunately we now have two new books to educate ourselves.  Both were written by Samantha Kleinberg: ["Causality, Probability, and Time," Cambridge University Press (2013)](http://www.amazon.com/dp/1107026482), and ["Why: A Guide to Finding and Using Causes," O'Reilly Media (2016)](http://www.amazon.com/dp/1491949643).  The first book was written for an audience with knowledge of statistics and probability theory, whereas the second has no mathematics in it, only text and graphs.  This is the one I'm reviewing here.
 
 {% fullwidth "assets/img/blog/SK_Books.jpg" "" %}
 
-Causality is our home in this world. It is so basic to our way of thinking and acting that its conundrums show up everywhere, and this ubiquity makes it also hard to define.  Already in the first chapter the author warns us that no definition of causality covers all cases, and each definition has counter-examples that another does not. We don’t even know if causality is a fundamental building block of the world we live in, or a structure we impose on it. There is no unified theory of causes, nor a foolproof method for finding them. The last chapter reiterates this notion that "causality is still an unsolved problem".  In between these warnings the reader will find extensive discussions of how we learn about causes; how correlation relates to causation; the importance of timing; observation versus experimentation; computation; explanation; and the transition from causal understanding to decisions, policies, and interventions.
+Causality is so basic to our way of thinking and acting that its conundrums show up everywhere, and this ubiquity makes it also hard to define.  Already in the first chapter the author warns us that no definition of causality covers all cases, and each definition has counter-examples that another does not. We don’t even know if causality is a fundamental building block of the world we live in, or a structure we impose on it. There is no unified theory of causes, nor a foolproof method for finding them. The last chapter reiterates this notion that "causality is still an unsolved problem".  In between these warnings the reader will find extensive discussions of how we learn about causes; how correlation relates to causation; the importance of timing; observation versus experimentation; computation; explanation; and the transition from causal understanding to decisions, policies, and interventions.
 
 ## A multitude of examples
-One of the great strengths of the book is the multitude of concrete examples it gives to illustrate various points and stimulate the reader's thinking.  These examples range from the almost trivial (e.g. ice cream stands correlate with warm weather but do not cause it) to famous court cases (for example the 1999 Sally Clark case in the UK, involving the death of two children in the space of one year: was it a double case of sudden infant death syndrome, or murder?), from psychological experiments to understand the cognitive biases affecting the search for causes, to famous paradoxes (Simpson's paradox from probability theory and the Einstein-Podolsky-Rosen paradox in physics).  
+A definite strength of the book is the multitude of concrete examples it gives to illustrate various points and stimulate the reader's thinking.  These examples range from the almost trivial (e.g. ice cream stands correlate with warm weather but do not cause it) to famous court cases (for example the 1999 Sally Clark case in the UK, involving the death of two children in the space of one year: was it a double case of sudden infant death syndrome, or murder?) Also included here are psychological experiments to understand the cognitive biases affecting the search for causes, and famous paradoxes (Simpson's paradox from probability theory and the Einstein-Podolsky-Rosen paradox in physics).  
 
 ## Languages for thinking about causality
-The second strength of the book is that it helps the reader develop a language for thinking about causality. This language has a philosophical tradition: Hume talked about regular occurrence, contiguousness in time and space, time ordering of cause and effect, Kant about a priori knowledge, and more recently Mackie discussed causes as insufficient but necessary parts of unnecessary but sufficient conditions, whereas Suppes and others introduced a probabilistic approach to causality. There are many interesting concepts throughout the book to help describe the great variety of causal situations; for the interested reader I collected some examples in the [appendix](#appendix) to this review.
+A second strength is the book's development of several languages for thinking about causality. The oldest one is philosophy: Aristotle gave one of the earliest definitions of causes. Later, Hume talked about regular occurrence, contiguousness in time and space, time ordering of cause and effect, and Kant emphasized a deep form of a priori knowledge. More recently Mackie discussed causes as insufficient but necessary parts of unnecessary but sufficient conditions, whereas Suppes and others introduced a probabilistic approach to causality.
 
-Then there is the psychological tradition, which has uncovered a number of cognitive obstacles to learning causes: superstition, confirmation bias, stereotype threat, placebo effect, side-effect effect, etc., as well as causal learning paths: the associative model, backward blocking, mechanisms,…  
+Next comes the psychological tradition with its own language. It uncovered a number of cognitive obstacles to learning causes: superstition, confirmation bias, stereotype threat, placebo effect, side-effect effect, etc., and identified several causal learning paths: the associative model, backward blocking, mechanisms,…  
 
-Finally there is the mathematical/computational tradition, which to some extent is based on statistics and probability but needs something more to account for causality, as demonstrated by Simpson's paradox and Judea Pearl's insightful work.  As with all mathematical approaches however, there are assumptions: Have we identified all hidden common causes (confounders)?  Are our observations representative of the true system we are trying to describe?  And are we measuring the right things?  This is where methods and results from the philosophical and psychological traditions can be of great help.
+Finally there is the mathematical/computational language, which to some extent is based on statistics and probability but needs something more to account for causality, as demonstrated by Simpson's paradox and Judea Pearl's insightful work.  As with all mathematical approaches however, there are assumptions: Have we identified all hidden common causes (confounders)?  Are our observations representative of the true system we are trying to describe?  And are we measuring the right things?  This is where methods and results from philosophy and psychology can be of great help.
 
-## An example from hard science
-Let's see how these concepts work in the case of the gravitational wave discovery mentioned at the beginning. This discovery was a one-time event, so Hume's criterion of regular occurrence doesn't apply.  The initial cause, a black hole merger, was not actually observed, it was merely inferred from the shape of the gravitational wave signal itself. So what is the causal evidence in this case? It consists of two pieces. First, the probability that noise alone caused the signal observed in the apparatus is extremely low (the signal is actually a time-coincidence of identically shaped signals in two independent detectors, one located in Livingston, LA, and the other in Hanford, WA) . Second, we actually have a detailed mechanism to explain the observation, and this mechanism is based on a powerful theory (general relativity) that has already explained plenty of other types of observations.  So the new observation fits nicely with our current model of how the universe works. Nevertheless the causal evidence is rather unusual by the standards described in the book and falls into the category of "finding causes and effects of infrequent events", described in chapter 1 as one of the open problems of causality research. This is clearly an area where domain knowledge plays a crucial role.
+There are many interesting concepts throughout the book to help describe the great variety of causal situations; for the interested reader I collected some examples in the [appendix](#appendix) to this review.
+
+## An case from hard science
+Given my background in physics, I was curious to see how these concepts could be applied to a famous recent discovery in astrophysics.
+
+First some context. On February 11 of this year, a collaboration of physicists known by the acronym [LIGO](http://www.ligo.org/) announced a remarkable discovery, that of gravitational waves.  Physicists had been searching for such waves since the 1960s, so it was a great relief to see confirmed one more prediction of Einstein's theory of general relativity.  However the real significance of the discovery was much more than historical, it was a breakthrough on three levels: the observation of a gravitational wave interacting with an apparatus on earth, the surmised origin of the wave as a merger of two black holes, and the advent of a new subfield,  gravitational-wave astronomy.
+
+This discovery was a one-time event, so Hume's criterion of regular occurrence doesn't apply.  The initial cause, a black hole merger, was not actually observed, it was merely inferred from the shape of the gravitational wave signal itself. So what is the causal evidence in this case? As far as I can tell, it consists of two pieces. First, the probability that noise alone caused the signal observed in the apparatus is extremely low (the signal is actually a time coincidence of identically shaped signals in two independent detectors, one located in Livingston, LA, and the other in Hanford, WA) . Second, we actually have a detailed mechanism to explain the observation, and this mechanism is based on a powerful theory (general relativity) that has already explained plenty of other types of observations.  So the new observation fits nicely with our current model of how the universe works. Nevertheless the causal evidence is rather unusual by the standards described in Kleinberg's book and falls into the category of "finding causes and effects of infrequent events", described in chapter 1 as one of the open problems of causality research. Fascinating!
 
 ## Recipes and procedures
-A third aspect of the book that I found useful is the possibility to extract procedures and recipes from it to approach certain problems.  For example, chapter 5 lists Mill's methods for learning about causes: the method of agreement, the method of difference, the joint method of agreement and difference, the method of residues, and the method of concomitant variation.  And in chapter 9 we encounter Bradford Hill's considerations for evaluating causal claims: strength, consistency, specificity, temporality, biological gradient, plausibility and coherence, experiment, and analogy.  In each case these methods and considerations are clearly described in practical terms. I have added some annotated examples of such techniques in the [appendix](#appendix) to this review.
+Back to the book. A third aspect of it that I found useful is the occasional procedure or recipe it provides for attacking certain problems.  For example, chapter 5 lists John Stuart Mill's methods for learning about causes: the method of agreement, the method of difference, the joint method of agreement and difference, the method of residues, and the method of concomitant variation.  And in chapter 9 we encounter Bradford Hill's considerations for evaluating causal claims: strength, consistency, specificity, temporality, biological gradient, plausibility and coherence, experiment, and analogy.  In each case these methods and considerations are clearly described in practical terms. I have added some annotated examples of such techniques in the [appendix](#appendix).
 
 ## Causality and big data
 In addition to reiterating some key principles of causal thinking, the last chapter of the book argues for the importance of causality research in the context of big data.  Contrary to what is sometimes claimed, big data often requires more rigorous causal thinking than "small data", and this for three reasons: data quality, which is often worse in large data sets; spurious signals, which are more likely when performing large numbers of tests; and interpretation, which is typically harder with big data.
 
 ## The book's structure
-A possible criticism of the book is its weak support structure. By this I mean the lack of typographical design and proper sectioning to facilitate learning. The book has ten numbered chapters, but chapter sections and subsections are unnumbered (only the title capitalization differentiates the latter two). There is no subdivision below the subsection level, and I would argue that this is regrettable for a philosophical book of this nature. This lack of structural visibility obscures the flow of the book's arguments. It also prevents proper cross-referencing.  For example, the second paragraph on page 122 asks the reader to "recall the dead salmon study", without further location information.  Luckily in this case the reader can go look up "dead salmon fMRI study" in the index to find that it is discussed on pages 52 and 55.  But the reader shouldn't have to do this, there should be a direct reference to a subsection or paragraph number.  The notes system is similarly awkward.  Notes are at the end of the book, between pages 209 and 231, and are numbered separately for each chapter (an annoying burden on the reader).  The bibliography is between pages 233 and 266.  Almost 20% of the notes are just references to the bibliography, which means that the reader often has to make two jumps to get to the desired information. (I should add however, that the bibliography is extensive and useful.)
+An unfortunate aspect of the book is its weak support structure. By this I mean the lack of typographical design and proper sectioning to facilitate learning. The book has ten numbered chapters, but chapter sections and subsections are unnumbered (only the title capitalization differentiates the latter two). There is no subdivision below the subsection level. There is an overabundance of examples but no numbering system to keep track of them. This lack of structural visibility obscures the flow of the book's arguments and prevents proper cross-referencing.  For example, the second paragraph on page 122 asks the reader to "recall the dead salmon study", without further location information.  In this case the reader can go look up "dead salmon fMRI study" in the index, but a direct reference to a subsection or a page would have been so much easier.  The notes system is similarly awkward.  Notes are at the end of the book, between pages 209 and 231, and are numbered separately for each chapter (by itself a burden on the reader). Almost 20% of the notes are just references to the bibliography, which is between pages 233 and 266. This means that the reader often has to make two jumps to get to the desired information. I should add however, that the bibliography is extensive and very useful.
 
 ## The book's scope
 As mentioned earlier, the author deliberately chose to make the book accessible to a general audience and therefore avoided mathematical formalities.  Most of the time she succeeds, but less so when it comes down to computational techniques, the subject of chapter 6. This is also the longest chapter (29 pages; the average is 20), as it introduces a number of difficult concepts: graphical models, Bayesian networks, causal significance, Granger causality, etc.  There are plenty of examples, but few rigorous definitions, and this can be a frustrating impediment to understanding. I would have been hard pressed to give a simple definition of Granger causality after reading this chapter, so I turned to Wikipedia for help (see the definition in the [appendix](#appendix) below).  Although the chapter is titled computation, the reader should not expect to learn to actually compute things.  This is rather a conceptual introduction to computation.
 
 ## Recommendation
-Overall this is a fascinating book and I highly recommend it.  Be prepared for hard work though.  It will sometimes be necessary to consult works in the bibliography to gain a better understanding of a topic.  For example, the discussion of Simpson's paradox on pages 94-96 is quite illuminating, but ends with the rather vague recommendation that level of granularity matters when looking at data, as does background knowledge about a problem.  The reader will be well served to study Judea Pearl's paper on Simpson's paradox for a more quantitative, graph-based treatment. It may also be necessary to read the book twice, as the author occasionally indulges in forward references…
+I recommend the book as a broad introduction to the subject, with the caveat that occasionally an overabundance of examples tends to obscure rather than illustrate the meaning of a new concept. It will sometimes be necessary to consult works in the bibliography to gain a better understanding of a topic.  For example, the discussion of Simpson's paradox on pages 94-96 is quite illuminating, but ends with the limited observation that level of granularity matters when looking at data, as does background knowledge about the underlying problem.  The reader will be well served to study Judea Pearl's cited paper on Simpson's paradox for a more quantitative treatment.
+
+Overall the book succeeds in presenting a remarkable number of key ideas, and together with the bibliography this is an excellent starting point for further study.
 
 <a name="appendix"></a>
 
 ## Appendix
 This appendix gathers some material I put together after reading the book, thinking it could be useful for further study or in practical applications.  It begins with a short [vocabulary](#vocab) of terms used in the causality literature (most definitions are adapted from Kleinberg's book, but I have indicated when this is not the case).  This is followed by four "techniques": [Mill's methods](#tech1) for finding causes from observations, [Bradford Hill's considerations](#tech2) for evaluating causal claims, considerations for [how to intervene](#tech3) to make a desired effect happen, and [key principles](#tech4) of causal analysis.
 
-[Back to Top](#top).
+[Back to Top](#TopOfPage).
 
 <hr class="slender">
 <a name="vocab"></a>
@@ -94,12 +99,12 @@ This appendix gathers some material I put together after reading the book, think
 1. **Wallpaper effect:** When a study fails to replicate because, unbeknownst to the investigators, there was a real difference in experimental setup between the original investigation and the failed replication (the joke being that the
 experiment was affected by the color of the wallpaper in the room). From [William A. Wilson, "Scientific Regress", First Things, May 2016](http://www.firstthings.com/article/2016/05/scientific-regress).
 
-[Back to Appendix](#appendix); [Back to Top](#top).
+[Back to Appendix](#appendix); [Back to Top](#TopOfPage).
 
 <hr class="slender">
 <a name="tech1"></a>
 
-### **Technique 1: Mill's methods for finding causes from observations**
+### **Technique 1: John Stuart Mill's methods for finding causes from observations**
 
 1. **Method of agreement:** what's the same in all cases where the effect happens? (necessity but not sufficiency)
 1. **Method of difference:** what differs between when the effect occurs and doesn't? (sufficiency but not necessity)
@@ -107,7 +112,7 @@ experiment was affected by the color of the wallpaper in the room). From [Willia
 1. **Method of residues:** Subtract known causes and effects.  If there is one cause left, it is the cause of the remaining effect.
 1. **Method of concomitant variation:** As the amount of the cause increases, the amount of the effect increases. (But not always, cfr. J-shaped curve.)
 
-[Back to Appendix](#appendix); [Back to Top](#top).
+[Back to Appendix](#appendix); [Back to Top](#TopOfPage).
 
 <hr class="slender">
 <a name="tech2"></a>
@@ -136,7 +141,7 @@ If we intervene to introduce the cause or increase its presence, does the effect
 1. **Analogy:**
 If we know of a similar relationship, the standards of evidence may be lowered.
 
-[Back to Appendix](#appendix); [Back to Top](#top).
+[Back to Appendix](#appendix); [Back to Top](#TopOfPage).
 
 <hr class="slender">
 <a name="tech3"></a>
@@ -154,7 +159,7 @@ Develop a detailed model that includes not only the cause but also the method of
 Do a cost-benefit analysis.
 Note that not all unintended consequences are negative.
 
-[Back to Appendix](#appendix); [Back to Top](#top).
+[Back to Appendix](#appendix); [Back to Top](#TopOfPage).
 
 <hr class="slender">
 <a name="tech4"></a>
@@ -174,4 +179,4 @@ What is the delay between cause and effect? Is it a plausible delay?
 1. **"All experimentation" is not better than "all observation".**
 In many cases, a thoughtful combination of experimental and observational data can address the limits of each.
 
-[Back to Appendix](#appendix); [Back to Top](#top).
+[Back to Appendix](#appendix); [Back to Top](#TopOfPage).
