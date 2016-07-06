@@ -7,7 +7,7 @@ excerpt: "A review of Samantha Kleinberg's latest book, \"WHY: A Guide to Findin
 
 When scientists claim discoveries, they talk about evidence. Evidence requires statistical reasoning, but what is this reasoning actually trying to accomplish? The underlying beliefs are that observations have causes, that we have methods to identify those causes, and that we can avoid being fooled by misleading evidence and cognitive biases. These are strong beliefs, involving difficult issues about which few scientists are truly knowledgeable. Fortunately we now have two new books to educate ourselves.  Both were written by Samantha Kleinberg: ["Causality, Probability, and Time," Cambridge University Press (2013)](http://www.amazon.com/dp/1107026482), and ["Why: A Guide to Finding and Using Causes," O'Reilly Media (2016)](http://www.amazon.com/dp/1491949643).  The first book was written for an audience with knowledge of statistics and probability theory, whereas the second has no mathematics in it, only text and graphs.  This is the one I'm reviewing here.
 
-{% fullwidth "assets/img/blog/SK_Books.jpg" "" %}
+{% fullwidth "assets/img/blog/Causality/SK_Books.jpg" "" %}
 
 Causality is so basic to our way of thinking and acting that its conundrums show up everywhere, and this ubiquity makes it also hard to define.  Already in the first chapter the author warns us that no definition of causality covers all cases, and each definition has counter-examples that another does not. We don’t even know if causality is a fundamental building block of the world we live in, or a structure we impose on it. There is no unified theory of causes, nor a foolproof method for finding them. The last chapter reiterates this notion that "causality is still an unsolved problem".  In between these warnings the reader will find extensive discussions of how we learn about causes; how correlation relates to causation; the importance of timing; observation versus experimentation; computation; explanation; and the transition from causal understanding to decisions, policies, and interventions.
 
@@ -23,7 +23,7 @@ Finally there is the mathematical/computational language, which to some extent i
 
 There are many interesting concepts throughout the book to help describe the great variety of causal situations; for the interested reader I collected some examples in the [appendix](#appendix) to this review.
 
-## An case from hard science
+## A case from hard science
 Given my background in physics, I was curious to see how these concepts could be applied to a famous recent discovery in astrophysics.
 
 First some context. On February 11 of this year, a collaboration of physicists known by the acronym [LIGO](http://www.ligo.org/) announced a remarkable discovery, that of gravitational waves.  Physicists had been searching for such waves since the 1960s, so it was a great relief to see confirmed one more prediction of Einstein's theory of general relativity.  However the real significance of the discovery was much more than historical, it was a breakthrough on three levels: the observation of a gravitational wave interacting with an apparatus on earth, the surmised origin of the wave as a merger of two black holes, and the advent of a new subfield,  gravitational-wave astronomy.
