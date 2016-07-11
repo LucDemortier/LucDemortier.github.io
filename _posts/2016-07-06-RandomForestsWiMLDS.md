@@ -3,9 +3,10 @@ layout: post
 title: "Predicting Flight Delays with a Random Forest"
 date: 6 July 2016
 excerpt: "Following up on a workshop on random forests organized by the NYC meetup group <em>Women in Machine Learning and Data Science</em>."
+comments: true
 ---
 
-{% marginnote 'ADS-0' '**Contents:** <br>[1. The airline data set](#AirlineDataSet) <br>[2. Categorical features](#CategoricalFeatures) <br>[3. Intrinsic discrepancies](#IntrinsicDiscrepancies) <br>[4. Fitting Strategy](#FittingStrategy) <br>[5. Grid search](#GridSearch) <br>[6. Results](#Results) <br>[7. Technical note](#TechnicalNote)' %}
+{% marginnote 'ADS-0' '**Contents:** <br>[1. The airline data set](#AirlineDataSet) <br>[2. Categorical features](#CategoricalFeatures) <br>[3. Intrinsic discrepancies](#IntrinsicDiscrepancies) <br>[4. Fitting Strategy](#FittingStrategy) <br>[5. Grid search](#GridSearch) <br>[6. Classifier performance](#ClassifierPerformance) <br>[7. Technical note](#TechnicalNote)' %}
 On Sunday June 5 of this year, the NYC meetup group [Women in Machine Learning and Data Science](http://www.meetup.com/NYC-Women-in-Machine-Learning-Data-Science/) organized a [workshop on random forests](http://www.meetup.com/NYC-Women-in-Machine-Learning-Data-Science/events/230658399/) led by Anita Schmid and Christine Hurtubise from [OnDeck](http://www.ondeck.com/). They started with a theoretical review of the random forest algorithm, followed with some practical tips, and after that we all broke up into small groups to try our hands on a data set of flight delays. Some of us used Python, others R.
 
 There wasn't really enough time to complete the analysis during the workshop, so I finished it at home and report the results here.
@@ -128,7 +129,9 @@ In the next sections I describe the grid search and the result of applying the r
 [Scikit-learn](http://scikit-learn.org/stable/) provides method [```GridSearchCV```](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html) to search a grid in hyper-parameter space for the optimal classifier of a given type in a given problem. In the present case we are interested in a [```RandomForestClassifier```](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html). As was emphasized at the WiMLDS workshop, random forests can and do sometimes overfit. Scikit-learn provides three parameters to control overfitting, and these are the ones I used in the grid search:
 
 - **n_estimators:** the number of trees in the forest; more trees reduces overfitting but takes longer to run; I tried the values 50, 100, 200.
+
 - **max_depth:** the maximum depth of a tree in the forest; the deeper a tree, the more it risks overfitting; I tried the values 5, 10, 20.
+
 - **min_samples_leaf:** the minimum number of training examples in a newly created leaf in a tree; the smaller this number, the higher the risk of overfit; I tried the values 1, 2, 3, 4, 5, 10, 20.
 
 The remaining random forest parameters were set to their scikit-learn default values, except for **class_weight**, which was set to "balanced_subsample".  Among the grid search parameters, **scoring** was set to "roc_auc", which is the AUC defined in the previous section.
@@ -137,9 +140,9 @@ The result of the grid search is **n_estimators = 200**, **max_depth = 20**, and
 
 {% marginnote "btt-5" "[Back to Top](#TopOfPage)" %}
 
-<a name="Results"></a>
+<a name="ClassifierPerformance"></a>
 
-## Results
+## Classifier performance
 The grid search was performed on 70% of the total sample. I used the remaining 30% as a test sample to compute the confusion matrix and make summary plots. Here then is the confusion matrix, where I assigned the label "positive" to "flight delay" (since that's the effect of interest) and the label "negative" to "no delay":
 
 {% marginnote "TB-3" "Table 3: Confusion matrix for the random forest classifier found with the grid search, showing the number of true negatives (tn), false positives (fp), false negatives (fn), and true positives (tp). A 50% threshold on the classifier output is assumed." %}

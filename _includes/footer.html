@@ -1,5 +1,6 @@
 <footer>
   <hr class="slender">
+
   <ul class="footer-links">
     <li><a href="mailto:luc.demortier@gmail.com"><span class="icon-mail"></span></a></li>
     {% for entry in site.data.social %}
@@ -8,7 +9,31 @@
       </li>
     {% endfor %}
   </ul>
-<div class="credits">
-<span>&copy; {{ site.time | date: '%Y' }} &nbsp;&nbsp;{{site.author | upcase }}</span>
-</div>
+
+  <div class="credits">
+    <span>&copy; {{ site.time | date: '%Y' }} &nbsp;&nbsp;{{site.author | upcase }}</span>
+  </div>
+
+  {% if page.comments %}
+    <hr class="slender"><br><br>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+          var disqus_config = function () {
+              this.page.url = "{{ site.url }}{{ page.url }}";
+              this.page.identifier = "{{ page.id }}";
+          };
+
+          (function() {  // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.src = '//lightondata.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+          })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//lightondata.disqus.com/count.js" async></script>
+  {% endif %}
+
 </footer>

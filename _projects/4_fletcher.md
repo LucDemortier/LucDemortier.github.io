@@ -8,6 +8,7 @@ excerpt: How to identify topics by clustering documents, or cluster documents by
 For the fourth project of the Metis Data Science bootcamp, the only requirement was to include some kind of text processing.  An intriguing aspect of text processing is the existence of two classes of methods, with little explanation of how they are related.  Both classes require one to map documents to numerical vectors in a high-dimensional space (through a bag-of-words or Tf-Idf transformation), but one class uses purely algebraic methods whereas the other uses probabilistic tools:
 
 - **Algebraic** methods use cosine similarity to measure the semantic relatedness of two documents.  Examples of such methods include K-Means and Latent Semantic Indexing (LSI).
+
 - **Probabilistic** methods start from a probabilistic model for the relationship between topics, documents, and words.  Examples are Latent Dirichlet Allocation (LDA) and Hierarchical Dirichlet Process (HDP).
 
 Suppose for example that we are asked to identify the topics discussed in a corpus of documents.  One possible approach in the algebraic class is to cluster the documents with K-means, and identify topics with the top terms used in each cluster.  In the probabilistic class one could use Latent Dirichlet Allocation (LDA) to find the underlying topics of the corpus, and then associate each document with the topic that has the highest probability for that document.  In this way we obtain both topics and clusters from each method and we can compare them.  This is what I attempted to do with a collection of tweets about yoga...
@@ -24,7 +25,9 @@ Using Python's guess_language module, only tweets in English were kept, reducing
 
 The tweet with the largest number of emissions (238) was an invitation:
 
-`"RT @mohitfreedom: #LetsStayfree and be #SultansOfStyle at @IndianEmbassyUS Yoga Day celebrations of PM of #India @narendramodi http://t.co/…"`
+    "RT @mohitfreedom: #LetsStayfree and be #SultansOfStyle
+    at @IndianEmbassyUS Yoga Day celebrations of PM of #India
+    @narendramodi http://t.co/…"
 
 The RT tag at the beginning signals that this is a retweet, and the ellipsis at the end indicates truncation (at least partly due to Twitter inserting the retweet tag).
 

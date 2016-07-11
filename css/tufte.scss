@@ -76,10 +76,10 @@ p > a { @if $link-style == underline
     }
   }
 
-body { width: 100%;
+body { width: 95%;
        margin-left: auto;
        margin-right: auto;
-       padding-left: 5.7%;
+       padding-left: 5%;
        font-family: et-bembo, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
        background-color: $bg-color;
        color: $text-color;
@@ -207,9 +207,14 @@ section { padding-top: 1rem;
           padding-bottom: 1rem; }
 
 
-ul { width: 45%;
-     -webkit-padding-start: 5%;
-     -webkit-padding-end: 5%;
+ol { width: 95%;
+     padding-left: 5%;
+     padding-right: 0;
+     list-style-type: decimal; }
+
+ul { width: 95%;
+     padding-left: 5%;
+     padding-right: 0;
      list-style-type: none; }
 
 //li { padding: 0.5em 0; } //vertical padding on list items screws up vertical rhythym
@@ -231,7 +236,7 @@ figcaption { float: right;
              position: relative;
              max-width: 40%; }
 
-figure.fullwidth figcaption { float: right; margin-right: -4%; margin-left: 0%; }
+figure.fullwidth figcaption { float: right; margin-right: -6%; }
 
 img { max-width: 100%; }
 
@@ -275,8 +280,7 @@ div.table-wrapper { overflow-x: auto; } //changed all overflow values to 'auto' 
                                        pre code { width: 87.5%; }
                                        ul { width: 85%; }
                                        figure { max-width: 90%; }
-                                       figcaption, figure.fullwidth figcaption { margin-right: 0%;
-                                                                                 max-width: none; }
+                                       figcaption, figure.fullwidth figcaption { margin-right: 0%; max-width: none; }
                                        blockquote p, blockquote footer {  width: 80%;
                                                                           padding-left: 5%;
                                                                           padding-right: 5%;
@@ -403,7 +407,6 @@ body.full-width, .content-listing, ul.content-listing li.listing{ width: 90%;
 .full-width article p{
   width: 90%;
 }
-
 
 h1.content-listing-header{
   font-style: normal;
