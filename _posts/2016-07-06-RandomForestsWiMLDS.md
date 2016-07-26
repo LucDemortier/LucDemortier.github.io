@@ -126,7 +126,7 @@ In the next sections I describe the grid search and the result of applying the r
 <a name="GridSearch"></a>
 
 ## Grid search
-[Scikit-learn](http://scikit-learn.org/stable/) provides method [```GridSearchCV```](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html) to search a grid in hyper-parameter space for the optimal classifier of a given type in a given problem. In the present case we are interested in a [```RandomForestClassifier```](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html). As was emphasized at the WiMLDS workshop, random forests can and do sometimes overfit. Scikit-learn provides three parameters to control overfitting, and these are the ones I used in the grid search:
+[Scikit-learn](http://scikit-learn.org/stable/) provides method [`GridSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html) to search a grid in hyper-parameter space for the optimal classifier of a given type in a given problem. In the present case we are interested in a [`RandomForestClassifier`](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html). As was emphasized at the WiMLDS workshop, random forests can and do sometimes overfit. Scikit-learn provides three parameters to control overfitting, and these are the ones I used in the grid search:
 
 - **n_estimators:** the number of trees in the forest; more trees reduces overfitting but takes longer to run; I tried the values 50, 100, 200.
 
