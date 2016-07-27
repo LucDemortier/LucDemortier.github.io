@@ -10,3 +10,5 @@
 #  icon: icon-feed
 - link: //linkedin.com/in/lucdemortier
   icon: icon-linkedin
+- link: /feed.xml
+  icon: icon-rss2
