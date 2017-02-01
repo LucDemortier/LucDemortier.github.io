@@ -6,14 +6,14 @@ excerpt: "A review of Samantha Kleinberg's latest book, \"WHY: A Guide to Findin
 comments: true
 ---
 
-When scientists claim discoveries, they talk about evidence. Evidence requires statistical reasoning, but what is this reasoning actually trying to accomplish? The underlying beliefs are that observations have causes, that we have methods to identify those causes, and that we can avoid being fooled by misleading evidence and cognitive biases. These are strong beliefs, involving difficult issues about which few scientists are truly knowledgeable. Fortunately we now have two new books to educate ourselves.  Both were written by Samantha Kleinberg: ["Causality, Probability, and Time," Cambridge University Press (2013)](http://www.amazon.com/dp/1107026482), and ["Why: A Guide to Finding and Using Causes," O'Reilly Media (2016)](http://www.amazon.com/dp/1491949643).  The first book was written for an audience with knowledge of statistics and probability theory, whereas the second has no mathematics in it, only text and graphs.  This is the one I'm reviewing here.
+When scientists claim discoveries, they talk about evidence. Evidence requires statistical reasoning, but what does this reasoning require? The underlying beliefs are that observations have causes, that we have methods to identify those causes, and that we can inoculate ourselves against misleading evidence and cognitive biases. These are strong beliefs, involving difficult issues about which few scientists are truly knowledgeable. Fortunately we now have two new books to educate ourselves, both written by Samantha Kleinberg: ["Causality, Probability, and Time," Cambridge University Press (2013)](http://www.amazon.com/dp/1107026482), and ["Why: A Guide to Finding and Using Causes," O'Reilly Media (2016)](http://www.amazon.com/dp/1491949643).  The first book was written for an audience with knowledge of statistics and probability theory, whereas the second has no mathematics in it, only text and graphs.  This is the one I'm reviewing here.
 
 {% fullwidth "assets/img/blog/Causality/SK_Books.jpg" "" %}
 
 Causality is so basic to our way of thinking and acting that its conundrums show up everywhere, and this ubiquity makes it also hard to define.  Already in the first chapter the author warns us that no definition of causality covers all cases, and each definition has counter-examples that another does not. We don’t even know if causality is a fundamental building block of the world we live in, or a structure we impose on it. There is no unified theory of causes, nor a foolproof method for finding them. The last chapter reiterates this notion that "causality is still an unsolved problem".  In between these warnings the reader will find extensive discussions of how we learn about causes; how correlation relates to causation; the importance of timing; observation versus experimentation; computation; explanation; and the transition from causal understanding to decisions, policies, and interventions.
 
 ## A multitude of examples
-A definite strength of the book is the multitude of concrete examples it gives to illustrate various points and stimulate the reader's thinking.  These examples range from the almost trivial (e.g. ice cream stands correlate with warm weather but do not cause it) to famous court cases (for example the 1999 Sally Clark case in the UK, involving the death of two children in the space of one year: was it a double case of sudden infant death syndrome, or murder?) Also included here are psychological experiments to understand the cognitive biases affecting the search for causes, and famous paradoxes (Simpson's paradox from probability theory and the Einstein-Podolsky-Rosen paradox in physics).  
+A definite strength of the book is the multitude of concrete examples used to illustrate various points and stimulate the reader's thinking.  These examples range from the almost trivial (e.g. ice cream stands correlate with warm weather but do not cause it) to famous court cases (for example the 1999 Sally Clark case in the UK, involving the death of two children in the space of one year: was it a double case of sudden infant death syndrome, or murder?) Also included here are psychological experiments to understand the cognitive biases affecting the search for causes, and famous paradoxes (Simpson's paradox from probability theory and the Einstein-Podolsky-Rosen paradox in physics).  
 
 ## Languages for thinking about causality
 A second strength is the book's development of several languages for thinking about causality. The oldest one is philosophy: Aristotle gave one of the earliest definitions of causes. Later, Hume talked about regular occurrence, contiguousness in time and space, time ordering of cause and effect, and Kant emphasized a deep form of a priori knowledge. More recently Mackie discussed causes as insufficient but necessary parts of unnecessary but sufficient conditions, whereas Suppes and others introduced a probabilistic approach to causality.
@@ -64,9 +64,9 @@ This appendix gathers some material I put together after reading the book, think
 
 1. **Backward blocking:** if you see an effect when two factors are present, and the effect stays when one factor is removed, then that factor is probably not a cause.  We can infer this without seeing the effect of removing the other factor.
 
-1. **Case-control study:** Type of study where one takes two groups that differ in some feature (e.g. hair color), and one goes back to see what's different about them (e.g. genetic variation).  Contrast with cohort study and randomized controlled trial.
+1. <a name="CaseControlStudy"></a>**Case-control study:** Type of study where one takes two groups that differ in some feature (e.g. hair color), and one goes back to see what's different about them (e.g. genetic variation).  Contrast with [cohort study](#CohortStudy) and [randomized controlled trial](#RandomizedControlledTrial).
 
-1. **Cohort study:** Type of study where one group is prospectively followed over a period of time. Contrast with case-control study and randomized controlled trial.
+1. <a name="CohortStudy"></a>**Cohort study:** Type of study where one group is prospectively followed over a period of time. Contrast with [case-control study](#CaseControlStudy) and [randomized controlled trial](#RandomizedControlledTrial).
 
 1. **Confirmation bias:** to seek and remember evidence that supports one's existing beliefs.
 
@@ -78,11 +78,11 @@ This appendix gathers some material I put together after reading the book, think
 
 1. **Cum hoc ergo propter hoc:** Logical fallacy, meaning "with, therefore because".
 
-1. **Double-blinded trial:** Clinical trial where neither patients nor those assessing the patients  know which patients are receiving the treatment and which are not. Contrast with single- and triple-blinded trials.
+1. <a name="DoubleBlindedTrial"></a>**Double-blinded trial:** Clinical trial where neither patients nor those assessing the patients  know which patients are receiving the treatment and which are not. Contrast with [single-](#SingleBlindedTrial) and [triple-blinded](#TripleBlindedTrial) trials.
 
-1. **Effectiveness:** How effective an intervention is in the real world. Contrast with efficacy.
+1. <a name="Effectiveness"></a>**Effectiveness:** How effective an intervention is in the real world. Contrast with [efficacy](#Efficacy).
 
-1. **Efficacy:** How effective an intervention is in an idealized setting. Contrast with effectiveness.
+1. <a name="Efficacy"></a>**Efficacy:** How effective an intervention is in an idealized setting. Contrast with [effectiveness](#Effectiveness).
 
 1. **Eikosogram:** Diagram to represent conditional probabilities. Also called **mosaic**, or **marimekko diagram**.
 
@@ -96,23 +96,23 @@ This appendix gathers some material I put together after reading the book, think
 
 1. **Omitted variable bias:** When the cause(s) of two or more variables are unmeasured.
 
-1. **Overdetermined event:** When two or more factors could claim responsibility for the event, and one cannot be definitively ruled a cause. Contrast with preemption.
+1. <a name="OverdeterminedEvent"></a>**Overdetermined event:** When two or more factors could claim responsibility for the event, and one cannot be definitively ruled a cause. Contrast with [preemption](#Preemption).
 
 1. **Placebo effect:** Effect whereby a treatment with no known active ingredient still improves outcomes.
 
 1. **Post hoc ergo propter hoc:** Logical fallacy, meaning "after, therefore because".
 
-1. **Preemption:** When two or more factors could be responsible for an effect, but only one is in fact responsible. Contrast with overdetermined event.
+1. <a name="Preemption"></a>**Preemption:** When two or more factors could be responsible for an effect, but only one is in fact responsible. Contrast with [overdetermined event](#OverdeterminedEvent).
 
 1. **Prosecutor's fallacy:** When the probability of an event is argued to be the probability of guilt or innocence.
 
-1. **Randomized controlled trial:** Type of experiment where there are two or more groups and participants are randomly assigned to each, so that the difference in treatment is supposed to be the only difference between the groups.  Contrast with cohort study and case-control study.
+1. <a name="RandomizedControlledTrial"></a>**Randomized controlled trial:** Type of experiment where there are two or more groups and participants are randomly assigned to each, so that the difference in treatment is supposed to be the only difference between the groups.  Contrast with [cohort study](#CohortStudy) and [case-control study](#CaseControlStudy).
 
 1. **Redundant causation:** Where several causes occur and any of them could have caused the effect.
 
-1. **Replication:** Repeating an experiment with the exact same methodology under the exact same conditions to make sure the method is well documented and the findings are stable. Contrast with reproduction.
+1. <a name="Replication"></a>**Replication:** Repeating an experiment with the exact same methodology under the exact same conditions to make sure the method is well documented and the findings are stable. Contrast with [reproduction](#Reproduction).
 
-1. **Reproduction:** Repeating an experiment while introducing some variation to test generalizability. Contrast with replication.
+1. <a name="Reproduction"></a>**Reproduction:** Repeating an experiment while introducing some variation to test generalizability. Contrast with [replication](#Replication).
 
 1. **Sampling bias:** to focus on only one portion of the data.
 
@@ -122,17 +122,17 @@ This appendix gathers some material I put together after reading the book, think
 
 1. **Simpson's paradox:** A relationship within subgroups might disappear or even  be reversed when the subgroups are combined.
 
-1. **Single-blinded trial:** Clinical trial where patients do not know which group they have been assigned to (treatment or no-treatment). Contrast with double- and triple-blinded trials.
+1. <a name="SingleBlindedTrial"></a>**Single-blinded trial:** Clinical trial where patients do not know which group they have been assigned to (treatment or no-treatment). Contrast with [double-](#DoubleBlindedTrial) and [triple-blinded](#TripleBlindedTrial) trials.
 
 1. **Stereotype threat:** When knowing that one is part of a group with negative characteristics leads to a fear of confirming those stereotypes.
 
 1. **Survival bias:** Stems from analyzing outcomes solely from the set of individuals who made it to some endpoint.
 
-1. **Token-level cause:** That which caused a specific effect in a particular instance (used to determine legal liability, or to assign credit when awarding prizes). Contrast with type-level cause.
+1. <a name="TokenLevelCause"></a>**Token-level cause:** That which caused a specific effect in a particular instance (used to determine legal liability, or to assign credit when awarding prizes). Contrast with [type-level cause](#TypeLevelCause).
 
-1. **Triple-blinded trial:** Clinical trial where patients, those assessing the patients, and those analyzing the data do not know who is receiving the treatment and who is not. Contrast with single- and double-blinded trials.
+1. <a name="TripleBlindedTrial"></a>**Triple-blinded trial:** Clinical trial where patients, those assessing the patients, and those analyzing the data do not know who is receiving the treatment and who is not. Contrast with [single-](#SingleBlindedTrial) and [double-blinded](#DoubleBlindedTrial) trials.
 
-1. **Type-level cause:** That which causes a specific effect in general (provides knowledge that can be used for prediction). Contrast with token-level cause.
+1. <a name="TypeLevelCause"></a>**Type-level cause:** That which causes a specific effect in general (provides knowledge that can be used for prediction). Contrast with [token-level cause](#TokenLevelCause).
 
 1. **Wallpaper effect:** When a study fails to replicate because, unbeknownst to the investigators, there was a real difference in experimental setup between the original investigation and the failed replication (the joke being that the
 experiment was affected by the color of the wallpaper in the room). From [William A. Wilson, "Scientific Regress", First Things, May 2016](http://www.firstthings.com/article/2016/05/scientific-regress).
