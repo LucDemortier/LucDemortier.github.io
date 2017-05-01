@@ -191,4 +191,4 @@ The last plot I'd like to show is that of the Receiver Operating Characteristic 
 <a name="TechnicalNote"></a>
 
 ## Technical note
-The Jupyter notebook for this analysis can be found in [my GitHub repository](https://github.com/LucDemortier/RandomForests).
+The Jupyter notebook for this analysis can be found in [my GitHub repository RandomForests](https://github.com/LucDemortier/RandomForests).
