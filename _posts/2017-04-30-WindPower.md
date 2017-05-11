@@ -111,7 +111,7 @@ It is instructive to compare predicted and observed turbine output distributions
 
 The random forest models don't do a very good job of modeling the spike at zero output, or the bump near one. This is shown above for Method 2, but is also true for Method 1.
 
-For method 1, the public leaderboard of the hackathon{% sidenote 'WTSN-4' 'After the hackathon I gained access to the measured turbine powers (as fractions of total capacity) for the public and private testing data sets, see side-note 2.' %} yields:
+For method 1, the public leaderboard of the hackathon{% sidenote 'WTSN-5' 'After the hackathon I gained access to the measured turbine powers (as fractions of total capacity) for the public and private testing data sets, see side-note 2.' %} yields:
 {% math %}
 {\rm RMSE} \;=\; 0.180311,
 {% endmath %}
@@ -135,9 +135,9 @@ Wind speeds are more important than measurement dates or times, but no single fe
 
 ## Gradient Boosting with XGBoost
 
-In gradient boosting models, a weak learner is improved by the sequential addition of more weak learners.  Each learner in the sequence focuses on instances that are not well modeled by the previous learner. To understand how this might work{% sidenote 'WTSN-5' 'See this [blog post](https://gormanalysis.com/gradient-boosting-explained/) by Ben Gorman for an insightful introduction to gradient boosting.' %}, consider a regression model for example. The first weak learner attempts to fit the *response variable* directly, whereas the second weak learner tries to model the *residuals* of the fit by the first one, and so on. In this sense, each new weak learner acts as a corrective to the mistakes of the previous one. In practice, learners in gradient boosting models attempt to model the gradient of a loss function rather than residuals. This is more general and therefore more useful. Typically, shallow trees are used as weak learners, but the algorithm works with any kind of weak learner.
+In gradient boosting models, a weak learner is improved by the sequential addition of more weak learners.  Each learner in the sequence focuses on instances that are not well modeled by the previous learner. To understand how this might work{% sidenote 'WTSN-6' 'See this [blog post](https://gormanalysis.com/gradient-boosting-explained/) by Ben Gorman for an insightful introduction to gradient boosting.' %}, consider a regression model for example. The first weak learner attempts to fit the *response variable* directly, whereas the second weak learner tries to model the *residuals* of the fit by the first one. Thus the sum of these two learners should be better than the first one alone. The idea of boosting is to keep adding weak learners in this fashion until no further improvement is obtained. In practice, learners in gradient boosting models attempt to model the *gradient of a loss function*. This is more general than residuals and therefore more useful. Typically, shallow trees are used as weak learners, but the algorithm works with any kind of weak learner.
 
-One of the most popular and powerful implementations of gradient boosting is XGBoost{% sidenote 'WTSN-6' 'Tianqi Chen and Carlos Guestrin, ["XGBoost: A scalable tree boosting system"](http://www.kdd.org/kdd2016/papers/files/rfp0697-chenAemb.pdf), KDD 2016 Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pages 785-794
+One of the most popular and powerful implementations of gradient boosting is XGBoost{% sidenote 'WTSN-7' 'Tianqi Chen and Carlos Guestrin, ["XGBoost: A scalable tree boosting system"](http://www.kdd.org/kdd2016/papers/files/rfp0697-chenAemb.pdf), KDD 2016 Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pages 785-794
 (San Francisco, California, USA, August 13-17, 2016).' %}. This package has already been used with much success in several Kaggle competitions. It supplements the basic gradient boosting algorithm with regularization, shrinkage (via a learning rate), data and feature subsampling, and a number of computational optimizations.
 
 Proper tuning of the hyperparameters of XGBoost requires some exploration, but is fairly straightforward. I optimized each turbine separately on a hyperparameter grid, using five-fold cross-validation. For each turbine the training features consisted of all 32 wind speed measurements as well as the year, day of the year, and hour of the observations.
@@ -146,20 +146,20 @@ Figure 9 compares observed and predicted turbine output distributions in the tra
 
 {% maincolumn "assets/img/blog/WindTurbines/wind_turbine_output_train_test_xgb.png" "Figure 9 top: Fractional turbine power output in the training subset, as observed (green histogram) and modeled by XGBoost (blue histogram). The overlap between the two distributions appears in a blue-green shade. Bottom: same for the testing subset." %}
 
-Note how modeling of the spike at zero and the bump near the upper end of the spectrum is significantly better than with the random forest models.
+{% marginfigure "Fig10" "assets/img/blog/WindTurbines/H100_vs_H10.png" "Figure 10: Scatter plot of horizontal wind speed at 100m above ground versus that at 10m above ground, in zone 9. (The wind speed units are unknown.)" %}Note how, in the training subset, modeling of the spike at 0 and the bump near 1 is significantly better than with the random forest models. Unfortunately this does not generalize well to the testing subset, hinting at overfitting. For further insight, Figure 10 plots horizontal wind speeds measured at 100m above ground, versus 10m, in zone 9. The simplest model for vertical wind profiles is a [power law](https://en.wikipedia.org/wiki/Wind_profile_power_law), according to which the ratio of wind speeds at two different heights is a constant. Here we see that this model is not very good for the data at hand. The ratio between the two wind speeds in Figure 10 varies between about 1.3 and 3.0, demonstrating that knowledge of the wind speed at one height provides only limited information about wind speed at another height. This will make it difficult for a regressor algorithm to correctly identify the cut-in speed of a turbine{% sidenote 'WTSN-8' 'Exact heights of the turbines in the hackathon data set are not known, although it would be reasonable to assume they are somewhere between 10 and 100m.' %} in the training subset, and hence to predict when the turbine power output will be zero in the testing subset. A similar argument explains the defective modeling of the bump near 1 in Figure 9, bottom.
 
-After finishing optimization, I computed the performance measure on the test set for the public leaderboard of the hackathon. This yielded
+I computed the performance measure for XGBoost on the test set of the public leaderboard of the hackathon. This yielded
 {% math %}
 {\rm RMSE} \;=\; 0.167607.
 {% endmath %}
 
-For the record, Figure 10 shows a plot of feature importances, averaged over all turbines.
+For the record, Figure 11 shows a plot of feature importances, averaged over all turbines.
 
-{% maincolumn 'assets/img/blog/WindTurbines/xgb35_feature_importances.png' 'Figure 10: Feature importances for the XGBoost model, averaged over all turbines. Feature labels are the same as those in Figure 6.' %}
+{% maincolumn 'assets/img/blog/WindTurbines/xgb35_feature_importances.png' 'Figure 11: Feature importances for the XGBoost model, averaged over all turbines. Feature labels are the same as those in Figure 7.' %}
 
-In contrast with random forest models, XGBoost is able to make better use of the "DAYOFYEAR" and "HOUR" features. Here for example, "DAYOFYEAR" is the third most important feature, whereas in random forest models it scores below all the wind velocity measurements.
+XGBoost makes better use of the "DAYOFYEAR" and "HOUR" features than the random forest models. Here for example, "DAYOFYEAR" is the third most important feature, whereas in random forest models it scores below all the wind velocity measurements.
 
-As suggested earlier, I tried to improve on this result by first classifying turbine outputs as either "equal to zero" or "greater than zero", and then performing a regression on the latter outputs. Both steps were performed with XGBoost, but no improvement was obtained. Perhaps this is not so surprising, given how well the "regression-only" XGBoost is able to model the spike at zero.
+As suggested earlier, I tried to improve on this result by first classifying turbine outputs as either "equal to zero" or "greater than zero", and then performing a regression on the latter outputs. Both steps were performed with XGBoost, but no improvement was obtained. Perhaps this is not so surprising in the light of the above discussion of Figure 10.
 
 {% marginnote "btt-4" "[Back to Top](#TopOfPage)" %}
 
@@ -169,7 +169,7 @@ As suggested earlier, I tried to improve on this result by first classifying tur
 
 For predicting the power output of a wind turbine, one could argue that the only features that matter are the *magnitudes* of the horizontal wind velocities near the turbines. The directions of the wind velocity vectors shouldn't matter since a turbine always orients itself to maximize its capture of wind power. The timing of wind measurements could add some useful information due to the cyclic nature of daily and seasonal wind patterns. However this is not expected to be a major effect. By taking the wind velocity magnitudes as the only predictors, it should be possible to simplify the prediction model considerably and perhaps gain some interpretability.
 
-Ideally one would like to use a linear regression model, but this won't work here since the response variable is bound between 0 and 1. A generalized linear model with a two-parameter [beta distribution](https://en.wikipedia.org/wiki/Beta_distribution) for the response variable is a better option. Unfortunately the beta distribution does not assign finite probabilities to the boundaries 0 and 1, and in the problem at hand we have a large peak at 0 as well as a few instances at 1 (see Figure 1). A possible solution is to use the so-called "beta inflated distribution": a mixture of a beta distribution, a peak at 0, and a peak at 1. As far as I know, only R provides a package that can handle this problem, namely [GAMLSS](http://www.gamlss.org/), which stands for "Generalized Additive Models for Location, Scale, and Shape".
+Ideally one would like to use a linear regression model, but this won't work here since the response variable is bounded between 0 and 1. A generalized linear model with a two-parameter [beta distribution](https://en.wikipedia.org/wiki/Beta_distribution) for the response variable is a better option. Unfortunately the beta distribution does not assign finite probabilities to the boundaries 0 and 1, and in the problem at hand we have a large peak at 0 as well as a few instances at 1 (see Figure 1). A possible solution is to use the so-called "beta inflated distribution": a mixture of a beta distribution, a peak at 0, and a peak at 1. As far as I know, only R provides a package that can handle this problem, namely [GAMLSS](http://www.gamlss.org/), which stands for "Generalized Additive Models for Location, Scale, and Shape".
 
 First a word about GAMLSS. This is a very general framework for regression models. In ordinary linear regression the response variable has a normal distribution; its mean is a linear function of the predictor variables and its width is constant (homoscedasticity). In GAMLSS the response variable can have almost any distribution, discrete or continuous, and *all* the parameters of the response variable distribution (not just the mean) can be modeled via sums of functions (not necessarily linear) of the predictors.
 
@@ -217,13 +217,14 @@ In this way I linked two out of the four parameters of the beta inflated distrib
 The GAMLSS fitter then uses the entire training subset to produce fitted values for the coefficients {% m %}c_{0}, c_{1},\ldots,c_{p}{% em %} and {% m %}d_{0}, d_{1},\ldots,d_{p}{% em %}, as well as for {% m %}\sigma{% em %} and {% m %}\tau{% em %}.
 
 Finally, given the fitted coefficients, the link functions {% m %}g{% em %} and {% m %}h{% em %}, and an instance from the training or testing subset, one can predict values for all four parameters of the distribution of {% m %}Y{% em %}. The predicted value of {% m %}Y{% em %} is then given by:
+<a name="YpredEquation"></a>
 {% math %}
 y_{\rm pred} = p_{0}\times 0 + p_{1}\times 1 + (1-p_{0}-p_{1})\times \mu.
 {% endmath %}
 
-Figure 11 illustrates the performance of this model on the training and testing subsets. In both cases two plots are shown: the predicted turbine output distribution superimposed on the observed one, and a QQ plot. The QQ plot is a convenient way to check residuals in the case of a non-Gaussian response variable distribution. For a good fit the points on the QQ plot line up along the diagonal.
+Figure 12 illustrates the performance of this model on the training and testing subsets. In both cases two plots are shown: the predicted turbine output distribution superimposed on the observed one, and a QQ plot. The QQ plot is a convenient way to check residuals in the case of a non-Gaussian response variable distribution. For a good fit the points on the QQ plot line up along the diagonal.
 
-{% fullwidth "assets/img/blog/WindTurbines/wind_turbine_output_train_test_gamlss.png" "Figure 11 left: Fractional turbine power output in the training and testing subsets, as observed (green histogram) and as predicted by the GAMLSS model (blue histogram). The overlap between the two distributions appears in a blue-green shade. Right: QQ plots for the same training and testing subsets." %}
+{% fullwidth "assets/img/blog/WindTurbines/wind_turbine_output_train_test_gamlss.png" "Figure 12 left: Fractional turbine power output in the training and testing subsets, as observed (green histogram) and as predicted by the GAMLSS model (blue histogram). The overlap between the two distributions appears in a blue-green shade. Right: QQ plots for the same training and testing subsets." %}
 
 The fits are not very good, they fail to capture important features at both ends of the turbine power spectrum. However the fit to the testing subset does not appear to be worse than that to the training subset, suggesting that whatever features do get captured will generalize.
 
@@ -252,9 +253,7 @@ Table 3 summarizes the root-mean-square errors obtained for the four models on t
 
 Suppose that the hackathon was still going on, and that you had to choose a model for the (hidden) private leaderboard. Which one would you choose? The winner gets an iPad and a job offer at H2O...
 
-Based on the public leaderboard one could go with either Random Forest 2 or GAMLSS. On the other hand XGBoost is not too far behind, and definitely provides the best fit on the training data (Figure 9).
-
-Tough choice? Unfortunately hindsight only adds to the difficulty. Take a look at the private leaderboard:
+Based on the public leaderboard one could go with either Random Forest 2 or GAMLSS, or even XGBoost. Tough choice? Unfortunately hindsight only adds to the difficulty. Take a look at the private leaderboard:
 
 {% marginnote "WTMN-5" "Table 4: Root-mean-square errors on the public and private leaderboards for the models described in this post. These numbers can be compared with the top private leaderboard score obtained by the winner of the hackathon: RMSE=0.169463." %}
 
@@ -267,13 +266,13 @@ Tough choice? Unfortunately hindsight only adds to the difficulty. Take a look a
 
 Random Forest 2 and GAMLSS, the top two winners on the public leaderboard, don't do so well on the private leaderboard, where XGBoost is the clear winner.
 
-Figure 12 provides another way to look at this case. It shows weekly root-mean-square errors over the entire hackathon data set. Again it is remarkable how well XGBoost fits the training data set. But when we look at the testing portion of the data set (the last 18 weeks), week-to-week fluctuations are so large that it is hard to pick out a winner.
+Figure 13 provides another way to look at this case. It shows weekly root-mean-square errors over the entire hackathon data set. Again it is remarkable how well XGBoost fits the training data set. But when we look at the testing portion of the data set (the last 18 weeks), week-to-week fluctuations are so large that it is hard to pick out a winner.
 
-{% maincolumn "assets/img/blog/WindTurbines/weekly_rmse_all.png" "Figure 12: Weekly root-mean-square errors over the entire hackathon data set, for the four models studied in this post. The first 82 weeks correspond to the training set and the remainder to the testing set (nine weeks for the public leaderboard followed by nine weeks for the private leaderboard)." %}
+{% maincolumn "assets/img/blog/WindTurbines/weekly_rmse_all.png" "Figure 13: Weekly root-mean-square errors over the entire hackathon data set, for the four models studied in this post. The first 82 weeks correspond to the training set and the remainder to the testing set (nine weeks for the public leaderboard followed by nine weeks for the private leaderboard)." %}
 
 Note that the worse a model's fit is to a data set, the larger its week-to-week fluctuations are in the same data set. This is just a statistical effect. The RMSE is the square root of a [(non-central) chi-squared variate](https://en.wikipedia.org/wiki/Noncentral_chi-squared_distribution), for which variance and mean increase and decrease together.
 
-The jump in performance between the training and testing data sets is quite striking for the tree-based models. A large jump could be an indication of overfitting. Is XGBoost overfitting? I doubt it: it's the only model that manages to fit the spike at zero turbine output, and we know this feature is a real physics/engineering effect. In contrast, there is no perceptible jump for the generalized linear model, and this could be an indication of underfitting.
+The jump in performance between the training and testing data sets is quite striking for the tree-based models. A large jump could be an indication of overfitting. As argued above, XGBoost is probably overfitting the spike at 0 and the bump near 1 in the turbine output spectra. In contrast, there is no perceptible jump for the generalized linear model, and this could be an indication of underfitting.
 
 I had hoped to use the above plot to draw conclusions about model trends beyond the training period (for example, does the RMSE get worse as time elapses after training?) Unfortunately the fluctuations are too large to permit a meaningful statement.
 
@@ -281,9 +280,11 @@ Here are some lessons that can be drawn from the  whole exercise:
 
 1. A machine learning algorithm may perform differently depending on how the data are presented to it. This is the only difference between random forest models 1 and 2, and the latter is clearly better than the former on the testing set.
 
-2. XGBoost is remarkable in its ability to model "singular" features such as the peak near zero turbine output. This is probably because of the way gradient boosting works, each tree acting mostly on instances mismodeled by the previous trees. In contrast, a random forest averages the results of all its trees, and this must have a smoothing effect on the singularities. A similar effect is at work with generalized linear regression models (see equation for {% m %}y_{\rm pred}{% em %} in the section on GAMLSS: {% m %}y_{\rm pred}{% em %} can never be exactly zero since it is a weighted average over the three components of a mixture.)
+2. XGBoost is remarkable in its ability to model "singular" features such as the peak near zero turbine output. This is probably because of the way gradient boosting works, each tree acting mostly on instances mismodeled by the previous trees. In contrast, a random forest averages the results of independent trees, and this must have a smoothing effect on the singularities. A similar effect is at work with generalized linear regression models (see the [equation for {% m %}y_{\rm pred}{% em %}](#YpredEquation) in the section on GAMLSS: {% m %}y_{\rm pred}{% em %} can never be exactly zero since it is a weighted average over the three components of a mixture.) It is of course unfortunate that some aspects of XGBoost's modeling do not generalize as well as I had hoped in this wind power data set.
 
-3. Generalized linear models are very fast to train, but there is clearly a tradeoff to consider between training speed and modeling performance.
+3. Generalized linear models are very fast to train, but there may be a tradeoff to consider between training speed and modeling performance.
+
+4. One way to take advantage of time series such as the hourly wind speed data set is to compute a rolling window average to smooth out random fluctuations. Here I used a simple arithmetic average over three consecutive measurements. However, a weighted average might make more sense, where older measurements are weighed down compared to recent ones. One option is the so-called Exponentially Weighted Moving Average, implemented by [the function `ewm()` in pandas](http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-windows).
 
 {% marginnote "btt-6" "[Back to Top](#TopOfPage)" %}
 
