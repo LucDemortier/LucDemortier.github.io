@@ -228,7 +228,7 @@ Figure 12 illustrates the performance of this model on the training and testing 
 
 {% fullwidth "assets/img/blog/WindTurbines/wind_turbine_output_train_test_gamlss.png" "Figure 12 left: Fractional turbine power output in the training and testing subsets, as observed (green histogram) and as predicted by the GAMLSS model (blue histogram). The overlap between the two distributions appears in a blue-green shade. Right: QQ plots for the same training and testing subsets." %}
 
-The fits are not very good, they fail to capture important features at both ends of the turbine power spectrum. However the fit to the testing subset does not appear to be worse than that to the training subset, suggesting that whatever features do get captured will generalize.
+The fits are not very good; they fail to capture important features at both ends of the turbine power spectrum. However the fit to the testing subset does not appear to be worse than that to the training subset, suggesting that whatever features do get captured will generalize.
 
 Here is the root-mean-square error for the public leaderboard of the hackathon:
 {% math %}
