@@ -109,33 +109,27 @@ Finally, note that the ratios {% m %}{\rm lr+}{% em %}, {% m %}{\rm lr-}{% em %}
 
 ## Estimating performance metrics from the confusion matrix
 The performance metrics can be estimated from the confusion matrix that is obtained by applying the classifier to a test data set different from the training data set. Here is my notation for this matrix:
-<br/><br/>
-
-|                        | {% m %}\ell_{1}{% em %} | {% m %}\ell_{0}{% em %} |
-|:-----------------------|:-----------------------:|:-----------------------:|
-| {%m%}\lambda_{1}{%em%} | tp                      | fn                      |
-| {%m%}\lambda_{0}{%em%} | fp                      | tn                      |
-
+{% fullwidth "assets/img/blog/ConfusionMatrix/confusionMatrix4.png" "" %}
 where tp stands for true positives, fn for false negatives, and so on. The columns correspond to class labels, the rows to true classes. We have then the following approximations:
 {% math %}
 \begin{aligned}
 \mbox{Prevalence :} & \quad &&\equiv\pi(\lambda_{1}) &&\approx \dfrac{\rm fn+tp}{\rm fn+tp+fp+tn}\\[4mm]
 
-\mbox{True positive rate, sensitivity, recall :} & \quad S_{e} &&\equiv p(\ell_{1}\mid\lambda_{1}) &&\approx \dfrac{\rm tp}{\rm tp+fn}\\[1mm]
+\mbox{True-positive rate, sensitivity, recall :} & \quad S_{e} &&\equiv p(\ell_{1}\mid\lambda_{1}) &&\approx \dfrac{\rm tp}{\rm tp+fn}\\[1mm]
 
-\mbox{True negative rate, specificity :} & \quad S_{p} &&\equiv p(\ell_{0}\mid\lambda_{0}) &&\approx \dfrac{\rm tn}{\rm tn + fp}\\[1mm]
+\mbox{True-negative rate, specificity :} & \quad S_{p} &&\equiv p(\ell_{0}\mid\lambda_{0}) &&\approx \dfrac{\rm tn}{\rm tn + fp}\\[1mm]
 
-\mbox{False positive rate, Type-I error rate :} & \quad \alpha &&\equiv p(\ell_{1}\mid\lambda_{0})&&\approx \dfrac{\rm fp}{\rm tn + fp}\\[1mm]
+\mbox{False-positive rate, Type-I error rate :} & \quad \alpha &&\equiv p(\ell_{1}\mid\lambda_{0})&&\approx \dfrac{\rm fp}{\rm tn + fp}\\[1mm]
 
-\mbox{False negative rate, Type-II error rate :} & \quad \beta &&\equiv p(\ell_{0}\mid\lambda_{1})&&\approx \dfrac{\rm fn}{\rm tp + fn}\\[4mm]
+\mbox{False-negative rate, Type-II error rate :} & \quad \beta &&\equiv p(\ell_{0}\mid\lambda_{1})&&\approx \dfrac{\rm fn}{\rm tp + fn}\\[4mm]
 
 \mbox{Positive predictive value, precision :} & \quad {\rm ppv} &&\equiv p(\lambda_{1}\mid\ell_{1}) &&\approx \dfrac{\rm tp}{\rm tp + fp}\\[1mm]
 
 \mbox{Negative predictive value :} & \quad {\rm npv} &&\equiv p(\lambda_{0}\mid\ell_{0}) &&\approx \dfrac{\rm tn}{\rm tn + fn}\\[1mm]
 
-\mbox{False discovery rate :} & \quad {\rm fdr} &&\equiv p(\lambda_{0}\mid\ell_{1}) &&\approx \dfrac{\rm fp}{\rm tp + fp}\\[1mm]
+\mbox{False-discovery rate :} & \quad {\rm fdr} &&\equiv p(\lambda_{0}\mid\ell_{1}) &&\approx \dfrac{\rm fp}{\rm tp + fp}\\[1mm]
 
-\mbox{False omission rate :} & \quad {\rm for} &&\equiv p(\lambda_{1}\mid\ell_{0}) &&\approx \dfrac{\rm fn}{\rm tn + fn}\\[4mm]
+\mbox{False-omission rate :} & \quad {\rm for} &&\equiv p(\lambda_{1}\mid\ell_{0}) &&\approx \dfrac{\rm fn}{\rm tn + fn}\\[4mm]
 
 \mbox{Positive likelihood ratio :} & \quad {\rm lr+} &&\equiv \frac{p(\ell_{1}\mid\lambda_{1})}{p(\ell_{0}\mid\lambda_{1})}&&\approx \frac{\rm tp}{\rm fn}\\[1mm]
 
