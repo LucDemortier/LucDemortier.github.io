@@ -53,6 +53,8 @@ The **positive labeling rate**: {% m %}p(\ell_{1}) = p(\ell_{1}\mid\lambda_{0})\
 
 The **negative labeling rate**: {% m %}p(\ell_{0}) = p(\ell_{0}\mid\lambda_{0})\,\pi(\lambda_{0}) + p(\ell_{0}\mid\lambda_{1})\,\pi(\lambda_{1}){% em %}.
 
+The positive labeling rate is more commonly known as the **queue rate**, especially when it is calculated as the fraction of instances for which the classifier score {% m %}q{% em %} is above a pre-specified threshold {% m %}q_{T}{% em %}.
+
 Armed with the prior probability, the conditional probability, and the evidence, we can compute the posterior probability from Bayes' theorem.  There are four combinations of truth and label:
 
 The **positive predictive value**, also known as **precision**: {% m %}{\rm ppv}\equiv p(\lambda_{1}\mid\ell_{1}) = \frac{p(\ell_{1}\mid\lambda_{1})\, \pi(\lambda_{1})}{p(\ell_{1})} {% em %},
@@ -113,7 +115,9 @@ The performance metrics can be estimated from the confusion matrix that is obtai
 where tp stands for true positives, fn for false negatives, and so on. The columns correspond to class labels, the rows to true classes. We have then the following approximations:
 {% math %}
 \begin{aligned}
-\mbox{Prevalence :} & \quad &&\equiv\pi(\lambda_{1}) &&\approx \dfrac{\rm fn+tp}{\rm fn+tp+fp+tn}\\[4mm]
+\mbox{Prevalence :} & \quad &&\equiv\pi(\lambda_{1}) &&\approx \dfrac{\rm fn+tp}{\rm fn+tp+fp+tn}\\[1mm]
+
+\mbox{Queue rate :} & \quad &&\equiv p(\ell_{1}) &&\approx \dfrac{\rm fp+tp}{\rm fn+tp+fp+tn}\\[4mm]
 
 \mbox{True-positive rate, sensitivity, recall :} & \quad S_{e} &&\equiv p(\ell_{1}\mid\lambda_{1}) &&\approx \dfrac{\rm tp}{\rm tp+fn}\\[1mm]
 
