@@ -180,7 +180,9 @@ The bound is the accuracy of a *random* classifier with the same labeling rates 
 <a name="MetricsEstimation"></a>
 ## Performance metric estimation
 The performance metrics can be estimated from a two-by-two contingency table known as the confusion matrix. It is obtained by applying the classifier to a test data set different from the training data set. Here is standard notation for this matrix:
+
 {% fullwidth "assets/img/blog/ConfusionMatrix/ConfusionMatrix.png" 'Figure 2: Estimated confusion matrix. The notation tp stands for "number of true positives", fn for "number of false negatives", and so on.' %}
+
 The rows correspond to class labels, the columns to true classes. We then have the following approximations:
 {% math %}
 \begin{aligned}
