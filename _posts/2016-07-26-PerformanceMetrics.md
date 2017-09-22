@@ -117,7 +117,7 @@ namely:
 {% math %}
 \alpha + S_{p} = 1,\quad \beta + S_{e} = 1,\quad \pi_{0} + \pi_{1} = 1,\quad p_{0} + p_{1} = 1,\quad p_{1} = (1-S_{p}) (1-\pi_{1}) + S_{e} \pi_{1}.
 {% endmath %}
-Altogether this yields nine equations among twelve variables, leaving only three independent ones, for example {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, and {% m %} \pi_{1}{% em %}. The importance of this will become clear [further down](#MetricsEstimation), when we'll see how to *estimate* all the quantities discussed in this section from a two-by-two contingency table, which also has three degrees of freedom.
+Altogether this yields nine equations among twelve quantities, leaving only three independent ones, for example {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, and {% m %}\pi_{1}{% em %}. This matches the number of degrees of freedom of a two-by-two contingency table such as the confusion matrix, which is used to estimate these quantities (see [below](#MetricsEstimation)). It also tells us that we only have two degrees of freedom to optimize a binary classifier (since {% m %}\pi_{1}{% em %} is not a classifier property).
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="JointProbabilities"></a>
@@ -162,13 +162,11 @@ The usefulness condition {% m %}\fbox{dor $\gt 1$}{% em %} is mathematically equ
 
 1. {% m %}\fbox{$\beta \lt 1 - \alpha$}{% em %} A reformulation of condition 1 in terms of Type-I and II error rates.
 
-1. {% m %}\fbox{ppv $\gt \pi_{1}$}{% em %} The precision must be larger than the prevalence. In other words, the probability for an instance to belong to the positive class must be larger within the subset of instances with a positive label than within the entire population. If this is not the case, the classifier adds no useful information.
+1. {% m %}\fbox{ppv $\gt \pi_{1}$}{% em %} The precision must be larger than the prevalence. In other words, the probability for an instance to belong to the positive class must be larger within the subset of instances with a positive label than within the entire population. If this is not the case, the classifier adds no useful information. Similarly: {% m %}\fbox{npv $\gt \pi_{0}$}{% em %}.
 
-1. {% m %}\fbox{npv $\gt \pi_{0}$}{% em %} The probability for an instance to belong to the negative class must be larger within the subset of instances with a negative label than within the entire population.
+1. {% m %}\fbox{$S_{e} \gt p_{1}$}{% em %} This follows from condition 3 and Bayes' theorem for {% m %}{\rm ppv}{% em %}. The probability of encountering a positively labeled instance must be larger within the subset of positive-class instances than within the entire population. Similarly: {% m %}\fbox{$S_{p} \gt p_{0}$}{% em %}, {% m %}\fbox{$\alpha \lt p_{1}$}{% em %}, and {% m %}\fbox{$\beta \lt p_{0}$}{% em %}.
 
-1. {% m %}\fbox{$S_{e} \gt p_{1}$}{% em %} This follows from condition 3 and Bayes' theorem for {% m %}{\rm ppv}{% em %}. The probability of encountering a positively labeled instance must be larger within the subset of positive-class instances than within the entire population.
-
-1. {% m %}\fbox{$S_{p} \gt p_{0}$}{% em %} This is similar to condition 5.
+1. {% m %}\fbox{fdr $\lt \pi_{0}$}{% em %} The probability of encountering a negative-class instance must be smaller within the subset of positively labeled instances than within the entire population. Similarly: {% m %}\fbox{for $\lt \pi_{1}$}{% em %}.
 
 The classifier usefulness condition also puts a bound on the accuracy:
 {% math %}
