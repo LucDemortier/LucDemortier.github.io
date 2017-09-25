@@ -105,18 +105,20 @@ The precision, for example, quantifies the predictive value of a positive label 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Summary"></a>
 ### Summary
-Table 1 shows how the four quantities {% m %}{\rm ppv}{% em %}, {% m %}{\rm npv}{% em %}, {% m %}{\rm fdr}{% em %} and {% m %}{\rm for}{% em %} are related to the quantities {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %} via Bayes' theorem.
+Figure 1 shows how the posterior probabilities {% m %}{\rm ppv}{% em %}, {% m %}{\rm npv}{% em %}, {% m %}{\rm fdr}{% em %} and {% m %}{\rm for}{% em %} are related to the likelihoods {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %} via Bayes' theorem:
 
 {% fullwidth "assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" "Figure 1: Four applications of Bayes' theorem to the performance metrics of a classifier. Each application connects an observed value (the label, indicated by the corresponding row header) to a true value (the class, indicated by the corresponding column header)." %}
 
-Note that only two of these four theorems are independent, since {% m %}{\rm npv} + {\rm for} = {\rm fdr} + {\rm ppv} = 1{% em %}. Five more identities connect the twelve quantities
+These four relations involve the twelve quantities
 {% math %}
-\pi_{0},\; \pi_{1},\; p_{0},\; p_{1},\; \alpha,\; \beta,\; S_{e},\; S_{p},\; {\rm fdr},\; {\rm for},\; {\rm ppv},\; {\rm npv},
+\pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; {\rm ppv},\; {\rm npv},\; {\rm fdr},\; {\rm for},
 {% endmath %}
-namely:
+which by virtue of their definitions satisfy seven identities:
 {% math %}
-\alpha + S_{p} = 1,\quad \beta + S_{e} = 1,\quad \pi_{0} + \pi_{1} = 1,\quad p_{0} + p_{1} = 1,\quad p_{1} = (1-S_{p}) (1-\pi_{1}) + S_{e} \pi_{1}.
+\pi_{0} + \pi_{1} = 1,\quad S_{e} + \beta = 1,\quad S_{p} + \alpha = 1,\quad p_{0} + p_{1} = 1,\quad p_{1} = \alpha \pi_{0} + S_{e} \pi_{1},\quad {\rm npv} + {\rm for} = 1,\quad {\rm fdr} + {\rm ppv} = 1.
 {% endmath %}
+Bayes' theorem adds two relations two this, one per data value (label 0 and label 1).
+
 Altogether this yields nine equations among twelve quantities, leaving only three independent ones, for example {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, and {% m %}\pi_{1}{% em %}. This matches the number of degrees of freedom of a two-by-two contingency table such as the confusion matrix, which is used to estimate these quantities (see [below](#MetricsEstimation)). It also tells us that we only have two degrees of freedom to optimize a binary classifier (since {% m %}\pi_{1}{% em %} is not a classifier property).
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
@@ -134,7 +136,13 @@ Projecting this joint probability on the axis "{% m %} \ell=\lambda {% em %}" yi
 {% endmath %}
 The expression in terms of sensitivity and specificity shows that the accuracy depends on the prevalence and is therefore not an intrinsic property of the classifier. An equivalent measure is the **misclassification rate**, defined as one minus the accuracy. A benchmark that is sometimes used is the **null error rate**, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to {% m %}\min\{\pi_{1}, 1-\pi_{1}\}{% em %}. The complement of the null error rate is the **null accuracy**, which is equal to {% m %}\max\{\pi_{1}, 1-\pi_{1}\}{% em %}.
 
-One way to avoid dependence on the prevalence is to independently draw an instance from a population with positive true class and an instance from a population with negative true class. Consider the joint probability of the scores assigned by the classifier to such a pair of instances. A good measure of performance is the probability that the score assigned to the positive instance is larger than the score assigned to the negative instance. It can be shown that this is actually equal to the **Area Under the Receiver Operating Characteristic (AUROC)**. The Receiver Operating Characteristic (**ROC**) is a curve of the true positive rate as a function of the false positive rate (or sensitivity versus one-minus-specificity). In addition to being independent of prevalence, the AUROC does not require a choice of threshold on the classifier score {% m %}q{% em %}.
+The second joint probability to consider is that of the scores assigned by the classifier to two independently drawn instances, one from the positive class and one from the negative class. A good measure of performance is the probability that the positive instance is scored higher than the negative instance. This measure equals the **Area Under the Receiver Operating Characteristic (AUROC)**, a curve of the true positive rate as a function of the false positive rate (or sensitivity versus one-minus-specificity). By construction, the AUROC is independent of prevalence, and does not require a choice of threshold {% m %}q_{T}{% em %} on the classifier score {% m %}q{% em %}. In other words, it does not depend on the chosen operating point of the classifier.
+
+There is actually a relationship between the AUROC and the accuracy, via an expectation. Imagine an ensemble of binary classifiers like the one considered here, but with thresholds {% m %}q_{T}{% em %} distributed like the {% m %}q{% em %} scores of the instances in the population we are trying to classify. The expected (i.e. average) accuracy of the classifiers in this ensemble is given by:
+{% math %}
+\mathbb{E}(A) \;=\; \frac{\pi_{0}^{2} + \pi_{1}^{2}}{2} \,+\, 2\,\pi_{0}\,\pi_{1}\,\textrm{AUROC},
+{% endmath %}
+and is thus linearly related to the AUROC. In a sense, the AUROC aggregates the classifier accuracy information in a way that's independent of prevalence.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="LikelihoodRatios"></a>
