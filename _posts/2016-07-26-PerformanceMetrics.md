@@ -29,7 +29,7 @@ I always thought that the *confusion* matrix was rather aptly named, a reference
 
 Another advantage of taking the Bayesian route is that this forces us to view performance measures as probabilities, which are *estimated* from the confusion matrix. Elementary presentations tend to *define* performance metrics in terms of ratios of confusion matrix elements, thereby ignoring the effect of statistical fluctuations.
 
-Bayes' theorem is not the only way to generate performance metrics. One can also start from joint probabilities or likelihood ratios. The next three subsections describe these approaches one by one. This is followed by a subsection discussing a general condition for a classifier to be useful, a subsection on estimating performance measures, and one on the effect of changing the prevalence in the training and testing data sets of a classifier.
+Bayes' theorem is not the only way to generate performance metrics. One can also start from joint probabilities or likelihood ratios. The next three subsections describe these approaches one by one. This is followed by a subsection discussing a minimal condition for a classifier to be useful, a subsection on estimating performance measures, and one on the effect of changing the prevalence in the training and testing data sets of a classifier.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="FourApplications"></a>
@@ -52,12 +52,14 @@ p(\lambda \!=\!0\mid X) & \; =\; 1 \;-\; p(\lambda\!=\!1\mid X).
 {% endmath %}
 To describe the performance of a classifier, {% m %}X{% em %} could be summarized either by the *class label* {% m %}\ell{% em %} assigned to it by the classifier, or by the *score* {% m %}q{% em %} (a number between 0 and 1) assigned by the classifier to the hypothesis that {% m %}X{% em %} belongs to class 1. Thus for example, {% m %} p(\lambda\!=\!1 \mid \ell\!=\!0) {% em %} represents the posterior probability that the true class is 1 given a class label of 0, and {% m %}p(\lambda\!=\!1\mid q\!\ge\! q_{T}){% em %} is the posterior probability that the true class is 1 given that the score {% m %}q{% em %} is above a pre-specified threshold {% m %}q_{T}{% em %}.
 
+Next we'll take a look at each component of Bayes' theorem in turn: the prior, the likelihood, the model evidence, and finally the posterior. Each of these maps to a classifier performance measure or a population characteristic.
+
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Prior"></a>
 ### The prior
-To simplify the notation I'll write {% m %}\lambda_{0}{% em %} to signify {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} for {% m %}\lambda=1{% em %}, and similarly with other variables. The first ingredient in the computation of the posterior is the prior {% m %}\pi(\lambda){% em %}. To fix ideas, let's assume that {% m %}\lambda_{1}{% em %} is the class of interest, generically labeled "positive"; it indicates "effect", "signal", "disease", "fraud", or "spam", depending on the context. Then {% m %}\lambda_{0}{% em %} indicates the lack of these things and is generically labeled "negative". To fully specify the prior we just need {% m %}\pi(\lambda_{1}){% em %}, since {% m %}\pi(\lambda_{0}) = 1 - \pi(\lambda_{1}){% em %}. The prior probability {% m %}\pi(\lambda_{1}){% em %} of drawing a positive instance from the population is called the **prevalence**. It is a property of the population, not the classifier.
+To simplify the notation let's write {% m %}\lambda_{0}{% em %} to signify {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} for {% m %}\lambda=1{% em %}, and similarly with other variables. The first ingredient in the computation of the posterior is the prior {% m %}\pi(\lambda){% em %}. To fix ideas, let's assume that {% m %}\lambda_{1}{% em %} is the class of interest, generically labeled "positive"; it indicates "effect", "signal", "disease", "fraud", or "spam", depending on the context. Then {% m %}\lambda_{0}{% em %} indicates the lack of these things and is generically labeled "negative". To fully specify the prior we just need {% m %}\pi(\lambda_{1}){% em %}, since {% m %}\pi(\lambda_{0}) = 1 - \pi(\lambda_{1}){% em %}. The prior probability {% m %}\pi(\lambda_{1}){% em %} of drawing a positive instance from the population is called the **prevalence**. It is a property of the population, not the classifier.
 
-To simplify the notation even further I'll write {% m %}\pi_{1}{% em %} for {% m %}\pi(\lambda=1){% em %} and {% m %}\pi_{0}{% em %} for {% m %}\pi(\lambda=0){% em %}.
+To simplify the notation even further let's use {% m %}\pi_{1}{% em %} for {% m %}\pi(\lambda=1){% em %} and {% m %}\pi_{0}{% em %} for {% m %}\pi(\lambda=0){% em %}.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Likelihood"></a>
@@ -72,7 +74,9 @@ The next ingredient is the conditional probability {% m %}p(X\mid\lambda){% em %
 
 - The **false-negative or Type-II-error rate**: {% m %}\beta\equiv p(\ell_{0}\mid\lambda_{1}) = 1 - p(\ell_{1}\mid\lambda_{1}){% em %}.
 
-For example, {% m %}p(\ell_{1}\mid \lambda_{0}){% em %} is the conditional probability that the classifier assigns a label of 1 to an instance actually belonging to class 0. When viewed as a function of true class {% m %}\lambda{% em %}, for fixed label {% m %}\ell{% em %}, the conditional probability is called **likelihood**. Note that the above four rates are independent of the prevalence and are therefore intrinsic properties of the classifier.  
+For example, {% m %}p(\ell_{1}\mid \lambda_{0}){% em %} is the conditional probability that the classifier assigns a label of 1 to an instance actually belonging to class 0. Note that the above four rates are independent of the prevalence and are therefore intrinsic properties of the classifier.
+
+When viewed as a function of true class {% m %}\lambda{% em %}, for fixed label {% m %}\ell{% em %}, the conditional probability {% m %}p(\ell\mid\lambda){% em %} is known as the **likelihood function**. This functional aspect of {% m %}p(\ell\mid\lambda){% em %} is not really used here, but it is good to remember the terminology.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="ModelEvidence"></a>
@@ -90,7 +94,7 @@ Again to simplify the notation I'll write {% m %}p_{0}{% em %} for {% m %}p(\ell
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Posterior"></a>
 ### The posterior
-Armed with the prior probability, the conditional probability, and the model evidence, we can compute the posterior probability from Bayes' theorem.  There are four combinations of truth and label:
+Armed with the prior probability, the likelihood, and the model evidence, we can compute the posterior probability from Bayes' theorem.  There are four combinations of truth and label:
 
 - The **positive predictive value**, also known as **precision**: {% m %}{\rm ppv}\equiv p(\lambda_{1}\mid\ell_{1}) = \frac{p(\ell_{1}\mid\lambda_{1})\, \pi_{1}}{p_{1}} {% em %},
 
