@@ -25,7 +25,7 @@ comments: true
 
 <a name="Introduction"></a>
 ## Introduction
-I always thought that the *confusion* matrix was rather aptly named, a reference not so much to the mixed performance of a classifier as to my own bewilderment at the number of measures of that performance. Recently however, I encountered a brief mention of the possibility of a Bayesian interpretation of performance measures, and this helped clarify things in my mind. I'd like to develop the idea a little further in this post. It's not that Bayes' theorem is needed to understand or apply the performance measures, but it acts as an organizing and connecting principle, which I find helpful. New concepts are easier to remember if they fit inside a good story.
+I always thought that the *confusion* matrix was rather aptly named, a reference not so much to the mixed performance of a classifier as to my own bewilderment at the number of measures of that performance. Recently however, I encountered [a brief mention](http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/) of the possibility of a Bayesian interpretation of performance measures, and this inspired me to explore the idea a little further. It's not that Bayes' theorem is needed to understand or apply the performance measures, but it acts as an organizing and connecting principle, which I find helpful. New concepts are easier to remember if they fit inside a good story.
 
 Another advantage of taking the Bayesian route is that this forces us to view performance measures as probabilities, which are *estimated* from the confusion matrix. Elementary presentations tend to *define* performance metrics in terms of ratios of confusion matrix elements, thereby ignoring the effect of statistical fluctuations.
 
@@ -36,9 +36,9 @@ Bayes' theorem is not the only way to generate performance metrics. One can also
 ## Bayes' theorem
 Let's start from Bayes' theorem in its general form:
 {% math %}
-p(\lambda\mid X) \;=\; \frac{p(X\mid\lambda)\;\pi(\lambda)}{\int p(X\mid\lambda^{\prime})\;\pi(\lambda^{\prime})\;d\lambda^{\prime}},
+p(\lambda\mid X) \;=\; \frac{p(X\mid\lambda)\;\pi(\lambda)}{\int p(X\mid\lambda^{\prime})\;\pi(\lambda^{\prime})\;d\lambda^{\prime}}.
 {% endmath %}
-where {% m %}X{% em %} represents the observed data and {% m %}\lambda{% em %} a parameter of interest. On the left-hand side is the posterior probability density of {% m %}\lambda{% em %} given {% m %}X{% em %}. On the right-hand side, {% m %}p(X\mid\lambda){% em %} is the likelihood, or conditional probability density of {% m %}X{% em %} given {% m %}\lambda{% em %}, and {% m %}\pi(\lambda){% em %} is the prior probability density of {% m %}\lambda{% em %}. The denominator is called model evidence, or marginal likelihood. One way to think about Bayes' theorem is that it uses the data {% m %}X{% em %} to update the prior information {% m %}\pi(\lambda){% em %} about {% m %}\lambda{% em %}, and returns the posterior {% m %}p(\lambda\mid X){% em %}.
+Here {% m %}X{% em %} represents the observed data and {% m %}\lambda{% em %} a parameter of interest. On the left-hand side is the posterior probability density of {% m %}\lambda{% em %} given {% m %}X{% em %}. On the right-hand side, {% m %}p(X\mid\lambda){% em %} is the likelihood, or conditional probability density of {% m %}X{% em %} given {% m %}\lambda{% em %}, and {% m %}\pi(\lambda){% em %} is the prior probability density of {% m %}\lambda{% em %}. The denominator is called model evidence, or marginal likelihood. One way to think about Bayes' theorem is that it uses the data {% m %}X{% em %} to update the prior information {% m %}\pi(\lambda){% em %} about {% m %}\lambda{% em %}, and returns the posterior {% m %}p(\lambda\mid X){% em %}.
 
 For a binary classifier {% m %}\lambda{% em %} is the true class to which instance {% m %}X{% em %} belongs and can take only two values, say 0 and 1. Bayes' theorem then simplifies to:
 {% math %}
@@ -121,7 +121,7 @@ which by virtue of their definitions satisfy seven identities:
 {% math %}
 \pi_{0} + \pi_{1} = 1,\quad S_{e} + \beta = 1,\quad S_{p} + \alpha = 1,\quad p_{0} + p_{1} = 1,\quad p_{1} = \alpha \pi_{0} + S_{e} \pi_{1},\quad {\rm npv} + {\rm for} = 1,\quad {\rm fdr} + {\rm ppv} = 1.
 {% endmath %}
-Bayes' theorem adds two relations two this, one per data value (label 0 and label 1).
+Bayes' theorem adds two relations to this, one per data value (label 0 and label 1).
 
 Altogether this yields nine equations among twelve quantities, leaving only three independent ones, for example {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, and {% m %}\pi_{1}{% em %}. This matches the number of degrees of freedom of a two-by-two contingency table such as the confusion matrix, which is used to estimate these quantities (see [below](#MetricsEstimation)). It also tells us that we only have two degrees of freedom to optimize a binary classifier (since {% m %}\pi_{1}{% em %} is not a classifier property).
 
