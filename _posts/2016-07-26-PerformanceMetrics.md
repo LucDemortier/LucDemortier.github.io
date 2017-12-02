@@ -146,7 +146,7 @@ There is actually a relationship between the AUROC and the accuracy, via an expe
 {% math %}
 \mathbb{E}(A) \;=\; \frac{\pi_{0}^{2} + \pi_{1}^{2}}{2} \,+\, 2\,\pi_{0}\,\pi_{1}\,\textrm{AUROC},
 {% endmath %}
-and is thus linearly related to the AUROC. In a sense, the AUROC aggregates the classifier accuracy information in a way that's independent of prevalence.
+and is thus linearly related to the AUROC. In a sense, the AUROC aggregates the classifier accuracy information in a way that's independent of prevalence (see [this answer](https://www.quora.com/Machine-Learning-What-is-an-intuitive-explanation-of-AUC/answer/Peter-Flach) by Peter Flach on Quora for a more detailed explanation).
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="LikelihoodRatios"></a>
