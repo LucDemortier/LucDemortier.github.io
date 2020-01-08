@@ -5,7 +5,7 @@ date: 26 July 2016
 excerpt: "How Bayes' theorem helps organize the bewildering array of performance metrics that can be estimated from a classifier's confusion matrix."
 comments: true
 ---
-[Revised 21 September 2017]
+[Revised 21 September 2017, 24 December 2019]
 
 > **Contents**
 > <br>[Introduction](#Introduction)
@@ -106,24 +106,27 @@ Armed with the prior probability, the likelihood, and the model evidence, we can
 
 The precision, for example, quantifies the predictive value of a positive label by answering the question: If we see a positive label, what is the (posterior) probability that the true class is positive? (Note that the predictive values are not intrinsic properties of the classifier since they depend on the prevalence. Sometimes they are "standardized" by evaluating them at {% m %} \pi_{0} = \pi_{1} = 1/2 {% em %}.)
 
-<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
-<a name="Summary"></a>
-### Summary
 Figure 1 shows how the posterior probabilities {% m %}{\rm ppv}{% em %}, {% m %}{\rm npv}{% em %}, {% m %}{\rm fdr}{% em %} and {% m %}{\rm for}{% em %} are related to the likelihoods {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %} via Bayes' theorem:
 
-{% fullwidth "assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" "Figure 1: Four applications of Bayes' theorem to the performance metrics of a classifier. Each application connects an observed value (the label, indicated by the corresponding row header) to a true value (the class, indicated by the corresponding column header)." %}
+{% fullwidth "assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" "Figure 1: For each combination of class and label, Bayes' theorem connects the corresponding performance metrics of a classifier." %}
 
-These four relations involve the twelve quantities
+<a name="Summary"></a>
+### Summary
+This section introduced twelve quantities:
 {% math %}
-\pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; {\rm ppv},\; {\rm npv},\; {\rm fdr},\; {\rm for},
+\pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; {\rm ppv},\; {\rm npv},\; {\rm fdr},\; {\rm for}.
 {% endmath %}
-which by virtue of their definitions satisfy seven identities:
+Only three of these are independent, say {% m %}\pi_{1}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %}. To see this, note that by virtue of their definition the first six quantities satisfy three conditions:
 {% math %}
-\pi_{0} + \pi_{1} = 1,\quad S_{e} + \beta = 1,\quad S_{p} + \alpha = 1,\quad p_{0} + p_{1} = 1,\quad p_{1} = \alpha \pi_{0} + S_{e} \pi_{1},\quad {\rm npv} + {\rm for} = 1,\quad {\rm fdr} + {\rm ppv} = 1.
+\pi_{0} + \pi_{1} = 1,\quad S_{e} + \beta = 1, \quad S_{p} + \alpha = 1,
 {% endmath %}
-Bayes' theorem adds two relations to this, one per data value (label 0 and label 1).
+and the last six can be expressed in terms of the first six: for {% m %}p_{0}{% em %} and {% m %}p_{1}{% em %} we have:
+{% math %}
+p_{0} = S_{p} \pi_{0} +  \beta \pi_{1}, \quad p_{1} = \alpha \pi_{0} + S_{e} \pi_{1},
+{% endmath %}
+and Bayes' theorem takes care of the remaining four (Figure 1).
 
-Altogether this yields nine equations among twelve quantities, leaving only three independent ones, for example {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, and {% m %}\pi_{1}{% em %}. This matches the number of degrees of freedom of a two-by-two contingency table such as the confusion matrix, which is used to estimate these quantities (see [below](#MetricsEstimation)). It also tells us that we only have two degrees of freedom to optimize a binary classifier (since {% m %}\pi_{1}{% em %} is not a classifier property).
+The final number of independent quantities matches the number of degrees of freedom of a two-by-two contingency table such as the confusion matrix, which is used to estimate all twelve quantities (see [below](#MetricsEstimation)). It also tells us that we only need two numbers to fully characterize a binary classifier (since {% m %}\pi_{1}{% em %} is not a classifier property). As trivial examples, consider the majority and minority classifiers. Assume that class 0 is more prevalent than class 1. Then the majority classifier assigns the label 0 to every instance and has {% m %}\alpha=0{% em %} and {% m %}\beta=1{% em %}. The minority classifier assigns the label 1 to every instance and has {% m %}\alpha=1{% em %} and {% m %}\beta=0{% em %}. These classifiers are of course not very useful. As we will show below, for a classifier to be useful, it must satisfy {% m %} \alpha + \beta \lt 1 {% em %}.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="JointProbabilities"></a>
@@ -136,9 +139,10 @@ p(\ell,\lambda) \;=\; p(\ell\mid\lambda)\,\pi(\lambda).
 {% endmath %}
 Projecting this joint probability on the axis "{% m %} \ell=\lambda {% em %}" yields the **accuracy**, or the probability to correctly identify any instance, negative or positive:
 {% math %}
-{\rm A} \;\equiv\; p(\ell=\lambda) \;=\; p(\ell_{0}\mid\lambda_{0})\,\pi_{0} \;+\; p(\ell_{1}\mid\lambda_{1})\,\pi_{1} \;=\; S_{p}\,(1-\pi_{1}) \;+\; S_{e}\,\pi_{1}.
+{\rm A} \;\equiv\; p(\ell=\lambda) \;=\; p(\ell_{0}\mid\lambda_{0})\,\pi_{0} \;+\; p(\ell_{1}\mid\lambda_{1})\,\pi_{1} \;=\; S_{p}\,(1-\pi_{1}) \;+\; S_{e}\,\pi_{1} \;=\;
+1 - \alpha \;+\; (\alpha - \beta) \,\pi_{1}.
 {% endmath %}
-The expression in terms of sensitivity and specificity shows that the accuracy depends on the prevalence and is therefore not an intrinsic property of the classifier. An equivalent measure is the **misclassification rate**, defined as one minus the accuracy. A benchmark that is sometimes used is the **null error rate**, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to {% m %}\min\{\pi_{1}, 1-\pi_{1}\}{% em %}. The complement of the null error rate is the **null accuracy**, which is equal to {% m %}\max\{\pi_{1}, 1-\pi_{1}\}{% em %}.
+The last expression on the right shows that the accuracy depends on the prevalence and is therefore not an intrinsic property of the classifier. An equivalent measure is the **misclassification rate**, defined as one minus the accuracy. A benchmark that is sometimes used is the **null error rate**, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to {% m %}\min\{\pi_{1}, 1-\pi_{1}\}{% em %}. The complement of the null error rate is the **null accuracy**, which is equal to {% m %}\max\{\pi_{1}, 1-\pi_{1}\}{% em %}.
 
 The second joint probability to consider is that of the scores assigned by the classifier to two independently drawn instances, one from the positive class and one from the negative class. A good measure of performance is the probability that the positive instance is scored higher than the negative instance. This measure equals the **Area Under the Receiver Operating Characteristic (AUROC)**, a curve of the true positive rate as a function of the false positive rate (or sensitivity versus one-minus-specificity). By construction, the AUROC is independent of prevalence, and does not require a choice of threshold {% m %}q_{T}{% em %} on the classifier score {% m %}q{% em %}. In other words, it does not depend on the chosen operating point of the classifier.
 
@@ -182,9 +186,11 @@ The usefulness condition {% m %}\fbox{dor $\gt 1$}{% em %} is mathematically equ
 
 The classifier usefulness condition also puts a bound on the accuracy:
 {% math %}
-{\rm A} \;=\; S_{p}\,(1-\pi_{1}) \;+\; S_{e}\,\pi_{1} \;>\; p_{0}\,\pi_{0} \;+\; p_{1}\,\pi_{1}.
+{\rm A} \;=\; 1 - \alpha \;+\; (\alpha - \beta) \,\pi_{1}
+        \;>\; 1 - \alpha \;+\; (2\alpha - 1) \,\pi_{1}.
 {% endmath %}
-The bound is the accuracy of a *random* classifier with the same labeling rates {% m %}p_{0}{% em %} and {% m %}p_{1}{% em %} as the classifier of interest. By "random classifier" I mean one that assigns labels independently of true class. Now, note that the usefulness condition *implies* the above accuracy bound, but a stronger bound is needed for the converse to hold: the accuracy must be larger than the null accuracy {% m %}\max\{\pi_{0}, \pi_{1}\}{% em %}. The corresponding classifier, the majority classifier, is of course also random in the sense just defined.
+
+It is straightforward to verify that the majority and minority classifiers defined earlier both fail any of the above usefulness conditions. As a counter-example, imagine starting with the majority classifier and flipping the label on a single positive instance. Thus, this classifier sets {% m %}\ell=1{% em %} on one {% m %}\lambda=1{% em %} instance and {% m %}\ell=0{% em %} on all other instances. It has 100% precision on positive labels ({% m %}\mbox{ppv}=1{% em %}). For negative labels the precision is {% m %}\mbox{npv} = \pi_{0}/(1-1/N){% em %}, with {% m %}N{% em %} the total number of instances. Hence this classifier passes the usefulness condition, although barely in the case of {% m %}\mbox{npv}{% em %} and large {% m %}N{% em %}.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="MetricsEstimation"></a>
@@ -196,9 +202,9 @@ The performance metrics can be estimated from a two-by-two contingency table kno
 The rows correspond to class labels, the columns to true classes. We then have the following approximations:
 {% math %}
 \begin{aligned}
-\mbox{Prevalence :} & \quad &&\equiv\pi(\lambda_{1}) &&\approx \dfrac{\rm fn+tp}{\rm fn+tp+fp+tn}\\[1mm]
+\mbox{Prevalence :} & \quad \pi_{1} &&\equiv\pi(\lambda_{1}) &&\approx \dfrac{\rm fn+tp}{\rm fn+tp+fp+tn}\\[1mm]
 
-\mbox{Queue rate :} & \quad &&\equiv p(\ell_{1}) &&\approx \dfrac{\rm fp+tp}{\rm fn+tp+fp+tn}\\[4mm]
+\mbox{Queue rate :} & \quad p_{1} &&\equiv p(\ell_{1}) &&\approx \dfrac{\rm fp+tp}{\rm fn+tp+fp+tn}\\[4mm]
 
 \mbox{True-positive rate, sensitivity, recall :} & \quad S_{e} &&\equiv p(\ell_{1}\mid\lambda_{1}) &&\approx \dfrac{\rm tp}{\rm tp+fn}\\[1mm]
 
@@ -232,7 +238,7 @@ Note that the relations between probabilities derived in the previous sections a
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="EffectOfPrevalence"></a>
 ## Effect of prevalence on classifier training and testing
-In this post I have tried to be careful in pointing out which performance metrics depend on the prevalence, and which don't. The reason is that prevalence is a population or sample property, whereas here I am interested in classifier properties. Of course, real-world classifiers must be trained and tested on finite samples, and this has implications for the actual effect of prevalence on classifier performance:
+In this post I have tried to be careful in pointing out which performance metrics depend on the prevalence, and which don't. The reason is that prevalence is a population or sample property, whereas here we are interested in classifier properties. Of course, real-world classifiers must be trained and tested on finite samples, and this has implications for the actual effect of prevalence on classifier performance:
 
 - When **training** a classifier, changing the prevalence in the training data *may affect* properties such as the sensitivity and specificity, depending on the characteristics of the training algorithm.
 

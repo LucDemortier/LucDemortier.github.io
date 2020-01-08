@@ -7,7 +7,7 @@ comments: true
 ---
 
 {% marginnote 'WTMN-1' '**Contents:** <br>[1. The Hackathon&#39;s Challenge](#TheChallenge) <br>[2. The Wind Turbine Data Set](#WindTurbineDataSet) <br>[3. Random Forest Analysis](#RandomForestAnalysis) <br>[4. Gradient Boosting with XGBoost](#XGBoost) <br>[5. A Generalized Linear Model](#GeneralizedAdditiveModel) <br>[6. Summary and Private Leaderboard](#Summary) <br>[7. Technical Note](#TechnicalNote)' %}
-On July 19 and 20, 2016, the [H2O Open Tour](http://open.h2o.ai/nyc.html) came to the [IAC building](https://en.wikipedia.org/wiki/IAC_Building) in New York City to present their product and foster community with the help of tutorials, talks, social events, and a [hackathon](https://datahack.analyticsvidhya.com/contest/h2o-open-tour-nyc-hackathon/). The hackathon was much fun, so that I (sporadically) continued working on it after the conference. This post summarizes my findings.
+On July 19 and 20, 2016, the [H2O Open Tour](http://open.h2o.ai/nyc.html) came to the [IAC building](https://en.wikipedia.org/wiki/IAC_Building) in New York City to present their product and foster community with the help of tutorials, talks, social events, and a [hackathon](https://datahack.analyticsvidhya.com/contest/h2o-open-tour-nyc-hackathon/). The hackathon was interesting, so that I (sporadically) continued working on it after the conference. This post summarizes my findings.
 
 <a name="TheChallenge"></a>
 
@@ -63,7 +63,7 @@ The spectrum displays two noteworthy features: a large spike near 0, and a bump 
 
 Figure 2 illustrates the effect of the cut-in speed for turbine 9. Each dot in this figure is the tip of a horizontal wind velocity vector with tail at (0,0). Orange dots correspond to zero turbine output and congregate at low wind velocities. Blue dots correspond to non-zero turbine output and form a donut shape around the orange ones.
 
-{% maincolumn "assets/img/blog/WindTurbines/donut_plots.png" "Figure 2: Scatter plots of zonal versus meridional wind velocity components at heights of 10m (left) and 100m (right) above ground, for turbine 9. Turbine output is zero for orange dots and greater than zero for blue dots. Note that the center point of both plots has coordinates (0,0)." %}
+{% maincolumn "assets/img/blog/WindTurbines/donut_plots.png" "Figure 2: Scatter plots of zonal versus meridional wind velocity components at heights of 10m (left) and 100m (right) above ground, for turbine 9. Turbine output is zero for orange dots and greater than zero for blue dots. The red cross at the center of each plot indicates zero wind velocity. Note how wind velocities tend to be higher at 100m than at 10m." %}
 
 Since the measurements were taken at one-hour intervals, they are serially correlated. Figure 3 illustrates this correlation for the turbine-1 power output.
 
