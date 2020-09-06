@@ -35,18 +35,18 @@ This page contains two sections, the first one listing papers on [statistical is
 <a name="ExperimentalParticlePhysics"></a>
 <h2 class="content-listing-header sans">Papers on Experimental Particle Physics
 <a href= "#TopOfPage" style="float: right; font-style: normal; font-weight: normal; font-size: 50%; font-family: Palatino; line-height: normal;">Back to Top</a></h2>
-{% newthought 'A list of all refereed publications' %} can be obtained via INSPIRE, please click <a href="http://inspirehep.net/search?p=find a demortier and tc p">here</a> (a total of 1191 as of 16 October 2017).
+{% newthought 'A list of all refereed publications' %} can be obtained via INSPIRE, please click <a href="https://inspirehep.net/search?p=find a demortier and tc p">here</a> (a total of 1191 as of 16 October 2017).
 
 You can also list by **journal**:
-- <a href="http://inspirehep.net/search?p=find j Phys.Rev.Lett. and a demortier">Physical Review Letters,</a>
-- <a href="http://inspirehep.net/search?p=find j PHRVA and a demortier">Physical Review C or D,</a>
-- <a href="http://inspirehep.net/search?p=find j Phys.Lett.B and a demortier">Physics Letters B,</a>
-- <a href="http://inspirehep.net/search?p=find j JHEP and a demortier">Journal of High Energy Physics,</a>
-- <a href="http://inspirehep.net/search?p=find j Eur.Phys.J.C and a demortier">European Physics Journal C,</a>
-- <a href="http://inspirehep.net/search?p=find j J.Phys. and a demortier">Journal of Physics G,</a>
-- <a href="http://inspirehep.net/search?p=find j Nucl.Instrum.Meth. and a demortier">Nuclear Instruments and Methods in Physics Research,</a>
-- <a href="http://inspirehep.net/search?p=find j JINST and a demortier">Journal of Instrumentation,</a>
+- <a href="https://inspirehep.net/search?p=find j Phys.Rev.Lett. and a demortier">Physical Review Letters,</a>
+- <a href="https://inspirehep.net/search?p=find j PHRVA and a demortier">Physical Review C or D,</a>
+- <a href="https://inspirehep.net/search?p=find j Phys.Lett.B and a demortier">Physics Letters B,</a>
+- <a href="https://inspirehep.net/search?p=find j JHEP and a demortier">Journal of High Energy Physics,</a>
+- <a href="https://inspirehep.net/search?p=find j Eur.Phys.J.C and a demortier">European Physics Journal C,</a>
+- <a href="https://inspirehep.net/search?p=find j J.Phys. and a demortier">Journal of Physics G,</a>
+- <a href="https://inspirehep.net/search?p=find j Nucl.Instrum.Meth. and a demortier">Nuclear Instruments and Methods in Physics Research,</a>
+- <a href="https://inspirehep.net/search?p=find j JINST and a demortier">Journal of Instrumentation,</a>
 
 or by **experiment**:
-- <a href="http://inspirehep.net/search?p=find a demortier and cn cdf and tc p">CDF,</a>
-- <a href="http://inspirehep.net/search?p=find a demortier and cn cms and tc p">CMS.</a>
+- <a href="https://inspirehep.net/search?p=find a demortier and cn cdf and tc p">CDF,</a>
+- <a href="https://inspirehep.net/search?p=find a demortier and cn cms and tc p">CMS.</a>

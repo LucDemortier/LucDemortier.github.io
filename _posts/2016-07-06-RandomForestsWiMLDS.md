@@ -7,7 +7,7 @@ comments: true
 ---
 
 {% marginnote 'ADS-0' '**Contents:** <br>[1. The airline data set](#AirlineDataSet) <br>[2. Categorical features](#CategoricalFeatures) <br>[3. Intrinsic discrepancies](#IntrinsicDiscrepancies) <br>[4. Fitting Strategy](#FittingStrategy) <br>[5. Grid search](#GridSearch) <br>[6. Classifier performance](#ClassifierPerformance) <br>[7. Technical note](#TechnicalNote)' %}
-On Sunday June 5 of this year, the NYC meetup group [Women in Machine Learning and Data Science](http://www.meetup.com/NYC-Women-in-Machine-Learning-Data-Science/) organized a [workshop on random forests](http://www.meetup.com/NYC-Women-in-Machine-Learning-Data-Science/events/230658399/) led by Anita Schmid and Christine Hurtubise from [OnDeck](http://www.ondeck.com/). They started with a theoretical review of the random forest algorithm, followed with some practical tips, and after that we all broke up into small groups to try our hands on a data set of flight delays. Some of us used Python, others R.
+On Sunday June 5 of this year, the NYC meetup group [Women in Machine Learning and Data Science](https://www.meetup.com/NYC-Women-in-Machine-Learning-Data-Science/) organized a [workshop on random forests](https://www.meetup.com/NYC-Women-in-Machine-Learning-Data-Science/events/230658399/) led by Anita Schmid and Christine Hurtubise from [OnDeck](https://www.ondeck.com/). They started with a theoretical review of the random forest algorithm, followed with some practical tips, and after that we all broke up into small groups to try our hands on a data set of flight delays. Some of us used Python, others R.
 
 There wasn't really enough time to complete the analysis during the workshop, so I finished it at home and report the results here.
 
@@ -16,7 +16,7 @@ There wasn't really enough time to complete the analysis during the workshop, so
 <a name="AirlineDataSet"></a>
 
 ## The airline data set
-The data set consists of 100,000 flight records (this is actually a subsample of a large [public data set](http://stat-computing.org/dataexpo/2009/the-data.html)).  After some basic cleanup{% sidenote 'ADS-1' 'The cleanup consisted in converting the "Month", "DayofMonth", and "DayOfWeek" fields from string to integer, and mapping "DepTime" values larger than 2400 back to the interval [0,2400].' %}, each record contains the following fields:
+The data set consists of 100,000 flight records (this is actually a subsample of a large [public data set](https://stat-computing.org/dataexpo/2009/the-data.html)).  After some basic cleanup{% sidenote 'ADS-1' 'The cleanup consisted in converting the "Month", "DayofMonth", and "DayOfWeek" fields from string to integer, and mapping "DepTime" values larger than 2400 back to the interval [0,2400].' %}, each record contains the following fields:
 
 {% marginnote "TB-1" "Table 1: Features of the airline data set; the last row ("dep_delayed_15min") is the response variable; the type column indicates whether a feature is binary (bin), integer (int), or categorical (cat)." %}
 
@@ -60,14 +60,14 @@ To prepare the data for the classifier, the categorical features ("UniqueCarrier
 df2 = pd.get_dummies(df1, drop_first=False)
 ```
 
-This results in data frame ```df1```, with 9 feature variables, being replaced by data frame ```df2```, which has 642 feature variables! The ```drop_first=False``` argument indicates that we do not wish to drop one dummy variable per categorical variable{% sidenote 'ADS-2' 'See for example Galit Shmueli, ["The use of dummy variables in predictive algorithms"](http://www.bzst.com/2014/03/the-use-of-dummy-variables-in.html).' %}. This is only necessary for regression problems, where input multicollinearity is an issue ("dummy variable trap"). For tree-based classification models, removing a dummy variable may actually reduce efficiency.
+This results in data frame ```df1```, with 9 feature variables, being replaced by data frame ```df2```, which has 642 feature variables! The ```drop_first=False``` argument indicates that we do not wish to drop one dummy variable per categorical variable{% sidenote 'ADS-2' 'See for example Galit Shmueli, ["The use of dummy variables in predictive algorithms"](https://www.bzst.com/2014/03/the-use-of-dummy-variables-in.html).' %}. This is only necessary for regression problems, where input multicollinearity is an issue ("dummy variable trap"). For tree-based classification models, removing a dummy variable may actually reduce efficiency.
 
 {% marginnote "btt-2" "[Back to Top](#TopOfPage)" %}
 
 <a name="IntrinsicDiscrepancies"></a>
 
 ## Intrinsic discrepancies
-For future reference I find it useful to summarize with one number the effectiveness of a feature to distinguish between delay and no-delay. A relatively simple, information-based measure to achieve this is the so-called intrinsic discrepancy{% sidenote 'ADS-3' 'See for example J. Bernardo, "[Reference Analysis](http://www.uv.es/~bernardo/RefAna.pdf)", Handbook of Statistics 25 (D. K. Dey and C. R. Rao, eds.), 17-90, Elsevier, 2005.' %} between two probability distributions {% m %}p_{1}{% em %} and {% m %}p_{2}{% em %}:
+For future reference I find it useful to summarize with one number the effectiveness of a feature to distinguish between delay and no-delay. A relatively simple, information-based measure to achieve this is the so-called intrinsic discrepancy{% sidenote 'ADS-3' 'See for example J. Bernardo, "[Reference Analysis](https://www.uv.es/~bernardo/RefAna.pdf)", Handbook of Statistics 25 (D. K. Dey and C. R. Rao, eds.), 17-90, Elsevier, 2005.' %} between two probability distributions {% m %}p_{1}{% em %} and {% m %}p_{2}{% em %}:
 {% math %} \delta\{p_{1},p_{2}\}\;=\;\min\Big\{ \int p_{1}(x)\,\log\frac{p_{1}(x
 )}{p_{2}(x)}\,dx,\; \int p_{2}(x)\,\log\frac{p_{2}(x)}{p_{1}(x)}\,dx \Big\}. {%
 endmath %}
@@ -105,7 +105,7 @@ Accuracy = p\times Recall \;+\; (1-p)\times Specificity,
 {% endmath %}
 where {% m %}p{% em %} is the prevalence, the fraction of positives in the sample. Since the recall (the fraction of positives that are correctly classified) and specificity (the fraction of negatives that are correctly classified) are independent of {% m %}p{% em %}, the above equation shows that accuracy does depend on {% m %}p{% em %} and is therefore not an intrinsic property of the classifier.
 
-A better measure to maximize is AUC, the area under the Receiver Operating Characteristic{% sidenote 'ADS-4' 'See for example Tom Fawcett, "[An Introduction to ROC Analysis](http://www.sciencedirect.com/science/article/pii/S016786550500303X)", Pattern Recognition Letters 27, no. 8 (June 2006), 861–874.' %} (ROC). It is independent of the prevalence and can be interpreted as the probability for the classifier to produce a higher score for a randomly drawn positive than for a randomly drawn negative.  
+A better measure to maximize is AUC, the area under the Receiver Operating Characteristic{% sidenote 'ADS-4' 'See for example Tom Fawcett, "[An Introduction to ROC Analysis](https://www.sciencedirect.com/science/article/pii/S016786550500303X)", Pattern Recognition Letters 27, no. 8 (June 2006), 861–874.' %} (ROC). It is independent of the prevalence and can be interpreted as the probability for the classifier to produce a higher score for a randomly drawn positive than for a randomly drawn negative.  
 
 A good fitting strategy, then, starts with a three-fold cross-validated search over a grid of hyper-parameters, and follows with testing on a holdout sample. Here are the steps:
 
@@ -126,7 +126,7 @@ In the next sections I describe the grid search and the result of applying the r
 <a name="GridSearch"></a>
 
 ## Grid search
-[Scikit-learn](http://scikit-learn.org/stable/) provides method [`GridSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html) to search a grid in hyper-parameter space for the optimal classifier of a given type in a given problem. In the present case we are interested in a [`RandomForestClassifier`](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html). As was emphasized at the WiMLDS workshop, random forests can and do sometimes overfit. Scikit-learn provides three parameters to control overfitting, and these are the ones I used in the grid search:
+[Scikit-learn](https://scikit-learn.org/stable/) provides method [`GridSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html) to search a grid in hyper-parameter space for the optimal classifier of a given type in a given problem. In the present case we are interested in a [`RandomForestClassifier`](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html). As was emphasized at the WiMLDS workshop, random forests can and do sometimes overfit. Scikit-learn provides three parameters to control overfitting, and these are the ones I used in the grid search:
 
 - **n_estimators:** the number of trees in the forest; more trees reduces overfitting but takes longer to run; I tried the values 50, 100, 200.
 
@@ -176,7 +176,7 @@ For predicting flight delays, thresholds other than 50% can be chosen from the l
 
 Note how the precision curve in the left panel becomes more jagged for thresholds above 0.60. This is due to a lack of statistics, as can be inferred from the right panel of Figure 4. To explore the variability of the precision, recall, and queue-rate curves as a function of threshold, I generated independent random forest models from 50 different random splittings of the original data set into training and test subsets (still maintaining a 70/30 ratio). I used this ensemble of models to compute and draw median curves and 90% confidence belts, which are shown in Figure 5's right panel.
 
-The confidence belts are generally quite narrow, the only exception being the precision curve for thresholds above 0.60. This type of plot can be used to guide business decisions{% sidenote 'ADS-5' 'For a nice introduction to thresholding, see this blog post by Slater Stich, ["Visualizing Machine Learning Thresholds to Make Better Business Decisions"](http://blog.insightdatalabs.com/visualizing-classifier-thresholds/).' %}.
+The confidence belts are generally quite narrow, the only exception being the precision curve for thresholds above 0.60. This type of plot can be used to guide business decisions{% sidenote 'ADS-5' 'For a nice introduction to thresholding, see this blog post by Slater Stich, ["Visualizing Machine Learning Thresholds to Make Better Business Decisions"](https://blog.insightdatalabs.com/visualizing-classifier-thresholds/).' %}.
 
 As mentioned earlier, our random forest classifier uses 642 features (after converting categorical features to binary ones). It is therefore interesting to check which ones are important, and how much impact important features have compared to the other ones. Scikit-learn provides a RandomForestClassifier attribute to extract feature importances. Each feature importance measures the decrease in classification accuracy when the corresponding feature values are randomly permuted over all trees in the forest.
 

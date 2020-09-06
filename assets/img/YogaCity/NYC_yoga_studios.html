@@ -9,7 +9,7 @@
 
 <body>
     <script type="text/javascript" src="../leaflet/leaflet.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
     <script src="NYC_yoga_studios.js"></script>
 
@@ -26,7 +26,7 @@
                 var lon = results[0].geometry.location.lng();
                 callback(lat,lon);
             } else {
-                alert('Geocode was not successful for the following reason: ' + 
+                alert('Geocode was not successful for the following reason: ' +
                     status);
                 var lat = 40.7442036;
                 var lon = -73.9853586;
@@ -38,8 +38,8 @@
 
     <script>
         var map;
-        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
         function initmap() {
             // set up the map
             map = new L.Map('map');
@@ -83,16 +83,16 @@
     <hr>
 
     <p>
-    <label for="nCenter" 
+    <label for="nCenter"
            style="display: inline-block; width: 260px; text-align: left">
            Address at center of search circle: <span id="nCenter-value"></span>
     </label>
-    <input type="text" value="80 Madison Ave, New York, NY 10016" size="35" 
+    <input type="text" value="80 Madison Ave, New York, NY 10016" size="35"
             id="nCenter">
     </p>
 
     <p>
-    <label for="nRadius" 
+    <label for="nRadius"
            style="display: inline-block; width: 260px; text-align: left">
            Radius of search circle [miles]: <span id="nRadius-value"></span>
     </label>
@@ -144,35 +144,35 @@
     </p>
 
     <p>
-    <label for="nChallenging" 
+    <label for="nChallenging"
            style="display: inline-block; width: 260px; text_align: left">
            "Strenuous": </label>
     <input type="checkbox" id="nChallenging">
     </p>
 
     <p>
-    <label for="nMeditation" 
+    <label for="nMeditation"
            style="display: inline-block; width: 260px; text_align: left">
            "Meditation": </label>
     <input type="checkbox" id="nMeditation">
     </p>
 
     <p>
-    <label for="nCompetent" 
+    <label for="nCompetent"
            style="display: inline-block; width: 260px; text_align: left">
            "Competent": </label>
     <input type="checkbox" id="nCompetent">
     </p>
 
     <p>
-    <label for="nPersonal" 
+    <label for="nPersonal"
            style="display: inline-block; width: 260px; text_align: left">
            "Personalized": </label>
     <input type="checkbox" id="nPersonal">
     </p>
 
     <p>
-    <label for="nApparel" 
+    <label for="nApparel"
            style="display: inline-block; width: 260px; text_align: left">
            "Yoga Apparel": </label>
     <input type="checkbox" id="nApparel">
@@ -247,7 +247,7 @@
                 // for map updates that don't involve a new center.
                 clat   = lat1;
                 clon   = lon1;
-                // Find index of selected yoga style  
+                // Find index of selected yoga style
                 if (style_val == "Any") {
                     ys_index = -1;
                 } else {
@@ -263,23 +263,23 @@
                     var dist   = distanceTo(lat1, lon1, lat, lon, unit);
                     var topic1 = true;
                     if (ys_index != -1) {
-                        topic1 = (nyc_yoga.businesses[i].lsi_scores[ys_index]>=LSIsim_val) && 
+                        topic1 = (nyc_yoga.businesses[i].lsi_scores[ys_index]>=LSIsim_val) &&
                                  (nyc_yoga.businesses[i].bkm_scores[ys_index]>=BKM_val);
                     }
-                    var topic2 = !challenging || 
-                                 ((nyc_yoga.businesses[i].lsi_scores[14]>=LSIsim_val) && 
+                    var topic2 = !challenging ||
+                                 ((nyc_yoga.businesses[i].lsi_scores[14]>=LSIsim_val) &&
                                   (nyc_yoga.businesses[i].bkm_scores[14]>=BKM_val));
-                    var topic3 = !meditation || 
-                                 ((nyc_yoga.businesses[i].lsi_scores[15]>=LSIsim_val) && 
+                    var topic3 = !meditation ||
+                                 ((nyc_yoga.businesses[i].lsi_scores[15]>=LSIsim_val) &&
                                   (nyc_yoga.businesses[i].bkm_scores[15]>=BKM_val));
-                    var topic4 = !competent || 
-                                 ((nyc_yoga.businesses[i].lsi_scores[17]>=LSIsim_val) && 
+                    var topic4 = !competent ||
+                                 ((nyc_yoga.businesses[i].lsi_scores[17]>=LSIsim_val) &&
                                   (nyc_yoga.businesses[i].bkm_scores[17]>=BKM_val));
-                    var topic5 = !personal || 
-                                 ((nyc_yoga.businesses[i].lsi_scores[23]>=LSIsim_val) && 
+                    var topic5 = !personal ||
+                                 ((nyc_yoga.businesses[i].lsi_scores[23]>=LSIsim_val) &&
                                   (nyc_yoga.businesses[i].bkm_scores[23]>=BKM_val));
-                    var topic6 = !apparel || 
-                                 ((nyc_yoga.businesses[i].lsi_scores[28]>=LSIsim_val) && 
+                    var topic6 = !apparel ||
+                                 ((nyc_yoga.businesses[i].lsi_scores[28]>=LSIsim_val) &&
                                   (nyc_yoga.businesses[i].bkm_scores[28]>=BKM_val));
                     if (dist < radius_val && topic1 && topic2 && topic3 && topic4 && topic5 && topic6) {
                         var name    = nyc_yoga.businesses[i].name;
@@ -305,7 +305,7 @@
                 var d2 = 0.5*((1.0+alpha)*d1+(1.0-alpha)*b1);
                 // Create the map
                 map.fitBounds([[b2,a2],[d2,c2]]);
-                var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});     
+                var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});
                 map.addLayer(osm);
                 circle = L.circle([lat1, lon1], 50, {
                             color: 'red',

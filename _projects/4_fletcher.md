@@ -27,7 +27,7 @@ The tweet with the largest number of emissions (238) was an invitation:
 
     "RT @mohitfreedom: #LetsStayfree and be #SultansOfStyle
     at @IndianEmbassyUS Yoga Day celebrations of PM of #India
-    @narendramodi http://t.co/…"
+    @narendramodi https://t.co/…"
 
 The RT tag at the beginning signals that this is a retweet, and the ellipsis at the end indicates truncation (at least partly due to Twitter inserting the retweet tag).
 

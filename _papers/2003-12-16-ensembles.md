@@ -10,4 +10,4 @@ The frequentist interpretation of measurement results requires the specificatio
 
 This paper was published in "Proceedings of PHYSTAT2003: Statistical Problems in Particle Physics, Astrophysics and Cosmology," Stanford Linear Accelerator Center, Stanford, California, 8-11 September 2003; eConf C030908, SLAC-R-703, pg. 256.
 
-It can be downloaded at <a href="http://arxiv.org/abs/physics/0312100">arXiv:physics/0312100 v2 (16 Dec 2003)</a>.
+It can be downloaded at <a href="https://arxiv.org/abs/physics/0312100">arXiv:physics/0312100 v2 (16 Dec 2003)</a>.

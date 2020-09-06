@@ -87,7 +87,7 @@ body { width: 87.5%;
        counter-reset: sidenote-counter; }
 
 // --------- Typography stuff -----------//
-// added rational line height and margins ala http://webtypography.net/intro/
+// added rational line height and margins ala https://webtypography.net/intro/
 
 h1 { font-weight: 400;
      margin-top: 1.568rem;
@@ -465,7 +465,7 @@ hr.slender {
     *:before,
     *:after {
         background: transparent !important;
-        color: #000 !important; // Black prints faster:http://www.sanbeiji.com/archives/953
+        color: #000 !important; // Black prints faster:https://www.sanbeiji.com/archives/953
         box-shadow: none !important;
         text-shadow: none !important;
     }
