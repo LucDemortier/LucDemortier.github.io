@@ -60,7 +60,7 @@ To prepare the data for the classifier, the categorical features ("UniqueCarrier
 df2 = pd.get_dummies(df1, drop_first=False)
 ```
 
-This results in data frame ```df1```, with 9 feature variables, being replaced by data frame ```df2```, which has 642 feature variables! The ```drop_first=False``` argument indicates that we do not wish to drop one dummy variable per categorical variable{% sidenote 'ADS-2' 'See for example Galit Shmueli, ["The use of dummy variables in predictive algorithms"](https://www.bzst.com/2014/03/the-use-of-dummy-variables-in.html).' %}. This is only necessary for regression problems, where input multicollinearity is an issue ("dummy variable trap"). For tree-based classification models, removing a dummy variable may actually reduce efficiency.
+This results in data frame ```df1```, with 9 feature variables, being replaced by data frame ```df2```, which has 642 feature variables! The ```drop_first=False``` argument indicates that we do not wish to drop one dummy variable per categorical variable{% sidenote 'ADS-2' 'See for example Galit Shmueli, ["The use of dummy variables in predictive algorithms"](http://www.bzst.com/2014/03/the-use-of-dummy-variables-in.html).' %}. This is only necessary for regression problems, where input multicollinearity is an issue ("dummy variable trap"). For tree-based classification models, removing a dummy variable may actually reduce efficiency.
 
 {% marginnote "btt-2" "[Back to Top](#TopOfPage)" %}
 
@@ -126,7 +126,7 @@ In the next sections I describe the grid search and the result of applying the r
 <a name="GridSearch"></a>
 
 ## Grid search
-[Scikit-learn](https://scikit-learn.org/stable/) provides method [`GridSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html) to search a grid in hyper-parameter space for the optimal classifier of a given type in a given problem. In the present case we are interested in a [`RandomForestClassifier`](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html). As was emphasized at the WiMLDS workshop, random forests can and do sometimes overfit. Scikit-learn provides three parameters to control overfitting, and these are the ones I used in the grid search:
+[Scikit-learn](https://scikit-learn.org/stable/) provides method [`GridSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) to search a grid in hyper-parameter space for the optimal classifier of a given type in a given problem. In the present case we are interested in a [`RandomForestClassifier`](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html). As was emphasized at the WiMLDS workshop, random forests can and do sometimes overfit. Scikit-learn provides three parameters to control overfitting, and these are the ones I used in the grid search:
 
 - **n_estimators:** the number of trees in the forest; more trees reduces overfitting but takes longer to run; I tried the values 50, 100, 200.
 
@@ -176,7 +176,7 @@ For predicting flight delays, thresholds other than 50% can be chosen from the l
 
 Note how the precision curve in the left panel becomes more jagged for thresholds above 0.60. This is due to a lack of statistics, as can be inferred from the right panel of Figure 4. To explore the variability of the precision, recall, and queue-rate curves as a function of threshold, I generated independent random forest models from 50 different random splittings of the original data set into training and test subsets (still maintaining a 70/30 ratio). I used this ensemble of models to compute and draw median curves and 90% confidence belts, which are shown in Figure 5's right panel.
 
-The confidence belts are generally quite narrow, the only exception being the precision curve for thresholds above 0.60. This type of plot can be used to guide business decisions{% sidenote 'ADS-5' 'For a nice introduction to thresholding, see this blog post by Slater Stich, ["Visualizing Machine Learning Thresholds to Make Better Business Decisions"](https://blog.insightdatalabs.com/visualizing-classifier-thresholds/).' %}.
+The confidence belts are generally quite narrow, the only exception being the precision curve for thresholds above 0.60. This type of plot can be used to guide business decisions{% sidenote 'ADS-5' 'For a nice introduction to thresholding, see this blog post by Slater Stich, ["Visualizing Machine Learning Thresholds to Make Better Business Decisions"](https://blog.insightdatascience.com/visualizing-machine-learning-thresholds-to-make-better-business-decisions-4ab07f823415).' %}.
 
 As mentioned earlier, our random forest classifier uses 642 features (after converting categorical features to binary ones). It is therefore interesting to check which ones are important, and how much impact important features have compared to the other ones. Scikit-learn provides a RandomForestClassifier attribute to extract feature importances. Each feature importance measures the decrease in classification accuracy when the corresponding feature values are randomly permuted over all trees in the forest.
 
