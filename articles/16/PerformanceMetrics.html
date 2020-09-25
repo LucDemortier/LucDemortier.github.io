@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <a name="TopOfPage"></a>
+  <title>Taking the Confusion out of the Confusion Matrix</title>
+  <meta name="description" content="How Bayes' theorem helps organize the bewildering array of performance metrics that can be estimated from a classifier's confusion matrix.">
+
+  <!-- Google Fonts loaded here depending on setting in _data/options.yml true loads font, blank does not-->
+   
+     <link href='//fonts.googleapis.com/css?family=Lato:400,400italic' rel='stylesheet' type='text/css'>
+   
+
+   <!-- Load up MathJax script if needed ... specify in /_data/options.yml file-->
+   
+     <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+   
+
+  <link rel="stylesheet" href="/css/tufte.css">
+
+  <link rel="canonical" href="http://lucdemortier.github.io/articles/16/PerformanceMetrics">
+  <link rel="alternate" type="application/rss+xml" title="Light on Data" href="http://lucdemortier.github.io/feed.xml" />
+
+  <!-- Load up the favicons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/assets/img/favicons/manifest.json">
+  <link rel="mask-icon" href="/assets/img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="/assets/img/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/assets/img/favicons/mstile-144x144.png">
+  <meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Load up Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-78138990-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+</head>
+
+  <body class="full-width">
+    <!--- Header and nav template site-wide -->
+<header>
+    <nav class="group">
+		<a href="/"><img class="badge" src="/assets/img/avatars/LightOnData5.jpg" alt="CH"></a>
+
+    
+
+    
+        
+            
+                <a href="/feed.xml"></a>
+            
+        
+    
+        
+            
+                <a href="/">blog</a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    <a href="/papers/index">papers</a>
+                
+            
+        
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    <a href="/projects/index">projects</a>
+                
+            
+        
+    
+
+    
+        <a href="/about/">about</a>
+    
+
+	</nav>
+</header>
+
+    <article>
+      <h1>Taking the Confusion out of the Confusion Matrix</h1>
+<p class="subtitle">July 26, 2016</p>
+
+
+<p>[Revised 21 September 2017, 24 December 2019]</p>
+
+<blockquote>
+  <p><strong>Contents</strong>
+<br /><a href="#Introduction">Introduction</a>
+<br /><a href="#FourApplications">Bayes’ theorem</a>
+<br />    <a href="#Prior">The prior</a>
+<br />    <a href="#Likelihood">The likelihood</a>
+<br />    <a href="#ModelEvidence">The model evidence</a>
+<br />    <a href="#Posterior">The posterior</a>
+<br />    <a href="#Summary">Summary</a>
+<br /><a href="#JointProbabilities">Joint probabilities</a>
+<br /><a href="#LikelihoodRatios">Likelihood ratios</a>
+<br /><a href="#ClassifierUsefulness">When is a classifier useful?</a>
+<br /><a href="#MetricsEstimation">Performance metric estimation</a>
+<br /><a href="#EffectOfPrevalence">Effect of prevalence on classifier training and testing</a></p>
+</blockquote>
+
+<hr />
+
+<p><a name="Introduction"></a></p>
+<h2 id="introduction">Introduction</h2>
+<p>I always thought that the <em>confusion</em> matrix was rather aptly named, a reference not so much to the mixed performance of a classifier as to my own bewilderment at the number of measures of that performance. Recently however, I encountered <a href="https://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/">a brief mention</a> of the possibility of a Bayesian interpretation of performance measures, and this inspired me to explore the idea a little further. It’s not that Bayes’ theorem is needed to understand or apply the performance measures, but it acts as an organizing and connecting principle, which I find helpful. New concepts are easier to remember if they fit inside a good story.</p>
+
+<p>Another advantage of taking the Bayesian route is that this forces us to view performance measures as probabilities, which are <em>estimated</em> from the confusion matrix. Elementary presentations tend to <em>define</em> performance metrics in terms of ratios of confusion matrix elements, thereby ignoring the effect of statistical fluctuations.</p>
+
+<p>Bayes’ theorem is not the only way to generate performance metrics. One can also start from joint probabilities or likelihood ratios. The next three subsections describe these approaches one by one. This is followed by a subsection discussing a minimal condition for a classifier to be useful, a subsection on estimating performance measures, and one on the effect of changing the prevalence in the training and testing data sets of a classifier.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="FourApplications"></a></p>
+<h2 id="bayes-theorem">Bayes’ theorem</h2>
+<p>Let’s start from Bayes’ theorem in its general form:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+p(\lambda\mid X) \;=\; \frac{p(X\mid\lambda)\;\pi(\lambda)}{\int p(X\mid\lambda^{\prime})\;\pi(\lambda^{\prime})\;d\lambda^{\prime}}.
+</script></div>
+<p>Here <span>​<script type="math/tex">X</script></span> represents the observed data and <span>​<script type="math/tex">\lambda</script></span> a parameter of interest. On the left-hand side is the posterior probability density of <span>​<script type="math/tex">\lambda</script></span> given <span>​<script type="math/tex">X</script></span>. On the right-hand side, <span>​<script type="math/tex">p(X\mid\lambda)</script></span> is the likelihood, or conditional probability density of <span>​<script type="math/tex">X</script></span> given <span>​<script type="math/tex">\lambda</script></span>, and <span>​<script type="math/tex">\pi(\lambda)</script></span> is the prior probability density of <span>​<script type="math/tex">\lambda</script></span>. The denominator is called model evidence, or marginal likelihood. One way to think about Bayes’ theorem is that it uses the data <span>​<script type="math/tex">X</script></span> to update the prior information <span>​<script type="math/tex">\pi(\lambda)</script></span> about <span>​<script type="math/tex">\lambda</script></span>, and returns the posterior <span>​<script type="math/tex">p(\lambda\mid X)</script></span>.</p>
+
+<p>For a binary classifier <span>​<script type="math/tex">\lambda</script></span> is the true class to which instance <span>​<script type="math/tex">X</script></span> belongs and can take only two values, say 0 and 1. Bayes’ theorem then simplifies to:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+\begin{aligned}
+p(\lambda \!=\!1\mid X) & \; =\; \frac{p(X\mid\lambda\!=\!1)\;\pi(\lambda\!=\!1)}
+     {p(X\mid\lambda\!=\!0)\,\pi(\lambda\!=\!0) \;+\;
+      p(X\mid\lambda\!=\!1)\,\pi(\lambda\!=\!1)},
+\quad\textrm{and} \\[3mm]
+p(\lambda \!=\!0\mid X) & \; =\; 1 \;-\; p(\lambda\!=\!1\mid X).
+\end{aligned}
+</script></div>
+<p>To describe the performance of a classifier, <span>​<script type="math/tex">X</script></span> could be summarized either by the <em>class label</em> <span>​<script type="math/tex">\ell</script></span> assigned to it by the classifier, or by the <em>score</em> <span>​<script type="math/tex">q</script></span> (a number between 0 and 1) assigned by the classifier to the hypothesis that <span>​<script type="math/tex">X</script></span> belongs to class 1. Thus for example, <span>​<script type="math/tex"> p(\lambda\!=\!1 \mid \ell\!=\!0) </script></span> represents the posterior probability that the true class is 1 given a class label of 0, and <span>​<script type="math/tex">p(\lambda\!=\!1\mid q\!\ge\! q_{T})</script></span> is the posterior probability that the true class is 1 given that the score <span>​<script type="math/tex">q</script></span> is above a pre-specified threshold <span>​<script type="math/tex">q_{T}</script></span>.</p>
+
+<p>Next we’ll take a look at each component of Bayes’ theorem in turn: the prior, the likelihood, the model evidence, and finally the posterior. Each of these maps to a classifier performance measure or a population characteristic.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="Prior"></a></p>
+<h3 id="the-prior">The prior</h3>
+<p>To simplify the notation let’s write <span>​<script type="math/tex">\lambda_{0}</script></span> to signify <span>​<script type="math/tex">\lambda=0</script></span>, <span>​<script type="math/tex">\lambda_{1}</script></span> for <span>​<script type="math/tex">\lambda=1</script></span>, and similarly with other variables. The first ingredient in the computation of the posterior is the prior <span>​<script type="math/tex">\pi(\lambda)</script></span>. To fix ideas, let’s assume that <span>​<script type="math/tex">\lambda_{1}</script></span> is the class of interest, generically labeled “positive”; it indicates “effect”, “signal”, “disease”, “fraud”, or “spam”, depending on the context. Then <span>​<script type="math/tex">\lambda_{0}</script></span> indicates the lack of these things and is generically labeled “negative”. To fully specify the prior we just need <span>​<script type="math/tex">\pi(\lambda_{1})</script></span>, since <span>​<script type="math/tex">\pi(\lambda_{0}) = 1 - \pi(\lambda_{1})</script></span>. The prior probability <span>​<script type="math/tex">\pi(\lambda_{1})</script></span> of drawing a positive instance from the population is called the <strong>prevalence</strong>. It is a property of the population, not the classifier.</p>
+
+<p>To simplify the notation even further let’s use <span>​<script type="math/tex">\pi_{1}</script></span> for <span>​<script type="math/tex">\pi(\lambda=1)</script></span> and <span>​<script type="math/tex">\pi_{0}</script></span> for <span>​<script type="math/tex">\pi(\lambda=0)</script></span>.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="Likelihood"></a></p>
+<h3 id="the-likelihood">The likelihood</h3>
+<p>The next ingredient is the conditional probability <span>​<script type="math/tex">p(X\mid\lambda)</script></span>. For now let’s work with classifier labels and replace <span>​<script type="math/tex">X</script></span> by <span>​<script type="math/tex">\ell</script></span>. This leads to the following four definitions:</p>
+
+<ul>
+  <li>
+    <p>The <strong>true positive rate</strong>, also known as <strong>sensitivity</strong> or <strong>recall</strong>: <span>​<script type="math/tex">S_{e} \equiv p(\ell_{1}\mid \lambda_{1})</script></span>,</p>
+  </li>
+  <li>
+    <p>The <strong>true negative rate</strong>, also known as <strong>specificity</strong>: <span>​<script type="math/tex">S_{p}\equiv p(\ell_{0}\mid \lambda_{0})</script></span>,</p>
+  </li>
+  <li>
+    <p>The <strong>false-positive or Type-I-error rate</strong>: <span>​<script type="math/tex">\alpha\equiv p(\ell_{1}\mid\lambda_{0}) = 1 - p(\ell_{0}\mid\lambda_{0})</script></span>, and</p>
+  </li>
+  <li>
+    <p>The <strong>false-negative or Type-II-error rate</strong>: <span>​<script type="math/tex">\beta\equiv p(\ell_{0}\mid\lambda_{1}) = 1 - p(\ell_{1}\mid\lambda_{1})</script></span>.</p>
+  </li>
+</ul>
+
+<p>For example, <span>​<script type="math/tex">p(\ell_{1}\mid \lambda_{0})</script></span> is the conditional probability that the classifier assigns a label of 1 to an instance actually belonging to class 0. Note that the above four rates are independent of the prevalence and are therefore intrinsic properties of the classifier.</p>
+
+<p>When viewed as a function of true class <span>​<script type="math/tex">\lambda</script></span>, for fixed label <span>​<script type="math/tex">\ell</script></span>, the conditional probability <span>​<script type="math/tex">p(\ell\mid\lambda)</script></span> is known as the <strong>likelihood function</strong>. This functional aspect of <span>​<script type="math/tex">p(\ell\mid\lambda)</script></span> is not really used here, but it is good to remember the terminology.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="ModelEvidence"></a></p>
+<h3 id="the-model-evidence">The model evidence</h3>
+<p>Finally, we need the normalization factor in Bayes’ theorem, the model evidence. For a binary classifier this has two components, corresponding to the two possible labels:</p>
+
+<ul>
+  <li>
+    <p>The <strong>positive labeling rate</strong>: <span>​<script type="math/tex">p(\ell_{1}) = p(\ell_{1}\mid\lambda_{0})\,\pi_{0} + p(\ell_{1}\mid\lambda_{1})\,\pi_{1}</script></span>, and</p>
+  </li>
+  <li>
+    <p>The <strong>negative labeling rate</strong>: <span>​<script type="math/tex">p(\ell_{0}) = p(\ell_{0}\mid\lambda_{0})\,\pi_{0} + p(\ell_{0}\mid\lambda_{1})\,\pi_{1}</script></span>.</p>
+  </li>
+</ul>
+
+<p>The positive labeling rate is more commonly known as the <strong>queue rate</strong>, especially when it is calculated as the fraction of instances for which the classifier score <span>​<script type="math/tex">q</script></span> is above a pre-specified threshold <span>​<script type="math/tex">q_{T}</script></span>.</p>
+
+<p>Again to simplify the notation I’ll write <span>​<script type="math/tex">p_{0}</script></span> for <span>​<script type="math/tex">p(\ell_{0})</script></span> and <span>​<script type="math/tex">p_{1}</script></span> for <span>​<script type="math/tex">p(\ell_{1})</script></span> in the following.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="Posterior"></a></p>
+<h3 id="the-posterior">The posterior</h3>
+<p>Armed with the prior probability, the likelihood, and the model evidence, we can compute the posterior probability from Bayes’ theorem.  There are four combinations of truth and label:</p>
+
+<ul>
+  <li>
+    <p>The <strong>positive predictive value</strong>, also known as <strong>precision</strong>: <span>​<script type="math/tex">{\rm ppv}\equiv p(\lambda_{1}\mid\ell_{1}) = \frac{p(\ell_{1}\mid\lambda_{1})\, \pi_{1}}{p_{1}} </script></span>,</p>
+  </li>
+  <li>
+    <p>The <strong>negative predictive value</strong>: <span>​<script type="math/tex"> {\rm npv}\equiv p(\lambda_{0}\mid\ell_{0}) = \frac{p(\ell_{0}\mid\lambda_{0})\, \pi_{0}}{p_{0}} </script></span>,</p>
+  </li>
+  <li>
+    <p>The <strong>false discovery rate</strong>: <span>​<script type="math/tex"> {\rm fdr}\equiv p(\lambda_{0}\mid\ell_{1}) = 1 - {\rm ppv}</script></span>, and</p>
+  </li>
+  <li>
+    <p>The <strong>false omission rate</strong>: <span>​<script type="math/tex"> {\rm for}\equiv p(\lambda_{1}\mid\ell_{0}) = 1 - {\rm npv} </script></span>.</p>
+  </li>
+</ul>
+
+<p>The precision, for example, quantifies the predictive value of a positive label by answering the question: If we see a positive label, what is the (posterior) probability that the true class is positive? (Note that the predictive values are not intrinsic properties of the classifier since they depend on the prevalence. Sometimes they are “standardized” by evaluating them at <span>​<script type="math/tex"> \pi_{0} = \pi_{1} = 1/2 </script></span>.)</p>
+
+<p>Figure 1 shows how the posterior probabilities <span>​<script type="math/tex">{\rm ppv}</script></span>, <span>​<script type="math/tex">{\rm npv}</script></span>, <span>​<script type="math/tex">{\rm fdr}</script></span> and <span>​<script type="math/tex">{\rm for}</script></span> are related to the likelihoods <span>​<script type="math/tex">S_{e}</script></span>, <span>​<script type="math/tex">S_{p}</script></span>, <span>​<script type="math/tex">\alpha</script></span> and <span>​<script type="math/tex">\beta</script></span> via Bayes’ theorem:</p>
+
+<figure class="fullwidth"><img src="/assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" /><figcaption>Figure 1: For each combination of class and label, Bayes' theorem connects the corresponding performance metrics of a classifier.</figcaption></figure>
+
+<p><a name="Summary"></a></p>
+<h3 id="summary">Summary</h3>
+<p>This section introduced twelve quantities:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+\pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; {\rm ppv},\; {\rm npv},\; {\rm fdr},\; {\rm for}.
+</script></div>
+<p>Only three of these are independent, say <span>​<script type="math/tex">\pi_{1}</script></span>, <span>​<script type="math/tex">\alpha</script></span> and <span>​<script type="math/tex">\beta</script></span>. To see this, note that by virtue of their definition the first six quantities satisfy three conditions:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+\pi_{0} + \pi_{1} = 1,\quad S_{e} + \beta = 1, \quad S_{p} + \alpha = 1,
+</script></div>
+<p>and the last six can be expressed in terms of the first six: for <span>​<script type="math/tex">p_{0}</script></span> and <span>​<script type="math/tex">p_{1}</script></span> we have:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+p_{0} = S_{p} \pi_{0} +  \beta \pi_{1}, \quad p_{1} = \alpha \pi_{0} + S_{e} \pi_{1},
+</script></div>
+<p>and Bayes’ theorem takes care of the remaining four (Figure 1).</p>
+
+<p>The final number of independent quantities matches the number of degrees of freedom of a two-by-two contingency table such as the confusion matrix, which is used to estimate all twelve quantities (see <a href="#MetricsEstimation">below</a>). It also tells us that we only need two numbers to fully characterize a binary classifier (since <span>​<script type="math/tex">\pi_{1}</script></span> is not a classifier property). As trivial examples, consider the majority and minority classifiers. Assume that class 0 is more prevalent than class 1. Then the majority classifier assigns the label 0 to every instance and has <span>​<script type="math/tex">\alpha=0</script></span> and <span>​<script type="math/tex">\beta=1</script></span>. The minority classifier assigns the label 1 to every instance and has <span>​<script type="math/tex">\alpha=1</script></span> and <span>​<script type="math/tex">\beta=0</script></span>. These classifiers are of course not very useful. As we will show below, for a classifier to be useful, it must satisfy <span>​<script type="math/tex"> \alpha + \beta \lt 1 </script></span>.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="JointProbabilities"></a></p>
+<h2 id="joint-probabilities">Joint probabilities</h2>
+<p>A couple of joint probabilities lead to performance metrics with very different properties.</p>
+
+<p>Consider first the joint probability of class label and true class, which can be decomposed in terms of likelihood and prior:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+p(\ell,\lambda) \;=\; p(\ell\mid\lambda)\,\pi(\lambda).
+</script></div>
+<p>Projecting this joint probability on the axis “<span>​<script type="math/tex"> \ell=\lambda </script></span>” yields the <strong>accuracy</strong>, or the probability to correctly identify any instance, negative or positive:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+{\rm A} \;\equiv\; p(\ell=\lambda) \;=\; p(\ell_{0}\mid\lambda_{0})\,\pi_{0} \;+\; p(\ell_{1}\mid\lambda_{1})\,\pi_{1} \;=\; S_{p}\,(1-\pi_{1}) \;+\; S_{e}\,\pi_{1} \;=\;
+1 - \alpha \;+\; (\alpha - \beta) \,\pi_{1}.
+</script></div>
+<p>The last expression on the right shows that the accuracy depends on the prevalence and is therefore not an intrinsic property of the classifier. An equivalent measure is the <strong>misclassification rate</strong>, defined as one minus the accuracy. A benchmark that is sometimes used is the <strong>null error rate</strong>, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to <span>​<script type="math/tex">\min\{\pi_{1}, 1-\pi_{1}\}</script></span>. The complement of the null error rate is the <strong>null accuracy</strong>, which is equal to <span>​<script type="math/tex">\max\{\pi_{1}, 1-\pi_{1}\}</script></span>.</p>
+
+<p>The second joint probability to consider is that of the scores assigned by the classifier to two independently drawn instances, one from the positive class and one from the negative class. A good measure of performance is the probability that the positive instance is scored higher than the negative instance. This measure equals the <strong>Area Under the Receiver Operating Characteristic (AUROC)</strong>, a curve of the true positive rate as a function of the false positive rate (or sensitivity versus one-minus-specificity). By construction, the AUROC is independent of prevalence, and does not require a choice of threshold <span>​<script type="math/tex">q_{T}</script></span> on the classifier score <span>​<script type="math/tex">q</script></span>. In other words, it does not depend on the chosen operating point of the classifier.</p>
+
+<p>There is actually a relationship between the AUROC and the accuracy, via an expectation. Imagine an ensemble of binary classifiers like the one considered here, but with thresholds <span>​<script type="math/tex">q_{T}</script></span> distributed like the <span>​<script type="math/tex">q</script></span> scores of the instances in the population we are trying to classify. The expected (i.e. average) accuracy of the classifiers in this ensemble is given by:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+\mathbb{E}(A) \;=\; \frac{\pi_{0}^{2} + \pi_{1}^{2}}{2} \,+\, 2\,\pi_{0}\,\pi_{1}\,\textrm{AUROC},
+</script></div>
+<p>and is thus linearly related to the AUROC. In a sense, the AUROC aggregates the classifier accuracy information in a way that’s independent of prevalence (see <a href="https://www.quora.com/Machine-Learning-What-is-an-intuitive-explanation-of-AUC/answer/Peter-Flach">this answer</a> by Peter Flach on Quora for a more detailed explanation).</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="LikelihoodRatios"></a></p>
+<h2 id="likelihood-ratios">Likelihood ratios</h2>
+<p>In some fields it is customary to work with ratios of probabilities rather than with the probabilities themselves.  Thus one defines:</p>
+
+<ul>
+  <li>
+    <p>The <strong>positive likelihood ratio</strong>: <span>​<script type="math/tex">{\rm lr+} \equiv \frac{p(\ell_{1}\mid\lambda_{1})}{p(\ell_{0}\mid\lambda_{1})} = \frac{S_{e}}{1-S_{e}}</script></span>, which represents the odds of a positive label if the true class is positive (in medical statistics for example, this would be the odds of a positive test if patient has the disease).</p>
+  </li>
+  <li>
+    <p>The <strong>negative likelihood ratio</strong>: <span>​<script type="math/tex">{\rm lr-} \equiv \frac{p(\ell_{1}\mid\lambda_{0})}{p(\ell_{0}\mid\lambda_{0})} = \frac{1-S_{p}}{S_{p}}</script></span>, which represents the odds of a positive label if the true class is negative (in medical statistics, the odds of a positive test if patient does not have the disease).</p>
+  </li>
+</ul>
+
+<p>Finally, it is instructive to take the ratio of these two likelihood ratios. This yields</p>
+
+<ul>
+  <li>The <strong>diagnostic odds ratio</strong>: <span>​<script type="math/tex">{\rm dor} \equiv \frac{\rm lr+}{\rm lr-} = \frac{S_{e}}{1-S_{e}}\frac{S_{p}}{1-S_{p}}</script></span>.</li>
+</ul>
+
+<p>If <span>​<script type="math/tex">{\rm dor} \gt 1</script></span>, the classifier is deemed useful, since this means that, in our medical example, the odds of a positive test are higher for a patient with the disease than for a healthy patient. If <span>​<script type="math/tex">{\rm dor}=1</script></span> the classifier is useless, but if <span>​<script type="math/tex">{\rm dor}\lt 1</script></span> the classifier is worse than useless, it is misleading. In this case one would be better off swapping the labels on the classifier output.</p>
+
+<p>Note that the ratios <span>​<script type="math/tex">{\rm lr+}</script></span>, <span>​<script type="math/tex">{\rm lr-}</script></span>, and <span>​<script type="math/tex">{\rm dor}</script></span> are all independent of prevalence.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="ClassifierUsefulness"></a></p>
+<h2 id="when-is-a-classifier-useful">When is a classifier useful?</h2>
+<p>The usefulness condition <span>​<script type="math/tex">\fbox{dor $\gt 1$}</script></span> is mathematically equivalent to any of the following conditions:</p>
+
+<ol>
+  <li>
+    <p><span>​<script type="math/tex">\fbox{$S_{e}\gt 1 - S_{p}$}</script></span> The sensitivity must be larger than one minus the specificity. Equivalently, the probability of detecting a positive-class instance must be larger than the probability of mislabeling a negative-class instance. This condition explains why, for a useful classifier, the ROC always lies <em>above</em> the main diagonal in a plot of <span>​<script type="math/tex">S_{e}</script></span> versus <span>​<script type="math/tex">1 - S_{p}</script></span>.</p>
+  </li>
+  <li>
+    <p><span>​<script type="math/tex">\fbox{$\beta \lt 1 - \alpha$}</script></span> A reformulation of condition 1 in terms of Type-I and II error rates.</p>
+  </li>
+  <li>
+    <p><span>​<script type="math/tex">\fbox{ppv $\gt \pi_{1}$}</script></span> The precision must be larger than the prevalence. In other words, the probability for an instance to belong to the positive class must be larger within the subset of instances with a positive label than within the entire population. If this is not the case, the classifier adds no useful information. Similarly: <span>​<script type="math/tex">\fbox{npv $\gt \pi_{0}$}</script></span>.</p>
+  </li>
+  <li>
+    <p><span>​<script type="math/tex">\fbox{$S_{e} \gt p_{1}$}</script></span> This follows from condition 3 and Bayes’ theorem for <span>​<script type="math/tex">{\rm ppv}</script></span>. The probability of encountering a positively labeled instance must be larger within the subset of positive-class instances than within the entire population. Similarly: <span>​<script type="math/tex">\fbox{$S_{p} \gt p_{0}$}</script></span>, <span>​<script type="math/tex">\fbox{$\alpha \lt p_{1}$}</script></span>, and <span>​<script type="math/tex">\fbox{$\beta \lt p_{0}$}</script></span>.</p>
+  </li>
+  <li>
+    <p><span>​<script type="math/tex">\fbox{fdr $\lt \pi_{0}$}</script></span> The probability of encountering a negative-class instance must be smaller within the subset of positively labeled instances than within the entire population. Similarly: <span>​<script type="math/tex">\fbox{for $\lt \pi_{1}$}</script></span>.</p>
+  </li>
+</ol>
+
+<p>The classifier usefulness condition also puts a bound on the accuracy:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+{\rm A} \;=\; 1 - \alpha \;+\; (\alpha - \beta) \,\pi_{1}
+        \;>\; 1 - \alpha \;+\; (2\alpha - 1) \,\pi_{1}.
+</script></div>
+
+<p>It is straightforward to verify that the majority and minority classifiers defined earlier both fail any of the above usefulness conditions. As a counter-example, imagine starting with the majority classifier and flipping the label on a single positive instance. Thus, this classifier sets <span>​<script type="math/tex">\ell=1</script></span> on one <span>​<script type="math/tex">\lambda=1</script></span> instance and <span>​<script type="math/tex">\ell=0</script></span> on all other instances. It has 100% precision on positive labels (<span>​<script type="math/tex">\mbox{ppv}=1</script></span>). For negative labels the precision is <span>​<script type="math/tex">\mbox{npv} = \pi_{0}/(1-1/N)</script></span>, with <span>​<script type="math/tex">N</script></span> the total number of instances. Hence this classifier passes the usefulness condition, although barely in the case of <span>​<script type="math/tex">\mbox{npv}</script></span> and large <span>​<script type="math/tex">N</script></span>.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="MetricsEstimation"></a></p>
+<h2 id="performance-metric-estimation">Performance metric estimation</h2>
+<p>The performance metrics can be estimated from a two-by-two contingency table known as the confusion matrix. It is obtained by applying the classifier to a test data set different from the training data set. Here is standard notation for this matrix:</p>
+
+<figure class="fullwidth"><img src="/assets/img/blog/ConfusionMatrix/ConfusionMatrix.png" /><figcaption>Figure 2: Estimated confusion matrix. The notation tp stands for "number of true positives", fn for "number of false negatives", and so on.</figcaption></figure>
+
+<p>The rows correspond to class labels, the columns to true classes. We then have the following approximations:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+\begin{aligned}
+\mbox{Prevalence :} & \quad \pi_{1} &&\equiv\pi(\lambda_{1}) &&\approx \dfrac{\rm fn+tp}{\rm fn+tp+fp+tn}\\[1mm]
+
+\mbox{Queue rate :} & \quad p_{1} &&\equiv p(\ell_{1}) &&\approx \dfrac{\rm fp+tp}{\rm fn+tp+fp+tn}\\[4mm]
+
+\mbox{True-positive rate, sensitivity, recall :} & \quad S_{e} &&\equiv p(\ell_{1}\mid\lambda_{1}) &&\approx \dfrac{\rm tp}{\rm tp+fn}\\[1mm]
+
+\mbox{True-negative rate, specificity :} & \quad S_{p} &&\equiv p(\ell_{0}\mid\lambda_{0}) &&\approx \dfrac{\rm tn}{\rm tn + fp}\\[1mm]
+
+\mbox{False-positive rate, Type-I error rate :} & \quad \alpha &&\equiv p(\ell_{1}\mid\lambda_{0})&&\approx \dfrac{\rm fp}{\rm tn + fp}\\[1mm]
+
+\mbox{False-negative rate, Type-II error rate :} & \quad \beta &&\equiv p(\ell_{0}\mid\lambda_{1})&&\approx \dfrac{\rm fn}{\rm tp + fn}\\[4mm]
+
+\mbox{Positive predictive value, precision :} & \quad {\rm ppv} &&\equiv p(\lambda_{1}\mid\ell_{1}) &&\approx \dfrac{\rm tp}{\rm tp + fp}\\[1mm]
+
+\mbox{Negative predictive value :} & \quad {\rm npv} &&\equiv p(\lambda_{0}\mid\ell_{0}) &&\approx \dfrac{\rm tn}{\rm tn + fn}\\[1mm]
+
+\mbox{False-discovery rate :} & \quad {\rm fdr} &&\equiv p(\lambda_{0}\mid\ell_{1}) &&\approx \dfrac{\rm fp}{\rm tp + fp}\\[1mm]
+
+\mbox{False-omission rate :} & \quad {\rm for} &&\equiv p(\lambda_{1}\mid\ell_{0}) &&\approx \dfrac{\rm fn}{\rm tn + fn}\\[4mm]
+
+\mbox{Positive likelihood ratio :} & \quad {\rm lr+} &&\equiv \frac{p(\ell_{1}\mid\lambda_{1})}{p(\ell_{0}\mid\lambda_{1})}&&\approx \frac{\rm tp}{\rm fn}\\[1mm]
+
+\mbox{Negative likelihood ratio :} & \quad {\rm lr-} &&\equiv \frac{p(\ell_{1}\mid\lambda_{0})}{p(\ell_{0}\mid\lambda_{0})}&&\approx \frac{\rm fp}{\rm tn}\\[1mm]
+
+\mbox{Diagnostic odds ratio :} & \quad {\rm dor} &&\equiv \frac{\rm lr+}{\rm lr-} &&\approx \frac{\rm tp}{\rm fn} \frac{\rm tn}{\rm fp}\\[4mm]
+
+\mbox{Accuracy :} & \quad A &&\equiv p(\ell=\lambda) &&\approx \dfrac{\rm tp + tn}{\rm tp + tn + fp + fn}
+\end{aligned}
+</script></div>
+<p>There is no simple expression for the AUROC, since the latter requires integration under the curve of true versus false positive rates.</p>
+
+<p>Note that the relations between probabilities derived in the previous sections also hold between their estimates.</p>
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<p><a name="EffectOfPrevalence"></a></p>
+<h2 id="effect-of-prevalence-on-classifier-training-and-testing">Effect of prevalence on classifier training and testing</h2>
+<p>In this post I have tried to be careful in pointing out which performance metrics depend on the prevalence, and which don’t. The reason is that prevalence is a population or sample property, whereas here we are interested in classifier properties. Of course, real-world classifiers must be trained and tested on finite samples, and this has implications for the actual effect of prevalence on classifier performance:</p>
+
+<ul>
+  <li>
+    <p>When <strong>training</strong> a classifier, changing the prevalence in the training data <em>may affect</em> properties such as the sensitivity and specificity, depending on the characteristics of the training algorithm.</p>
+  </li>
+  <li>
+    <p>When <strong>testing</strong> a trained classifier, changing the prevalence in the test data <em>will not affect</em> properties such as the sensitivity and specificity (within statistical fluctuations).</p>
+  </li>
+</ul>
+
+<p>To illustrate this point I went back to a <a href="/articles/16/RandomForestsWiMLDS">previous post</a> on predicting flight delays with a random forest. The prevalence of the given flight delay data set is about 20%, but can be increased by randomly dropping class 0 instances (non-delayed flights). The table below shows the effect of changing the prevalence in this way in the <em>training</em> data:
+<br /><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Training set prevalence</th>
+      <th style="text-align: center">Sensitivity</th>
+      <th style="text-align: center">Specificity</th>
+      <th style="text-align: center">Accuracy</th>
+      <th style="text-align: center">AUROC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0.40</td>
+      <td style="text-align: center">0.16</td>
+      <td style="text-align: center">0.96</td>
+      <td style="text-align: center">0.72</td>
+      <td style="text-align: center">0.72</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.42</td>
+      <td style="text-align: center">0.29</td>
+      <td style="text-align: center">0.91</td>
+      <td style="text-align: center">0.72</td>
+      <td style="text-align: center">0.72</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.44</td>
+      <td style="text-align: center">0.46</td>
+      <td style="text-align: center">0.82</td>
+      <td style="text-align: center">0.71</td>
+      <td style="text-align: center">0.72</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.46</td>
+      <td style="text-align: center">0.58</td>
+      <td style="text-align: center">0.72</td>
+      <td style="text-align: center">0.68</td>
+      <td style="text-align: center">0.71</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.48</td>
+      <td style="text-align: center">0.63</td>
+      <td style="text-align: center">0.67</td>
+      <td style="text-align: center">0.66</td>
+      <td style="text-align: center">0.72</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.50</td>
+      <td style="text-align: center">0.73</td>
+      <td style="text-align: center">0.57</td>
+      <td style="text-align: center">0.62</td>
+      <td style="text-align: center">0.71</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>To be clear, for each row it is the same classifier (same hyper-parameters: number of trees, maximum tree depth, etc.) that is being fit to a training data set with varying prevalence. The sensitivity, specificity, accuracy, and AUROC are then measured on a testing data set with a constant prevalence of 30%. Note how the sensitivity and specificity, <em>as measured on an independent test data set</em>, vary with training set prevalence. The AUROC, on the other hand, remains stable.</p>
+
+<p>Next, let’s look at the effect of changing the prevalence in the <em>testing</em> data:
+<br /><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Testing set prevalence</th>
+      <th style="text-align: center">Sensitivity</th>
+      <th style="text-align: center">Specificity</th>
+      <th style="text-align: center">Accuracy</th>
+      <th style="text-align: center">AUROC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0.20</td>
+      <td style="text-align: center">0.50</td>
+      <td style="text-align: center">0.78</td>
+      <td style="text-align: center">0.73</td>
+      <td style="text-align: center">0.72</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.30</td>
+      <td style="text-align: center">0.48</td>
+      <td style="text-align: center">0.80</td>
+      <td style="text-align: center">0.70</td>
+      <td style="text-align: center">0.72</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.40</td>
+      <td style="text-align: center">0.45</td>
+      <td style="text-align: center">0.82</td>
+      <td style="text-align: center">0.67</td>
+      <td style="text-align: center">0.72</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.50</td>
+      <td style="text-align: center">0.46</td>
+      <td style="text-align: center">0.80</td>
+      <td style="text-align: center">0.63</td>
+      <td style="text-align: center">0.71</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">0.60</td>
+      <td style="text-align: center">0.50</td>
+      <td style="text-align: center">0.79</td>
+      <td style="text-align: center">0.61</td>
+      <td style="text-align: center">0.71</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Here the prevalence in the training data was set at 0.45. The sensitivity and specificity appear much more stable; residual variations may be due to the effect on the training data set of the procedure used to vary the testing set prevalence.</p>
+
+<p>Training data sets are often unbalanced, with prevalences even lower than in the example discussed here. Modules such as scikit-learn’s <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html"><code class="highlighter-rouge">RandomForestClassifier</code></a> provide a <code class="highlighter-rouge">class_weight</code> option, which can be set to <code class="highlighter-rouge">balanced</code> or <code class="highlighter-rouge">balanced_subsample</code> in order to assign a larger weight to the minority class. This re-weighting is applied both to the GINI criterion used for finding splits at decision tree nodes and to class votes in the terminal nodes. The sensitivity and specificity of a classifier, as well as its accuracy, will depend on the setting of the <code class="highlighter-rouge">class_weight</code> option. For scoring purposes when optimizing a classifier, AUROC tends to be a much more robust property.</p>
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+
+
+    </article>
+    <span class="print-footer">Taking the Confusion out of the Confusion Matrix - July 26, 2016 - luc demortier</span>
+    <footer>
+  <hr class="slender">
+
+  <ul class="footer-links">
+    <li><a href="mailto:luc.demortier@gmail.com"><span class="icon-mail"></span></a></li>
+    
+      <li>
+        <a href="//github.com/LucDemortier"><span class="icon-github"></span></a>
+      </li>
+    
+      <li>
+        <a href="//www.twitter.com/ThisOneLuc"><span class="icon-twitter"></span></a>
+      </li>
+    
+      <li>
+        <a href="//linkedin.com/in/lucdemortier"><span class="icon-linkedin"></span></a>
+      </li>
+    
+      <li>
+        <a href="/feed.xml"><span class="icon-rss2"></span></a>
+      </li>
+    
+  </ul>
+
+  <div class="credits">
+    <span>&copy; 2020 &nbsp;&nbsp;LUC DEMORTIER</span>
+  </div>
+
+  
+    <hr class="slender"><br><br>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+          var disqus_config = function () {
+              this.page.url = "http://lucdemortier.github.io/articles/16/PerformanceMetrics";
+              this.page.identifier = "/articles/16/PerformanceMetrics";
+          };
+
+          (function() {  // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.src = '//lightondata.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+          })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//lightondata.disqus.com/count.js" async></script>
+  
+
+</footer>
+
+  </body>
+</html>
