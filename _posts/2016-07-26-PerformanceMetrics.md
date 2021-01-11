@@ -10,6 +10,7 @@ comments: true
 > **Contents**
 > <br>[Introduction](#Introduction)
 > <br>[Bayes' theorem](#FourApplications)
+> <br> &ensp;&ensp;&ensp;[Notation](#Notation)
 > <br> &ensp;&ensp;&ensp;[The prior](#Prior)
 > <br> &ensp;&ensp;&ensp;[The likelihood](#Likelihood)
 > <br> &ensp;&ensp;&ensp;[The model evidence](#ModelEvidence)
@@ -40,26 +41,27 @@ p(\lambda\mid X) \;=\; \frac{p(X\mid\lambda)\;\pi(\lambda)}{\int p(X\mid\lambda^
 {% endmath %}
 Here {% m %}X{% em %} represents the observed data and {% m %}\lambda{% em %} a parameter of interest. On the left-hand side is the posterior probability density of {% m %}\lambda{% em %} given {% m %}X{% em %}. On the right-hand side, {% m %}p(X\mid\lambda){% em %} is the likelihood, or conditional probability density of {% m %}X{% em %} given {% m %}\lambda{% em %}, and {% m %}\pi(\lambda){% em %} is the prior probability density of {% m %}\lambda{% em %}. The denominator is called model evidence, or marginal likelihood. One way to think about Bayes' theorem is that it uses the data {% m %}X{% em %} to update the prior information {% m %}\pi(\lambda){% em %} about {% m %}\lambda{% em %}, and returns the posterior {% m %}p(\lambda\mid X){% em %}.
 
-For a binary classifier {% m %}\lambda{% em %} is the true class to which instance {% m %}X{% em %} belongs and can take only two values, say 0 and 1. Bayes' theorem then simplifies to:
+For a binary classifier {% m %}\lambda{% em %} is the true class to which instance {% m %}X{% em %} belongs and can take only two values, say 0 and 1. The denominator in Bayes' theorem then simplifies to:
 {% math %}
-\begin{aligned}
-p(\lambda \!=\!1\mid X) & \; =\; \frac{p(X\mid\lambda\!=\!1)\;\pi(\lambda\!=\!1)}
-     {p(X\mid\lambda\!=\!0)\,\pi(\lambda\!=\!0) \;+\;
-      p(X\mid\lambda\!=\!1)\,\pi(\lambda\!=\!1)},
-\quad\textrm{and} \\[3mm]
-p(\lambda \!=\!0\mid X) & \; =\; 1 \;-\; p(\lambda\!=\!1\mid X).
-\end{aligned}
+p(X) \;\equiv\; \int p(X\mid\lambda^{\prime})\;\pi(\lambda^{\prime})\;d\lambda^{\prime}
+     \;=\; p(X\mid\lambda\!=\!0)\,\pi(\lambda\!=\!0)\;+\;
+           p(X\mid\lambda\!=\!1)\,\pi(\lambda\!=\!1).
 {% endmath %}
+
+We'll take a look at each component of Bayes' theorem in turn: the prior, the likelihood, the model evidence, and finally the posterior. Each of these maps to a classifier performance measure or a population characteristic. But first, a comment about notation.
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<a name="Notation"></a>
+### Notation
 To describe the performance of a classifier, {% m %}X{% em %} could be summarized either by the *class label* {% m %}\ell{% em %} assigned to it by the classifier, or by the *score* {% m %}q{% em %} (a number between 0 and 1) assigned by the classifier to the hypothesis that {% m %}X{% em %} belongs to class 1. Thus for example, {% m %} p(\lambda\!=\!1 \mid \ell\!=\!0) {% em %} represents the posterior probability that the true class is 1 given a class label of 0, and {% m %}p(\lambda\!=\!1\mid q\!\ge\! q_{T}){% em %} is the posterior probability that the true class is 1 given that the score {% m %}q{% em %} is above a pre-specified threshold {% m %}q_{T}{% em %}.
 
-Next we'll take a look at each component of Bayes' theorem in turn: the prior, the likelihood, the model evidence, and finally the posterior. Each of these maps to a classifier performance measure or a population characteristic.
+To simplify the notation we'll write {% m %}\lambda_{0}{% em %} to signify {% m %}\lambda=0{% em %} and {% m %}\lambda_{1}{% em %} to signify {% m %}\lambda=1{% em %}, and similarly with {% m %}\ell_{0}{% em %} and {% m %}\ell_{1}{% em %}. Going one step further, we'll write the prior as {% m %}\pi_{i}{% em %} for {% m %}\pi(\lambda_{i}){% em %} and the evidence as {% m %}p_{i}{% em %} for {% m %}p(\ell_{i}){% em %}, where {% m %}i=0,1{% em %}.
+
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Prior"></a>
 ### The prior
-To simplify the notation let's write {% m %}\lambda_{0}{% em %} to signify {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} for {% m %}\lambda=1{% em %}, and similarly with other variables. The first ingredient in the computation of the posterior is the prior {% m %}\pi(\lambda){% em %}. To fix ideas, let's assume that {% m %}\lambda_{1}{% em %} is the class of interest, generically labeled "positive"; it indicates "effect", "signal", "disease", "fraud", or "spam", depending on the context. Then {% m %}\lambda_{0}{% em %} indicates the lack of these things and is generically labeled "negative". To fully specify the prior we just need {% m %}\pi(\lambda_{1}){% em %}, since {% m %}\pi(\lambda_{0}) = 1 - \pi(\lambda_{1}){% em %}. The prior probability {% m %}\pi(\lambda_{1}){% em %} of drawing a positive instance from the population is called the **prevalence**. It is a property of the population, not the classifier.
-
-To simplify the notation even further let's use {% m %}\pi_{1}{% em %} for {% m %}\pi(\lambda=1){% em %} and {% m %}\pi_{0}{% em %} for {% m %}\pi(\lambda=0){% em %}.
+The first ingredient in the computation of the posterior is the prior {% m %}\pi(\lambda){% em %}. To fix ideas, let's assume that {% m %}\lambda_{1}{% em %} is the class of interest, generically labeled "positive"; it indicates "effect", "signal", "disease", "fraud", or "spam", depending on the context. Then {% m %}\lambda_{0}{% em %} indicates the lack of these things and is generically labeled "negative". To fully specify the prior we just need {% m %}\pi_{1}{% em %}, since {% m %}\pi_{0} = 1 - \pi_{1}{% em %}. The prior probability {% m %}\pi_{1}{% em %} of drawing a positive instance from the population is called the **prevalence**. It is a property of the population, not the classifier.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Likelihood"></a>
@@ -83,30 +85,28 @@ When viewed as a function of true class {% m %}\lambda{% em %}, for fixed label 
 ### The model evidence
 Finally, we need the normalization factor in Bayes' theorem, the model evidence. For a binary classifier this has two components, corresponding to the two possible labels:
 
-- The **positive labeling rate**: {% m %}p(\ell_{1}) = p(\ell_{1}\mid\lambda_{0})\,\pi_{0} + p(\ell_{1}\mid\lambda_{1})\,\pi_{1}{% em %}, and
+- The **positive labeling rate**: {% m %}p_{1} = p(\ell_{1}\mid\lambda_{0})\,\pi_{0} + p(\ell_{1}\mid\lambda_{1})\,\pi_{1}{% em %}, and
 
-- The **negative labeling rate**: {% m %}p(\ell_{0}) = p(\ell_{0}\mid\lambda_{0})\,\pi_{0} + p(\ell_{0}\mid\lambda_{1})\,\pi_{1}{% em %}.
+- The **negative labeling rate**: {% m %}p_{0} = p(\ell_{0}\mid\lambda_{0})\,\pi_{0} + p(\ell_{0}\mid\lambda_{1})\,\pi_{1}{% em %}.
 
 The positive labeling rate is more commonly known as the **queue rate**, especially when it is calculated as the fraction of instances for which the classifier score {% m %}q{% em %} is above a pre-specified threshold {% m %}q_{T}{% em %}.
-
-Again to simplify the notation I'll write {% m %}p_{0}{% em %} for {% m %}p(\ell_{0}){% em %} and {% m %}p_{1}{% em %} for {% m %}p(\ell_{1}){% em %} in the following.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Posterior"></a>
 ### The posterior
 Armed with the prior probability, the likelihood, and the model evidence, we can compute the posterior probability from Bayes' theorem.  There are four combinations of truth and label:
 
-- The **positive predictive value**, also known as **precision**: {% m %}{\rm ppv}\equiv p(\lambda_{1}\mid\ell_{1}) = \frac{p(\ell_{1}\mid\lambda_{1})\, \pi_{1}}{p_{1}} {% em %},
+- The **positive predictive value**, also known as **precision**: {% m %}\mathit{ppv}\equiv p(\lambda_{1}\mid\ell_{1}) = \frac{p(\ell_{1}\mid\lambda_{1})\, \pi_{1}}{p_{1}} {% em %},
 
-- The **negative predictive value**: {% m %} {\rm npv}\equiv p(\lambda_{0}\mid\ell_{0}) = \frac{p(\ell_{0}\mid\lambda_{0})\, \pi_{0}}{p_{0}} {% em %},
+- The **negative predictive value**: {% m %}\mathit{npv}\equiv p(\lambda_{0}\mid\ell_{0}) = \frac{p(\ell_{0}\mid\lambda_{0})\, \pi_{0}}{p_{0}} {% em %},
 
-- The **false discovery rate**: {% m %} {\rm fdr}\equiv p(\lambda_{0}\mid\ell_{1}) = 1 - {\rm ppv}{% em %}, and
+- The **false discovery rate**: {% m %}\mathit{fdr}\equiv p(\lambda_{0}\mid\ell_{1}) = 1 - {\rm ppv}{% em %}, and
 
-- The **false omission rate**: {% m %} {\rm for}\equiv p(\lambda_{1}\mid\ell_{0}) = 1 - {\rm npv} {% em %}.
+- The **false omission rate**: {% m %}\mathit{for}\equiv p(\lambda_{1}\mid\ell_{0}) = 1 - {\rm npv} {% em %}.
 
 The precision, for example, quantifies the predictive value of a positive label by answering the question: If we see a positive label, what is the (posterior) probability that the true class is positive? (Note that the predictive values are not intrinsic properties of the classifier since they depend on the prevalence. Sometimes they are "standardized" by evaluating them at {% m %} \pi_{0} = \pi_{1} = 1/2 {% em %}.)
 
-Figure 1 shows how the posterior probabilities {% m %}{\rm ppv}{% em %}, {% m %}{\rm npv}{% em %}, {% m %}{\rm fdr}{% em %} and {% m %}{\rm for}{% em %} are related to the likelihoods {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %} via Bayes' theorem:
+Figure 1 shows how the posterior probabilities {% m %}\mathit{ppv}{% em %}, {% m %}\mathit{npv}{% em %}, {% m %}\mathit{fdr}{% em %} and {% m %}\mathit{for}{% em %} are related to the likelihoods {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %} via Bayes' theorem:
 
 {% fullwidth "assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" "Figure 1: For each combination of class and label, Bayes' theorem connects the corresponding performance metrics of a classifier." %}
 
@@ -114,7 +114,7 @@ Figure 1 shows how the posterior probabilities {% m %}{\rm ppv}{% em %}, {% m %}
 ### Summary
 This section introduced twelve quantities:
 {% math %}
-\pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; {\rm ppv},\; {\rm npv},\; {\rm fdr},\; {\rm for}.
+\pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; \mathit{ppv},\; \mathit{npv},\; \mathit{fdr},\; \mathit{for}.
 {% endmath %}
 Only three of these are independent, say {% m %}\pi_{1}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %}. To see this, note that by virtue of their definition the first six quantities satisfy three conditions:
 {% math %}
@@ -163,26 +163,26 @@ In some fields it is customary to work with ratios of probabilities rather than 
 
 Finally, it is instructive to take the ratio of these two likelihood ratios. This yields
 
-- The **diagnostic odds ratio**: {% m %}{\rm dor} \equiv \frac{\rm lr+}{\rm lr-} = \frac{S_{e}}{1-S_{e}}\frac{S_{p}}{1-S_{p}}{% em %}.
+- The **diagnostic odds ratio**: {% m %}\mathit{dor} \equiv \frac{\rm lr+}{\rm lr-} = \frac{S_{e}}{1-S_{e}}\frac{S_{p}}{1-S_{p}}{% em %}.
 
-If {% m %}{\rm dor} \gt 1{% em %}, the classifier is deemed useful, since this means that, in our medical example, the odds of a positive test are higher for a patient with the disease than for a healthy patient. If {% m %}{\rm dor}=1{% em %} the classifier is useless, but if {% m %}{\rm dor}\lt 1{% em %} the classifier is worse than useless, it is misleading. In this case one would be better off swapping the labels on the classifier output.
+If {% m %}\mathit{dor} \gt 1{% em %}, the classifier is deemed useful, since this means that, in our medical example, the odds of a positive test are higher for a patient with the disease than for a healthy patient. If {% m %}\mathit{dor}=1{% em %} the classifier is useless, but if {% m %}\mathit{dor}\lt 1{% em %} the classifier is worse than useless, it is misleading. In this case one would be better off swapping the labels on the classifier output.
 
-Note that the ratios {% m %}{\rm lr+}{% em %}, {% m %}{\rm lr-}{% em %}, and {% m %}{\rm dor}{% em %} are all independent of prevalence.
+Note that the ratios {% m %}{\rm lr+}{% em %}, {% m %}{\rm lr-}{% em %}, and {% m %}\mathit{dor}{% em %} are all independent of prevalence.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="ClassifierUsefulness"></a>
 ## When is a classifier useful?
-The usefulness condition {% m %}\fbox{dor $\gt 1$}{% em %} is mathematically equivalent to any of the following conditions:
+The usefulness condition {% m %}\fbox{$\mathit{dor} \gt 1$}{% em %} is mathematically equivalent to any of the following conditions:
 
 1. {% m %}\fbox{$S_{e}\gt 1 - S_{p}$}{% em %} The sensitivity must be larger than one minus the specificity. Equivalently, the probability of detecting a positive-class instance must be larger than the probability of mislabeling a negative-class instance. This condition explains why, for a useful classifier, the ROC always lies *above* the main diagonal in a plot of {% m %}S_{e}{% em %} versus {% m %}1 - S_{p}{% em %}.
 
 1. {% m %}\fbox{$\beta \lt 1 - \alpha$}{% em %} A reformulation of condition 1 in terms of Type-I and II error rates.
 
-1. {% m %}\fbox{ppv $\gt \pi_{1}$}{% em %} The precision must be larger than the prevalence. In other words, the probability for an instance to belong to the positive class must be larger within the subset of instances with a positive label than within the entire population. If this is not the case, the classifier adds no useful information. Similarly: {% m %}\fbox{npv $\gt \pi_{0}$}{% em %}.
+1. {% m %}\fbox{$\mathit{ppv} \gt \pi_{1}$}{% em %} The precision must be larger than the prevalence. In other words, the probability for an instance to belong to the positive class must be larger within the subset of instances with a positive label than within the entire population. If this is not the case, the classifier adds no useful information. Similarly: {% m %}\fbox{$\mathit{npv} \gt \pi_{0}$}{% em %}.
 
 1. {% m %}\fbox{$S_{e} \gt p_{1}$}{% em %} This follows from condition 3 and Bayes' theorem for {% m %}{\rm ppv}{% em %}. The probability of encountering a positively labeled instance must be larger within the subset of positive-class instances than within the entire population. Similarly: {% m %}\fbox{$S_{p} \gt p_{0}$}{% em %}, {% m %}\fbox{$\alpha \lt p_{1}$}{% em %}, and {% m %}\fbox{$\beta \lt p_{0}$}{% em %}.
 
-1. {% m %}\fbox{fdr $\lt \pi_{0}$}{% em %} The probability of encountering a negative-class instance must be smaller within the subset of positively labeled instances than within the entire population. Similarly: {% m %}\fbox{for $\lt \pi_{1}$}{% em %}.
+1. {% m %}\fbox{$\mathit{fdr} \lt \pi_{0}$}{% em %} The probability of encountering a negative-class instance must be smaller within the subset of positively labeled instances than within the entire population. Similarly: {% m %}\fbox{$\mathit{for} \lt \pi_{1}$}{% em %}.
 
 The classifier usefulness condition also puts a bound on the accuracy:
 {% math %}
@@ -190,7 +190,7 @@ The classifier usefulness condition also puts a bound on the accuracy:
         \;>\; 1 - \alpha \;+\; (2\alpha - 1) \,\pi_{1}.
 {% endmath %}
 
-It is straightforward to verify that the majority and minority classifiers defined earlier both fail any of the above usefulness conditions. As a counter-example, imagine starting with the majority classifier and flipping the label on a single positive instance. Thus, this classifier sets {% m %}\ell=1{% em %} on one {% m %}\lambda=1{% em %} instance and {% m %}\ell=0{% em %} on all other instances. It has 100% precision on positive labels ({% m %}\mbox{ppv}=1{% em %}). For negative labels the precision is {% m %}\mbox{npv} = \pi_{0}/(1-1/N){% em %}, with {% m %}N{% em %} the total number of instances. Hence this classifier passes the usefulness condition, although barely in the case of {% m %}\mbox{npv}{% em %} and large {% m %}N{% em %}.
+It is straightforward to verify that the majority and minority classifiers defined earlier both fail any of the above usefulness conditions. As a counter-example, imagine starting with the majority classifier and flipping the label on a single positive instance. Thus, this classifier sets {% m %}\ell=1{% em %} on one {% m %}\lambda=1{% em %} instance and {% m %}\ell=0{% em %} on all other instances. It has 100% precision on positive labels ({% m %}\mathit{ppv}=1{% em %}). For negative labels the precision is {% m %}\mathit{npv} = \pi_{0}/(1-1/N){% em %}, with {% m %}N{% em %} the total number of instances. Hence this classifier passes the usefulness condition.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="MetricsEstimation"></a>
@@ -214,19 +214,19 @@ The rows correspond to class labels, the columns to true classes. We then have t
 
 \mbox{False-negative rate, Type-II error rate :} & \quad \beta &&\equiv p(\ell_{0}\mid\lambda_{1})&&\approx \dfrac{\rm fn}{\rm tp + fn}\\[4mm]
 
-\mbox{Positive predictive value, precision :} & \quad {\rm ppv} &&\equiv p(\lambda_{1}\mid\ell_{1}) &&\approx \dfrac{\rm tp}{\rm tp + fp}\\[1mm]
+\mbox{Positive predictive value, precision :} & \quad \mathit{ppv} &&\equiv p(\lambda_{1}\mid\ell_{1}) &&\approx \dfrac{\rm tp}{\rm tp + fp}\\[1mm]
 
-\mbox{Negative predictive value :} & \quad {\rm npv} &&\equiv p(\lambda_{0}\mid\ell_{0}) &&\approx \dfrac{\rm tn}{\rm tn + fn}\\[1mm]
+\mbox{Negative predictive value :} & \quad \mathit{npv} &&\equiv p(\lambda_{0}\mid\ell_{0}) &&\approx \dfrac{\rm tn}{\rm tn + fn}\\[1mm]
 
-\mbox{False-discovery rate :} & \quad {\rm fdr} &&\equiv p(\lambda_{0}\mid\ell_{1}) &&\approx \dfrac{\rm fp}{\rm tp + fp}\\[1mm]
+\mbox{False-discovery rate :} & \quad \mathit{fdr} &&\equiv p(\lambda_{0}\mid\ell_{1}) &&\approx \dfrac{\rm fp}{\rm tp + fp}\\[1mm]
 
-\mbox{False-omission rate :} & \quad {\rm for} &&\equiv p(\lambda_{1}\mid\ell_{0}) &&\approx \dfrac{\rm fn}{\rm tn + fn}\\[4mm]
+\mbox{False-omission rate :} & \quad \mathit{for} &&\equiv p(\lambda_{1}\mid\ell_{0}) &&\approx \dfrac{\rm fn}{\rm tn + fn}\\[4mm]
 
 \mbox{Positive likelihood ratio :} & \quad {\rm lr+} &&\equiv \frac{p(\ell_{1}\mid\lambda_{1})}{p(\ell_{0}\mid\lambda_{1})}&&\approx \frac{\rm tp}{\rm fn}\\[1mm]
 
 \mbox{Negative likelihood ratio :} & \quad {\rm lr-} &&\equiv \frac{p(\ell_{1}\mid\lambda_{0})}{p(\ell_{0}\mid\lambda_{0})}&&\approx \frac{\rm fp}{\rm tn}\\[1mm]
 
-\mbox{Diagnostic odds ratio :} & \quad {\rm dor} &&\equiv \frac{\rm lr+}{\rm lr-} &&\approx \frac{\rm tp}{\rm fn} \frac{\rm tn}{\rm fp}\\[4mm]
+\mbox{Diagnostic odds ratio :} & \quad \mathit{dor} &&\equiv \frac{\rm lr+}{\rm lr-} &&\approx \frac{\rm tp}{\rm fn} \frac{\rm tn}{\rm fp}\\[4mm]
 
 \mbox{Accuracy :} & \quad A &&\equiv p(\ell=\lambda) &&\approx \dfrac{\rm tp + tn}{\rm tp + tn + fp + fn}
 \end{aligned}
