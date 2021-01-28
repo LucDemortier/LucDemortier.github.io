@@ -8,34 +8,34 @@ comments: true
 [Revised 21 September 2017, 24 December 2019, 18 January 2021]
 
 > **Contents**
-> <br>[Introduction](#Introduction)
-> <br>[Bayes' theorem](#FourApplications)
-> <br> &ensp;&ensp;&ensp;[Notation](#Notation)
-> <br> &ensp;&ensp;&ensp;[The prior](#Prior)
-> <br> &ensp;&ensp;&ensp;[The likelihood](#Likelihood)
-> <br> &ensp;&ensp;&ensp;[The model evidence](#ModelEvidence)
-> <br> &ensp;&ensp;&ensp;[The posterior](#Posterior)
-> <br> &ensp;&ensp;&ensp;[Summary](#Summary)
-> <br>[Joint probabilities](#JointProbabilities)
-> <br>[Score-based metrics](#ScoreBasedMetrics)
-> <br>[Likelihood ratios](#LikelihoodRatios)
-> <br>[When is a classifier useful?](#ClassifierUsefulness)
-> <br>[Performance metric estimation](#MetricsEstimation)
-> <br>[Effect of prevalence on classifier training and testing](#EffectOfPrevalence)
+> <br>[1. Introduction](#Introduction)
+> <br>[2. Bayes' theorem](#FourApplications)
+> <br> &ensp;&ensp;&ensp;[2.1 Notation](#Notation)
+> <br> &ensp;&ensp;&ensp;[2.2 The prior](#Prior)
+> <br> &ensp;&ensp;&ensp;[2.3 The likelihood](#Likelihood)
+> <br> &ensp;&ensp;&ensp;[2.4 The model evidence](#ModelEvidence)
+> <br> &ensp;&ensp;&ensp;[2.5 The posterior](#Posterior)
+> <br> &ensp;&ensp;&ensp;[2.6 Summary](#Summary)
+> <br>[3. Joint probabilities](#JointProbabilities)
+> <br>[4. Classifier scores](#ScoreBasedMetrics)
+> <br>[5. Likelihood ratios](#LikelihoodRatios)
+> <br>[6. When is a classifier useful?](#ClassifierUsefulness)
+> <br>[7. Performance metric estimation](#MetricsEstimation)
+> <br>[8. Effect of prevalence on classifier training and testing](#EffectOfPrevalence)
 
 ---
 
 <a name="Introduction"></a>
-## Introduction
+## 1. Introduction
 I always thought that the *confusion* matrix was rather aptly named, a reference not so much to the mixed performance of a classifier as to my own bewilderment at the number of measures of that performance. Recently however, I encountered [a brief mention](https://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/) of the possibility of a Bayesian interpretation of performance measures, and this inspired me to explore the idea a little further. It's not that Bayes' theorem is needed to understand or apply the performance measures, but it acts as an organizing and connecting principle, which I find helpful. New concepts are easier to remember if they fit inside a good story.
 
 Another advantage of taking the Bayesian route is that this forces us to view performance measures as probabilities, which are *estimated* from the confusion matrix. Elementary presentations tend to *define* performance metrics in terms of ratios of confusion matrix elements, thereby ignoring the effect of statistical fluctuations.
 
-Bayes' theorem is not the only way to generate performance metrics. One can also start from joint probabilities or likelihood ratios. The next three subsections describe these approaches one by one. This is followed by a subsection discussing a minimal condition for a classifier to be useful, a subsection on estimating performance measures, and one on the effect of changing the prevalence in the training and testing data sets of a classifier.
+Bayes' theorem is not the only way to generate performance metrics. One can also start from joint probabilities, classifier scores, or likelihood ratios. The next four subsections describe these approaches one by one. This is followed by a subsection discussing a minimal condition for a classifier to be useful, a subsection on estimating performance measures, and one on the effect of changing the prevalence in the training and testing data sets of a classifier.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="FourApplications"></a>
-## Bayes' theorem
+## 2. Bayes' theorem
 Let's start from Bayes' theorem in its general form:
 {% math %}
 p(\lambda\mid X) \;=\; \frac{p(X\mid\lambda)\;\pi(\lambda)}{\int p(X\mid\lambda^{\prime})\;\pi(\lambda^{\prime})\;d\lambda^{\prime}}.
@@ -53,7 +53,7 @@ We'll take a look at each component of Bayes' theorem in turn: the prior, the li
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Notation"></a>
-### Notation
+### 2.1 Notation
 If our sole purpose is to describe the performance of a classifier in general terms, the list of predictors {% m %}X{% em %} can be summarized by the *class label* {% m %}\ell{% em %}, or by the *score* {% m %}q{% em %} (a number between 0 and 1), assigned by the classifier. Thus for example, {% m %} p(\lambda\!=\!1 \mid \ell\!=\!0) {% em %} represents the posterior probability that the true class is 1 given a class label of 0, and {% m %}p(\lambda\!=\!1\mid q\!\ge\! q_{T}){% em %} is the posterior probability that the true class is 1 given that the score {% m %}q{% em %} is above a pre-specified threshold {% m %}q_{T}{% em %}.
 
 To simplify the notation we'll write {% m %}\lambda_{0}{% em %} to mean {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} to mean {% m %}\lambda=1{% em %}, and similarly with {% m %}\ell_{0}{% em %} and {% m %}\ell_{1}{% em %}. Going one step further, when the class {% m %}i=0,1{% em %} is specified we'll write the prior as {% m %}\pi_{i}{% em %} instead of {% m %}\pi(\lambda_{i}){% em %} and the queue rate as {% m %}p_{i}{% em %} instead of {% m %}p(\ell_{i}){% em %}. With this notation the equation for the denominator of Bayes' theorem becomes:
@@ -64,12 +64,12 @@ p(X) \;=\; p(X\mid\lambda_{0})\,\pi_{0} \;+\; p(X\mid\lambda_{1})\,\pi_{1}.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Prior"></a>
-### The prior
+### 2.2 The prior
 The first ingredient in the computation of the posterior is the prior {% m %}\pi(\lambda){% em %}. To fix ideas, let's assume that {% m %}\lambda_{1}{% em %} is the class of interest, generically labeled "positive"; it indicates "effect", "signal", "disease", "fraud", or "spam", depending on the context. Then {% m %}\lambda_{0}{% em %} indicates the lack of these things and is generically labeled "negative". To fully specify the prior we just need {% m %}\pi_{1}{% em %}, since {% m %}\pi_{0} = 1 - \pi_{1}{% em %}. The prior probability {% m %}\pi_{1}{% em %} of drawing a positive instance from the population is called the **prevalence**. It is a property of the population, not the classifier.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Likelihood"></a>
-### The likelihood
+### 2.3 The likelihood
 The next ingredient is the conditional probability {% m %}p(X\mid\lambda){% em %}. For now let's work with classifier labels and replace {% m %}X{% em %} by {% m %}\ell{% em %}. This leads to the following four definitions:
 
 - The **true positive rate**, also known as **sensitivity** or **recall**: {% m %}S_{e} \equiv p(\ell_{1}\mid \lambda_{1}){% em %},
@@ -86,7 +86,7 @@ When viewed as a function of true class {% m %}\lambda{% em %}, for fixed label 
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="ModelEvidence"></a>
-### The model evidence
+### 2.4 The model evidence
 Finally, we need the normalization factor in Bayes' theorem, the model evidence. For a binary classifier this has two components, corresponding to the two possible labels:
 
 - The **positive labeling rate**: {% m %}p_{1} = p(\ell_{1}\mid\lambda_{0})\,\pi_{0} + p(\ell_{1}\mid\lambda_{1})\,\pi_{1}{% em %}, and
@@ -97,7 +97,7 @@ The labeling rates are more commonly known as **queue rates**.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Posterior"></a>
-### The posterior
+### 2.5 The posterior
 Armed with the prior probability, the likelihood, and the model evidence, we can compute the posterior probability from Bayes' theorem.  There are four combinations of truth and label:
 
 - The **positive predictive value**, also known as **precision**: {% m %}\mathit{ppv}\equiv p(\lambda_{1}\mid\ell_{1}) = \frac{p(\ell_{1}\mid\lambda_{1})\, \pi_{1}}{p_{1}} {% em %},
@@ -115,7 +115,7 @@ Figure 1 shows how the posterior probabilities {% m %}\mathit{ppv}{% em %}, {% m
 {% fullwidth "assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" "Figure 1: For each combination of class and label, Bayes' theorem connects the corresponding performance metrics of a classifier." %}
 
 <a name="Summary"></a>
-### Summary
+### 2.6 Summary
 This section introduced twelve quantities:
 {% math %}
 \pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; \mathit{ppv},\; \mathit{npv},\; \mathit{fdr},\; \mathit{for}.
@@ -134,7 +134,7 @@ The final number of independent quantities matches the number of degrees of free
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="JointProbabilities"></a>
-## Joint probabilities
+## 3. Joint probabilities
 The most useful measures of classifier performance are *conditional* probabilities. By conditioning on something, we do not need to know whether or how that something is realized in order to make a valid statement. For example, by conditioning on true class, we can ignore the prevalence when estimating sensitivity and specificity. Similarly, conditioning on class label allows us to derive the positive and negative predictive values without knowing the queue rate.
 
 In contrast, *joint* probabilities typically yield statements about the behavior of a classifier in a *specific* sample and are therefore less general than conditional probabilities. Nevertheless, by combining different joint probabilities one can still obtain useful metrics. Let's start for example with the joint probability for the true class to be negative and the class label to be negative:
@@ -164,26 +164,27 @@ An equivalent measure is the **misclassification rate**, defined as one minus th
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="ScoreBasedMetrics"></a>
-## Score-based metrics
-As mentioned earlier, classifiers usually produce a score {% m %}q{% em %} to quantify the likelihood that an instance belongs to the positive class. The performance metrics introduced so far can be defined in terms of this score, but they only need it in a binary way: {% m %}\ell=1{% em %} if {% m %}q\ge q_{T}{% em %}, otherwise {% m %}\ell=0{% em %}, for some predefined threshold {% m %}q_{T}{% em %}. The next performance metric we discuss actually uses score values without reference to {% m %}q_{T}{% em %}. This is the so-called **Area Under the Receiver Operating Characteristic**, or **AUROC**, defined as the probability for a random positive instance to be scored higher than a random negative instance. It can also be defined as the area under the curve of true positive rate versus false positive rate (or sensitivity versus one-minus-specificity; this curve is known as the Receiver Operating Characteristic, or ROC). By construction, the AUROC is independent of prevalence, and does not require a choice of threshold {% m %}q_{T}{% em %} on the classifier score {% m %}q{% em %}. In other words, it does not depend on the chosen operating point of the classifier.
+## 4. Classifier scores
+As mentioned earlier, classifiers usually produce a score {% m %}q{% em %} to quantify the likelihood that an instance belongs to the positive class. The performance metrics introduced so far can be defined in terms of this score, but they only need it in a binary way: {% m %}\ell=1{% em %} if {% m %}q\ge q_{T}{% em %}, otherwise {% m %}\ell=0{% em %}, for some predefined threshold {% m %}q_{T}{% em %}. The next performance metric we discuss actually uses score values without reference to {% m %}q_{T}{% em %}. This is the so-called **Area Under the Receiver Operating Characteristic**, or **AUROC**, defined as the probability for a random positive instance to be scored higher than a random negative instance. Its name comes from an alternative definition, as the area under the curve of true positive rate versus false positive rate (or sensitivity versus one-minus-specificity; this curve is known as the Receiver Operating Characteristic, or ROC). By construction, the AUROC is independent of prevalence, and does not require a choice of threshold {% m %}q_{T}{% em %} on the classifier score {% m %}q{% em %}. In other words, it does not depend on the chosen operating point of the classifier.
 
 An immediate interpretation of the AUROC is that it quantifies how well the score distributions for positive and negative instances are separated. If the score distribution for positives is to the right of that for negatives, and there is no overlap, the AUROC equals 1. If the positives are all to the left of the negatives, the AUROC equals 0, and if the two distributions overlap each other exactly, the AUROC equals 0.5.
 
-The AUROC is also related to expectation values of sensitivity and specificity. To see this, note that we can write the sensitivity as an expectation value:
+The AUROC is also related to expectation values of sensitivity and specificity. To see this, note that we can write the sensitivity as a conditional expectation value:
 {% math %}
-S_{e} \;=\; \mathbb{E}\left[\mathbb{1}(Q_{1} \ge Q^{\prime}) \left|\right. Q^{\prime}=q_{T}\right],
+S_{e} \;=\; \mathbb{P}\left[Q_{1}\ge q_{T}\right]
+      \;=\; \mathbb{E}\left[\mathbb{1}(Q_{1} \ge Q^{\prime}) \left|\right. Q^{\prime}=q_{T}\right],
 {% endmath %}
-where {% m %}Q_{1}{% em %} is a random variable distributed as the classifier scores of positive instances in the population of interest, and {% m %}\mathbb{1}(A){% em %} is the indicator function of set {% m %}A{% em %}. Instead of fixing {% m %}Q^{\prime}{% em %} at the treshold {% m %}q_{T}{% em %}, let us now draw it randomly from the *entire* population of interest, and calculate the expectation value of {% m %}S_{e}{% em %} with respect to {% m %}Q^{\prime}{% em %}. Using the law of total expectation, this yields:
+where {% m %}Q_{1}{% em %} is a random variable distributed as the classifier scores of positive instances in the population of interest, and {% m %}\mathbb{1}(A){% em %} is the indicator function of set {% m %}A{% em %}. Instead of fixing {% m %}Q^{\prime}{% em %} at the treshold {% m %}q_{T}{% em %}, let us now draw it randomly from the *entire* population of interest, and calculate the expectation value of {% m %}S_{e}{% em %} with respect to {% m %}Q^{\prime}{% em %}. Thus, with probability {% m %}\pi_{0}{% em %} the variable {% m %}Q^{\prime}{% em %} equals a random draw {% m %}Q^{\prime}_{0}{% em %} from the population of negative instance scores, and with probability {% m %}\pi_{1}{% em %} it equals a random draw {% m %}Q^{\prime}_{1}{% em %} from the population of positive instance scores. Using the law of total expectation this yields:
 {% math %}
 \begin{align}
 \mathbb{E}\left[S_{e}\right]
 \;&=\; \mathbb{E}\left[ \;\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime})\left|\right. Q^{\prime} \right]\; \right]\\[1mm]
-\;&=\; \mathbb{P}\left(Q^{\prime}_{0}\right)\,\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime}_{0}) \right] \;+\; \mathbb{P}\left(Q^{\prime}_{1}\right)\,\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime}_{1}) \right]\\[1mm]
-\;&=\; \mathbb{P}\left(Q^{\prime}_{0}\right)\,\mathbb{P}\left(Q_{1} \ge Q^{\prime}_{0}\right) \;+\; \mathbb{P}\left(Q^{\prime}_{1}\right)\,\mathbb{P}\left(Q_{1} \ge Q^{\prime}_{1}\right)\\[1mm]
-\;&=\; \pi_{0}\, \textrm{AUROC} \;+\; \frac{\pi_{1}}{2},
+\;&=\; \pi_{0}\,\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime}_{0}) \right] \;+\; \pi_{1}\,\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime}_{1}) \right]\\[1mm]
+\;&=\; \pi_{0}\,\mathbb{P}\left(Q_{1} \ge Q^{\prime}_{0}\right) \;+\; \pi_{1}\,\mathbb{P}\left(Q_{1} \ge Q^{\prime}_{1}\right)\\[1mm]
+\;&=\; \pi_{0}\, \textrm{AUROC} \;+\; \frac{\pi_{1}}{2}.
 \end{align}
 {% endmath %}
-where {% m %}Q^{\prime}_{1}{% em %} and {% m %}Q^{\prime}_{0}{% em %} are drawn randomly from the population of scores for positive and negative instances, respectively. One can similarly show that:
+One can similarly show that:
 {% math %}
 \mathbb{E}\left[S_{p}\right] \;=\; \pi_{1}\, \textrm{AUROC} \;+\; \frac{\pi_{0}}{2}.
 {% endmath %}
@@ -192,11 +193,11 @@ and the linearity of the expectation operator, we find:
 {% math %}
 \mathbb{E}\left[A\right] \;=\; \frac{\pi_{0}^{2} + \pi_{1}^{2}}{2} \,+\, 2\,\pi_{0}\,\pi_{1}\,\textrm{AUROC}.
 {% endmath %}
-The expectation values in the last three equations are over an ensemble of classifiers with operating points that are randomly drawn from the distribution of scores of the population of interest. Hence, the equations show how the AUROC aggregates classifier performance information in a way that's independent of prevalence and operating point (see also [this answer](https://www.quora.com/Machine-Learning-What-is-an-intuitive-explanation-of-AUC/answer/Peter-Flach) by Peter Flach on Quora).
+The expectation values in the last three equations are over an ensemble of classifiers with operating points that are randomly drawn from the distribution of scores of the population of interest. Hence, these equations show how the AUROC aggregates classifier performance information in a way that's independent of prevalence and operating point (see also [this answer](https://www.quora.com/Machine-Learning-What-is-an-intuitive-explanation-of-AUC/answer/Peter-Flach) by Peter Flach on Quora).
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="LikelihoodRatios"></a>
-## Likelihood ratios
+## 5. Likelihood ratios
 In some fields it is customary to work with ratios of probabilities rather than with the probabilities themselves.  Thus one defines:
 
 - The **positive likelihood ratio**: {% m %}{\rm lr+} \equiv \frac{p(\ell_{1}\mid\lambda_{1})}{p(\ell_{0}\mid\lambda_{1})} = \frac{S_{e}}{1-S_{e}}{% em %}, which represents the odds of a positive label if the true class is positive (in medical statistics for example, this would be the odds of a positive test if patient has the disease).
@@ -213,7 +214,7 @@ Note that the ratios {% m %}{\rm lr+}{% em %}, {% m %}{\rm lr-}{% em %}, and {% 
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="ClassifierUsefulness"></a>
-## When is a classifier useful?
+## 6. When is a classifier useful?
 The usefulness condition {% m %}\fbox{$\mathit{dor} \gt 1$}{% em %} is mathematically equivalent to any of the following conditions:
 
 1. {% m %}\fbox{$S_{e}\gt 1 - S_{p}$}{% em %} The sensitivity must be larger than one minus the specificity. Equivalently, the probability of detecting a positive-class instance must be larger than the probability of mislabeling a negative-class instance. This condition explains why, for a useful classifier, the ROC always lies *above* the main diagonal in a plot of {% m %}S_{e}{% em %} versus {% m %}1 - S_{p}{% em %}.
@@ -236,7 +237,7 @@ It is straightforward to verify that the majority and minority classifiers defin
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="MetricsEstimation"></a>
-## Performance metric estimation
+## 7. Performance metric estimation
 The performance metrics can be estimated from a two-by-two contingency table known as the confusion matrix. It is obtained by applying the classifier to a test data set different from the training data set. Here is standard notation for this matrix:
 
 {% fullwidth "assets/img/blog/ConfusionMatrix/ConfusionMatrix.png" 'Figure 2: Estimated confusion matrix. The notation tp stands for "number of true positives", fn for "number of false negatives", and so on.' %}
@@ -279,7 +280,7 @@ Note that the relations between probabilities derived in the previous sections a
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="EffectOfPrevalence"></a>
-## Effect of prevalence on classifier training and testing
+## 8. Effect of prevalence on classifier training and testing
 In this post I have tried to be careful in pointing out which performance metrics depend on the prevalence, and which don't. The reason is that prevalence is a population or sample property, whereas here we are interested in classifier properties. Of course, real-world classifiers must be trained and tested on finite samples, and this has implications for the actual effect of prevalence on classifier performance:
 
 - When **training** a classifier, changing the prevalence in the training data *may affect* properties such as the sensitivity and specificity, depending on the characteristics of the training algorithm.
