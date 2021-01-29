@@ -56,7 +56,7 @@ We'll take a look at each component of Bayes' theorem in turn: the prior, the li
 ### 2.1 Notation
 If our sole purpose is to describe the performance of a classifier in general terms, the list of predictors {% m %}X{% em %} can be summarized by the *class label* {% m %}\ell{% em %}, or by the *score* {% m %}q{% em %} (a number between 0 and 1), assigned by the classifier. Thus for example, {% m %} p(\lambda\!=\!1 \mid \ell\!=\!0) {% em %} represents the posterior probability that the true class is 1 given a class label of 0, and {% m %}p(\lambda\!=\!1\mid q\!\ge\! q_{T}){% em %} is the posterior probability that the true class is 1 given that the score {% m %}q{% em %} is above a pre-specified threshold {% m %}q_{T}{% em %}.
 
-To simplify the notation we'll write {% m %}\lambda_{0}{% em %} to mean {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} to mean {% m %}\lambda=1{% em %}, and similarly with {% m %}\ell_{0}{% em %} and {% m %}\ell_{1}{% em %}. Going one step further, when the class {% m %}i=0,1{% em %} is specified we'll write the prior as {% m %}\pi_{i}{% em %} instead of {% m %}\pi(\lambda_{i}){% em %} and the queue rate as {% m %}p_{i}{% em %} instead of {% m %}p(\ell_{i}){% em %}. With this notation the equation for the denominator of Bayes' theorem becomes:
+To simplify the notation we'll write {% m %}\lambda_{0}{% em %} to mean {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} to mean {% m %}\lambda=1{% em %}, and similarly with {% m %}\ell_{0}{% em %} and {% m %}\ell_{1}{% em %}. Going one step further, when the class {% m %}i{% em %} is specified we'll write the prior as {% m %}\pi_{i}{% em %} instead of {% m %}\pi(\lambda_{i}){% em %} and the queue rate as {% m %}p_{i}{% em %} instead of {% m %}p(\ell_{i}){% em %}, where {% m %}i=0,1{% em %}. With this notation the equation for the denominator of Bayes' theorem becomes:
 {% math %}
 p(X) \;=\; p(X\mid\lambda_{0})\,\pi_{0} \;+\; p(X\mid\lambda_{1})\,\pi_{1}.
 {% endmath %}
@@ -137,18 +137,16 @@ The final number of independent quantities matches the number of degrees of free
 ## 3. Joint probabilities
 The most useful measures of classifier performance are *conditional* probabilities. By conditioning on something, we do not need to know whether or how that something is realized in order to make a valid statement. For example, by conditioning on true class, we can ignore the prevalence when estimating sensitivity and specificity. Similarly, conditioning on class label allows us to derive the positive and negative predictive values without knowing the queue rate.
 
-In contrast, *joint* probabilities typically yield statements about the behavior of a classifier in a *specific* sample and are therefore less general than conditional probabilities. Nevertheless, by combining different joint probabilities one can still obtain useful metrics. Let's start for example with the joint probability for the true class to be negative and the class label to be negative:
+In contrast, *joint* probabilities typically yield statements about the behavior of a classifier in a *specific* sample and are therefore less general than conditional probabilities. Nevertheless, by combining different joint probabilities one can still obtain useful metrics. Start for example with the joint probability for true class and class label to be negative:
 {% math %}
-p(\lambda\!=\!0 \;\&\; \ell\!=\!0),
+p(\lambda_{0} \;\&\; \ell_{0}),
 {% endmath %}
-and let's add the joint probability for the true class and the class label both to be positive:
+and add the joint probability for true class and class label to be positive:
 {% math %}
-\begin{align}
-p(\lambda\!=\!0 \;\&\; \ell\!=\!0) \;+\; p(\lambda\!=\!1 \;\&\; \ell\!=\!1)
-  \;&=\; p[(\lambda\!=\!0 \;\&\; \ell\!=\!0) \;|\; (\lambda\!=\!1 \;\&\; \ell\!=\!1)]\\[1mm]
-  \;&=\; p(\lambda \!=\! \ell)\\[1mm]
-  \;&=\; {\rm A},
-\end{align}
+p(\lambda_{0} \;\&\; \ell_{0}) \;+\; p(\lambda_{1} \;\&\; \ell_{1})
+  \;=\; p[(\lambda_{0} \;\&\; \ell_{0}) \;\lor\; (\lambda_{1} \;\&\; \ell_{1})]
+  \;=\; p(\lambda \!=\! \ell)
+  \;=\; {\rm A},
 {% endmath %}
 which is the accuracy. In terms of quantities introduced previously this is:
 {% math %}
@@ -160,7 +158,7 @@ which is the accuracy. In terms of quantities introduced previously this is:
          \;=\; \mathit{npv}\,p_{0} \;+\; \mathit{ppv}\,p_{1}.
 \end{align}
 {% endmath %}
-An equivalent measure is the **misclassification rate**, defined as one minus the accuracy. A benchmark that is sometimes used is the **null error rate**, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to {% m %}\min\{\pi_{0}, \pi_{1}\}{% em %}. The complement of the null error rate is the **null accuracy**, which is equal to {% m %}\max\{\pi_{0}, \pi_{1}\}{% em %}.
+Note the dependence on prevalence or queue rate. An equivalent measure is the **misclassification rate**, defined as one minus the accuracy. A benchmark that is sometimes used is the **null error rate**, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to {% m %}\min\{\pi_{0}, \pi_{1}\}{% em %}. The complement of the null error rate is the **null accuracy**, which is equal to {% m %}\max\{\pi_{0}, \pi_{1}\}{% em %}.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="ScoreBasedMetrics"></a>
