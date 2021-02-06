@@ -56,11 +56,11 @@ We'll take a look at each component of Bayes' theorem in turn: the prior, the li
 ### 2.1 Notation
 If our sole purpose is to describe the performance of a classifier in general terms, the list of predictors {% m %}X{% em %} can be summarized by the *class label* {% m %}\ell{% em %}, or by the *score* {% m %}q{% em %} (a number between 0 and 1), assigned by the classifier. Thus for example, {% m %} p(\lambda\!=\!1 \mid \ell\!=\!0) {% em %} represents the posterior probability that the true class is 1 given a class label of 0, and {% m %}p(\lambda\!=\!1\mid q\!\ge\! q_{T}){% em %} is the posterior probability that the true class is 1 given that the score {% m %}q{% em %} is above a pre-specified threshold {% m %}q_{T}{% em %}.
 
-To simplify the notation we'll write {% m %}\lambda_{0}{% em %} to mean {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} to mean {% m %}\lambda=1{% em %}, and similarly with {% m %}\ell_{0}{% em %} and {% m %}\ell_{1}{% em %}. Going one step further, when the class {% m %}i{% em %} is specified we'll write the prior as {% m %}\pi_{i}{% em %} instead of {% m %}\pi(\lambda_{i}){% em %} and the queue rate as {% m %}p_{i}{% em %} instead of {% m %}p(\ell_{i}){% em %}, where {% m %}i=0,1{% em %}. With this notation the equation for the denominator of Bayes' theorem becomes:
+To simplify the notation we'll write {% m %}\lambda_{0}{% em %} to mean {% m %}\lambda=0{% em %}, {% m %}\lambda_{1}{% em %} to mean {% m %}\lambda=1{% em %}, and similarly with {% m %}\ell_{0}{% em %} and {% m %}\ell_{1}{% em %}. Going one step further, where convenient we'll write the prior as {% m %}\pi_{i}{% em %} instead of {% m %}\pi(\lambda_{i}){% em %} and the queue rate as {% m %}p_{i}{% em %} instead of {% m %}p(\ell_{i}){% em %}, where {% m %}i=0,1{% em %}. With this notation the equation for the denominator of Bayes' theorem becomes:
 {% math %}
 p(X) \;=\; p(X\mid\lambda_{0})\,\pi_{0} \;+\; p(X\mid\lambda_{1})\,\pi_{1}.
 {% endmath %}
-
+Finally, we'll use the notation {% m %}A\;{% em %}&{% m %}\;B{% em %} to indicate the logical *and* of {% m %}A{% em %} and {% m %}B{% em %}, the notation {% m %}A \lor B{% em %} for its logical *or*, and {% m %}A \mid B{% em %} for the conditional {% m %}A{% em %} *given* {% m %}B{% em %}.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Prior"></a>
@@ -135,27 +135,33 @@ The final number of independent quantities matches the number of degrees of free
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="JointProbabilities"></a>
 ## 3. Joint probabilities
-The most useful measures of classifier performance are *conditional* probabilities. By conditioning on something, we do not need to know whether or how that something is realized in order to make a valid statement. For example, by conditioning on true class, we can ignore the prevalence when estimating sensitivity and specificity. Similarly, conditioning on class label allows us to derive the positive and negative predictive values without knowing the queue rate.
+The most useful measures of classifier performance are *conditional* probabilities. By conditioning on something, we do not need to know whether or how that something is realized in order to make a valid statement. For example, by conditioning on true class, we ignore the prevalence when estimating sensitivity and specificity. Similarly, conditioning on class label allows us to derive predictive values without knowing the actual queue rate.
 
-In contrast, *joint* probabilities typically yield statements about the behavior of a classifier in a *specific* sample and are therefore less general than conditional probabilities. Nevertheless, by combining different joint probabilities one can still obtain useful metrics. Start for example with the joint probability for true class and class label to be negative:
+In contrast, *joint* probabilities typically yield statements about the behavior of a classifier in a *specific* sample and are therefore less general than conditional probabilities. Nevertheless, by combining different joint probabilities one can still obtain useful metrics. Start for example with the joint probability for class label and true class to be positive:
 {% math %}
-p(\lambda_{0} \;\&\; \ell_{0}),
+p(\ell_{1} \;\&\; \lambda_{1}).
 {% endmath %}
-and add the joint probability for true class and class label to be positive:
+Adding the joint probability for class label to be positive and true class to be negative yields the positive queue rate introduced earlier:
 {% math %}
-p(\lambda_{0} \;\&\; \ell_{0}) \;+\; p(\lambda_{1} \;\&\; \ell_{1})
-  \;=\; p[(\lambda_{0} \;\&\; \ell_{0}) \;\lor\; (\lambda_{1} \;\&\; \ell_{1})]
-  \;=\; p(\lambda \!=\! \ell)
-  \;=\; {\rm A},
+p(\ell_{1} \;\&\; \lambda_{1}) \;+\; p(\ell_{1} \;\&\; \lambda_{0})
+  \;=\; p(\ell_{1}\mid\lambda_{1})\,\pi_{1} \;+\; p(\ell_{1}\mid\lambda_{0})\,\pi_{0}
+  \;=\; p_{1}.
 {% endmath %}
-which is the accuracy. In terms of quantities introduced previously this is:
+If, instead, we add the joint probability for class label and true class to be negative, we obtain the so-called accuracy:
+{% math %}
+p(\ell_{1} \;\&\; \lambda_{1}) \;+\; p(\ell_{0} \;\&\; \lambda_{0})
+  \;=\; p[(\ell_{1} \;\&\; \lambda_{1}) \;\lor\; (\ell_{0} \;\&\; \lambda_{0})]
+  \;=\; p(\ell \!=\! \lambda)
+  \;=\; {\rm A}.
+{% endmath %}
+In terms of quantities introduced previously this is:
 {% math %}
 \begin{align}
-{\rm A}  \;=\; p(\lambda_{0} \;\&\; \ell_{0}) \;+\; p(\lambda_{1} \;\&\; \ell_{1})
-        &\;=\; p(\ell_{0}\mid\lambda_{0})\,\pi_{0} \;+\; p(\ell_{1}\mid\lambda_{1})\,\pi_{1}
-         \;=\; S_{p}\,\pi_{0} \;+\; S_{e}\,\pi_{1}\\[1mm]
-        &\;=\; p(\lambda_{0}\mid\ell_{0})\,p_{0} \;+\; p(\lambda_{1}\mid\ell_{1})\,p_{1}
-         \;=\; \mathit{npv}\,p_{0} \;+\; \mathit{ppv}\,p_{1}.
+{\rm A}  \;=\; p(\ell_{1} \;\&\; \lambda_{1}) \;+\; p(\ell_{0} \;\&\; \lambda_{0})
+        &\;=\; p(\ell_{1}\mid\lambda_{1})\,\pi_{1} \;+\; p(\ell_{0}\mid\lambda_{0})\,\pi_{0}
+         \;=\; S_{e}\,\pi_{1} \;+\; S_{p}\,\pi_{0}\\[1mm]
+        &\;=\; p(\lambda_{1}\mid\ell_{1})\,p_{1} \;+\; p(\lambda_{0}\mid\ell_{0})\,p_{0}
+         \;=\; \mathit{ppv}\,p_{0} \;+\; \mathit{npv}\,p_{1}.
 \end{align}
 {% endmath %}
 Note the dependence on prevalence or queue rate. An equivalent measure is the **misclassification rate**, defined as one minus the accuracy. A benchmark that is sometimes used is the **null error rate**, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to {% m %}\min\{\pi_{0}, \pi_{1}\}{% em %}. The complement of the null error rate is the **null accuracy**, which is equal to {% m %}\max\{\pi_{0}, \pi_{1}\}{% em %}.
@@ -170,13 +176,14 @@ An immediate interpretation of the AUROC is that it quantifies how well the scor
 The AUROC is also related to expectation values of sensitivity and specificity. To see this, note that we can write the sensitivity as a conditional expectation value:
 {% math %}
 S_{e} \;=\; \mathbb{P}\left[Q_{1}\ge q_{T}\right]
-      \;=\; \mathbb{E}\left[\mathbb{1}(Q_{1} \ge Q^{\prime}) \left|\right. Q^{\prime}=q_{T}\right],
+      \;=\; \mathbb{E}\left[\mathbb{1}(Q_{1} \ge q_{T})\right]
+      \;=\; \mathbb{E}\left[\mathbb{1}(Q_{1} \ge Q^{\prime}) \mid Q^{\prime}=q_{T}\right],
 {% endmath %}
-where {% m %}Q_{1}{% em %} is a random variable distributed as the classifier scores of positive instances in the population of interest, and {% m %}\mathbb{1}(A){% em %} is the indicator function of set {% m %}A{% em %}. Instead of fixing {% m %}Q^{\prime}{% em %} at the treshold {% m %}q_{T}{% em %}, let us now draw it randomly from the *entire* population of interest, and calculate the expectation value of {% m %}S_{e}{% em %} with respect to {% m %}Q^{\prime}{% em %}. Thus, with probability {% m %}\pi_{0}{% em %} the variable {% m %}Q^{\prime}{% em %} equals a random draw {% m %}Q^{\prime}_{0}{% em %} from the population of negative instance scores, and with probability {% m %}\pi_{1}{% em %} it equals a random draw {% m %}Q^{\prime}_{1}{% em %} from the population of positive instance scores. Using the law of total expectation this yields:
+where {% m %}Q_{1}{% em %} is a random variable distributed as the classifier scores of positive instances in the population of interest, and {% m %}\mathbb{1}(A){% em %} is the indicator function of set {% m %}A{% em %}. The conditioning trick in the rightmost expression allows us to extend the calculation: instead of fixing {% m %}Q^{\prime}{% em %} at the threshold {% m %}q_{T}{% em %}, let us draw it randomly from the *entire* population of instance scores, and calculate the expectation value of {% m %}S_{e}{% em %} with respect to {% m %}Q^{\prime}{% em %}. Thus, with probability {% m %}\pi_{0}{% em %} the variable {% m %}Q^{\prime}{% em %} equals a random draw {% m %}Q^{\prime}_{0}{% em %} from the population of negative instance scores, and with probability {% m %}\pi_{1}{% em %} it equals a random draw {% m %}Q^{\prime}_{1}{% em %} from the population of positive instance scores. Using the law of total expectation this yields:
 {% math %}
 \begin{align}
 \mathbb{E}\left[S_{e}\right]
-\;&=\; \mathbb{E}\left[ \;\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime})\left|\right. Q^{\prime} \right]\; \right]\\[1mm]
+\;&=\; \mathbb{E}\left[ \;\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime})\mid Q^{\prime} \right]\; \right]\\[1mm]
 \;&=\; \pi_{0}\,\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime}_{0}) \right] \;+\; \pi_{1}\,\mathbb{E}\left[ \mathbb{1}(Q_{1} \ge Q^{\prime}_{1}) \right]\\[1mm]
 \;&=\; \pi_{0}\,\mathbb{P}\left(Q_{1} \ge Q^{\prime}_{0}\right) \;+\; \pi_{1}\,\mathbb{P}\left(Q_{1} \ge Q^{\prime}_{1}\right)\\[1mm]
 \;&=\; \pi_{0}\, \textrm{AUROC} \;+\; \frac{\pi_{1}}{2}.
@@ -189,7 +196,7 @@ One can similarly show that:
 Using the expression for the accuracy A in terms of {% m %}S_{e}{% em %} and {% m %}S_{p}{% em %},
 and the linearity of the expectation operator, we find:
 {% math %}
-\mathbb{E}\left[A\right] \;=\; \frac{\pi_{0}^{2} + \pi_{1}^{2}}{2} \,+\, 2\,\pi_{0}\,\pi_{1}\,\textrm{AUROC}.
+\mathbb{E}\left[A\right] \;=\; 2\,\pi_{0}\,\pi_{1}\,\textrm{AUROC} \,+\, \frac{\pi_{0}^{2} + \pi_{1}^{2}}{2}.
 {% endmath %}
 The expectation values in the last three equations are over an ensemble of classifiers with operating points that are randomly drawn from the distribution of scores of the population of interest. Hence, these equations show how the AUROC aggregates classifier performance information in a way that's independent of prevalence and operating point (see also [this answer](https://www.quora.com/Machine-Learning-What-is-an-intuitive-explanation-of-AUC/answer/Peter-Flach) by Peter Flach on Quora).
 
@@ -215,15 +222,11 @@ Note that the ratios {% m %}{\rm lr+}{% em %}, {% m %}{\rm lr-}{% em %}, and {% 
 ## 6. When is a classifier useful?
 The usefulness condition {% m %}\fbox{$\mathit{dor} \gt 1$}{% em %} is mathematically equivalent to any of the following conditions:
 
-1. {% m %}\fbox{$S_{e}\gt 1 - S_{p}$}{% em %} The sensitivity must be larger than one minus the specificity. Equivalently, the probability of detecting a positive-class instance must be larger than the probability of mislabeling a negative-class instance. This condition explains why, for a useful classifier, the ROC always lies *above* the main diagonal in a plot of {% m %}S_{e}{% em %} versus {% m %}1 - S_{p}{% em %}.
+1. {% m %}\fbox{$S_{e}\gt 1 - S_{p}$}{% em %} The sensitivity must be larger than one minus the specificity. Equivalently, the probability of detecting a positive-class instance must be larger than the probability of mislabeling a negative-class instance. This condition explains why, for a useful classifier, the ROC always lies *above* the main diagonal in a plot of {% m %}S_{e}{% em %} versus {% m %}1 - S_{p}{% em %}. Reformulating in terms of Type-I and II error rates this condition becomes {% m %}\fbox{$\beta \lt 1 - \alpha$}{% em %}.
 
-1. {% m %}\fbox{$\beta \lt 1 - \alpha$}{% em %} A reformulation of condition 1 in terms of Type-I and II error rates.
+1. {% m %}\fbox{$S_{e} \gt p_{1}$}{% em %} The probability of encountering a positively labeled instance must be larger within the subset of positive-class instances than within the entire population. Similarly: {% m %}\fbox{$S_{p} \gt p_{0}$}{% em %}, {% m %}\fbox{$\alpha \lt p_{1}$}{% em %}, and {% m %}\fbox{$\beta \lt p_{0}$}{% em %}.
 
-1. {% m %}\fbox{$\mathit{ppv} \gt \pi_{1}$}{% em %} The precision must be larger than the prevalence. In other words, the probability for an instance to belong to the positive class must be larger within the subset of instances with a positive label than within the entire population. If this is not the case, the classifier adds no useful information. Similarly: {% m %}\fbox{$\mathit{npv} \gt \pi_{0}$}{% em %}.
-
-1. {% m %}\fbox{$S_{e} \gt p_{1}$}{% em %} This follows from condition 3 and Bayes' theorem for {% m %}{\rm ppv}{% em %}. The probability of encountering a positively labeled instance must be larger within the subset of positive-class instances than within the entire population. Similarly: {% m %}\fbox{$S_{p} \gt p_{0}$}{% em %}, {% m %}\fbox{$\alpha \lt p_{1}$}{% em %}, and {% m %}\fbox{$\beta \lt p_{0}$}{% em %}.
-
-1. {% m %}\fbox{$\mathit{fdr} \lt \pi_{0}$}{% em %} The probability of encountering a negative-class instance must be smaller within the subset of positively labeled instances than within the entire population. Similarly: {% m %}\fbox{$\mathit{for} \lt \pi_{1}$}{% em %}.
+1. {% m %}\fbox{$\mathit{ppv} \gt \pi_{1}$}{% em %} The precision must be larger than the prevalence. In other words, the probability for an instance to belong to the positive class must be larger within the subset of instances with a positive label than within the entire population. If this is not the case, the classifier adds no useful information. Similarly: {% m %}\fbox{$\mathit{npv} \gt \pi_{0}$}{% em %}, {% m %}\fbox{$\mathit{fdr} \lt \pi_{0}$}{% em %}, and {% m %}\fbox{$\mathit{for} \lt \pi_{1}$}{% em %}.
 
 The classifier usefulness condition also puts a bound on the accuracy:
 {% math %}
