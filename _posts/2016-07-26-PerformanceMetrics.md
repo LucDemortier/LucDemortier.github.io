@@ -15,7 +15,8 @@ comments: true
 > <br> &ensp;&ensp;&ensp;[2.3 The likelihood](#Likelihood)
 > <br> &ensp;&ensp;&ensp;[2.4 The model evidence](#ModelEvidence)
 > <br> &ensp;&ensp;&ensp;[2.5 The posterior](#Posterior)
-> <br> &ensp;&ensp;&ensp;[2.6 Summary](#Summary)
+> <br> &ensp;&ensp;&ensp;[2.6 Classifier precision versus measurement precision](#MeasurementPrecision)
+> <br> &ensp;&ensp;&ensp;[2.7 Summary](#Summary)
 > <br>[3. Joint probabilities](#JointProbabilities)
 > <br>[4. Classifier scores](#ScoreBasedMetrics)
 > <br>[5. Likelihood ratios](#LikelihoodRatios)
@@ -114,8 +115,19 @@ Figure 1 shows how the posterior probabilities {% m %}\mathit{ppv}{% em %}, {% m
 
 {% fullwidth "assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" "Figure 1: For each combination of class and label, Bayes' theorem connects the corresponding performance metrics of a classifier." %}
 
+<br>
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
+<a name="MeasurementPrecision"></a>
+### 2.6 Classifier precision versus measurement precision
+Although we defined precision as a property of a classifier in a given population, there are reasons and ways to extend that definition. Consider for example the Covid-19 pandemic. Tests for this disease are effectively classifiers, assigning negative and positive labels to members of the population. The positive predictive value of these tests depends on the prevalence {% m %}\pi_{1}{% em %}, both directly and indirectly through the queue rate {% m %}p_{1}{% em %}. We can make this dependence explicit:
+{% math %}
+\mathit{ppv} \;=\; \frac{S_{e}}{S_{e} - \alpha + \alpha/\pi_{1}},
+{% endmath %}
+showing that {% m %}\mathit{ppv}{% em %} increases with {% m %}\pi_{1}{% em %}. Suppose now that I take the test, and the result is positive. What are the chances that I actually have the disease? One answer would be the positive predictive value. However that number describes the test performance in the population and does not reflect the particular circumstances of my life. If I have no symptoms, and remained at home in isolation for the past two weeks, it seems unlikely that I would actually have the disease. This is where it is useful to remember the Bayesian construction of {% m %}\mathit{ppv}{% em %} as the posterior probability obtained by updating the prior {% m %}\pi_{1}{% em %} with the data from a test result. If we are talking about my particular test result, this prior should fold in more information than just the population prevalence. It should include the precautions I took as an individual, which could reduce {% m %}\pi_{1}{% em %} significantly, and therefore also {% m %}\mathit{ppv}{% em %}. The question of how exactly one should estimate prior probabilities is beyond the scope of this blog post, but the distinction between classifier precision and measurement precision is an important one to keep in mind.
+
+<div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="Summary"></a>
-### 2.6 Summary
+### 2.7 Summary
 This section introduced twelve quantities:
 {% math %}
 \pi_{0},\; \pi_{1},\; S_{e},\; S_{p},\; \alpha,\; \beta,\; p_{0},\; p_{1},\; \mathit{ppv},\; \mathit{npv},\; \mathit{fdr},\; \mathit{for}.
@@ -135,9 +147,9 @@ The final number of independent quantities matches the number of degrees of free
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="JointProbabilities"></a>
 ## 3. Joint probabilities
-The most useful measures of classifier performance are *conditional* probabilities. By conditioning on something, we do not need to know whether or how that something is realized in order to make a valid statement. For example, by conditioning on true class, we ignore the prevalence when estimating sensitivity and specificity. Similarly, conditioning on class label allows us to derive predictive values without knowing the actual queue rate.
+The most useful measures of classifier performance are *conditional* probabilities. By conditioning on something, we do not need to know whether or how that something is realized in order to make a valid statement. For example, by conditioning on true class, we ignore the prevalence when estimating sensitivity and specificity. Similarly, conditioning on class label allows us to derive the predictive values without knowing the actual queue rate.
 
-In contrast, *joint* probabilities typically yield statements about the behavior of a classifier in a *specific* sample and are therefore less general than conditional probabilities. Nevertheless, by combining different joint probabilities one can still obtain useful metrics. Start for example with the joint probability for class label and true class to be positive:
+In contrast, *joint* probabilities typically require more assumptions about the classifier and/or the population of interest, and are therefore less general than conditional probabilities. Nevertheless, by combining joint probabilities one can still obtain useful metrics. Start for example with the joint probability for class label and true class to be positive:
 {% math %}
 p(\ell_{1} \;\&\; \lambda_{1}).
 {% endmath %}
@@ -161,7 +173,7 @@ In terms of quantities introduced previously this is:
         &\;=\; p(\ell_{1}\mid\lambda_{1})\,\pi_{1} \;+\; p(\ell_{0}\mid\lambda_{0})\,\pi_{0}
          \;=\; S_{e}\,\pi_{1} \;+\; S_{p}\,\pi_{0}\\[1mm]
         &\;=\; p(\lambda_{1}\mid\ell_{1})\,p_{1} \;+\; p(\lambda_{0}\mid\ell_{0})\,p_{0}
-         \;=\; \mathit{ppv}\,p_{0} \;+\; \mathit{npv}\,p_{1}.
+         \;=\; \mathit{ppv}\,p_{1} \;+\; \mathit{npv}\,p_{0}.
 \end{align}
 {% endmath %}
 Note the dependence on prevalence or queue rate. An equivalent measure is the **misclassification rate**, defined as one minus the accuracy. A benchmark that is sometimes used is the **null error rate**, defined as the misclassification rate of a classifier that always predicts the majority class. It is equal to {% m %}\min\{\pi_{0}, \pi_{1}\}{% em %}. The complement of the null error rate is the **null accuracy**, which is equal to {% m %}\max\{\pi_{0}, \pi_{1}\}{% em %}.
@@ -230,11 +242,11 @@ The usefulness condition {% m %}\fbox{$\mathit{dor} \gt 1$}{% em %} is mathemati
 
 The classifier usefulness condition also puts a bound on the accuracy:
 {% math %}
-{\rm A} \;=\; 1 - \alpha \;+\; (\alpha - \beta) \,\pi_{1}
-        \;>\; 1 - \alpha \;+\; (2\alpha - 1) \,\pi_{1}.
+{\rm A} \;=\; S_{e}\,\pi_{1} \;+\; S_{p}\,\pi_{0}
+        \;>\; p_{1}\,\pi_{1} \;+\; p_{0}\,\pi_{0}.
 {% endmath %}
 
-It is straightforward to verify that the majority and minority classifiers defined earlier both fail any of the above usefulness conditions. As a counter-example, imagine starting with the majority classifier and flipping the label on a single positive instance. Thus, this classifier sets {% m %}\ell=1{% em %} on one {% m %}\lambda=1{% em %} instance and {% m %}\ell=0{% em %} on all other instances. It has 100% precision on positive labels ({% m %}\mathit{ppv}=1{% em %}). For negative labels the precision is {% m %}\mathit{npv} = \pi_{0}/(1-1/N){% em %}, with {% m %}N{% em %} the total number of instances. Hence this classifier passes the usefulness condition.
+Since {% m %}p_{0} + p_{1} = 1{% em %}, the right-hand side of the above inequality is bounded between {% m %}\min(\pi_{0}, \pi_{1}){% em %} and {% m %}\max(\pi_{0}, \pi_{1}){% em %}. The upper bound is actually the accuracy of the majority classifier, which assigns the majority label to every instance. Note that the majority classifier itself is not a useful classifier, since its accuracy is equal to the bound, not *strictly* higher than it. In addition, it is entirely possible for a useful classifier to have an accuracy below that of the useless majority classifier. To illustrate this last point, consider the minority classifier, which assigns the minority label to every instance. This is a useless classifier, with accuracy {% m %}\pi_{1}{% em %} if we assume that {% m %}\pi_{1} \lt \pi_{0}{% em %}. To improve it, let's flip the label of one arbitrarily chosen majority instance. The accuracy of this new classifier is {% m %}\pi_{1} + 1/N{% em %}, with {% m %}N{% em %} the size of the total population (assumed finite in this example). This is larger than the accuracy bound, {% m %}p_{1}\pi_{1} + p_{0}\pi_{0} = \pi_{1} + 1/N - 2\pi_{1}/N{% em %}. Hence the new classifier is useful, even though for {% m %}N{% em %} large enough its accuracy will be lower than that of the majority classifier. Of course for other metrics the new classifier performs better than the majority one, for example sensitivity and the predictive values.
 
 <div style="text-align: right"><a href="#TopOfPage">Back to Top</a></div>
 <a name="MetricsEstimation"></a>
