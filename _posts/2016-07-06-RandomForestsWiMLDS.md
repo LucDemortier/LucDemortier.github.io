@@ -31,7 +31,8 @@ The data set consists of 100,000 flight records (this is actually a subsample of
 |  7. | Origin            | Three-letter departure airport code            | cat  |
 |  8. | Dest              | Three-letter destination airport code          | cat  |
 |  9. | Distance          | Flight distance in miles                       | int  |
-| 10. | dep_delayed_15min | Y/N flag indicating a delay of &ge;15 min.     | bin  |
+| 10. | dep_delayed_15min | Y/N flag indicating a departure                |      |
+|     |                   | delay of more than 15 minutes                  | bin  |
 
 The purpose of the exercise is to construct a predictor of the binary delay variable ("dep_delay_15min") based on the nine available features. The input data set is unbalanced: 80,726 flights out of 100,000 had no delay.
 
@@ -45,9 +46,9 @@ The remaining features are categorical, and their distributions can be represent
 
 {% maincolumn "assets/img/blog/RandomForests/FlightDelayFeatures2.png" "Figure 2: Bar chart of airline codes for flights with (orange) and without (blue) delay. The charts are normalized to the same area." %}
 
-Next, the airports of departure and destination. There are 307 of the former and 306 of the latter, so these are long charts. For readability I have chosen to display them vertically, and ordered alphabetically. The main thing one learns from them is that some airports are busier than others.  Busyness may correlate with delays (see for example ATL-Atlanta, EWR-Newark, and ORD-Chicago), but not in a systematic way (DFW-Dallas/Fort Worth, IAH-Houston, and LAX-Los Angeles). Enjoy the scroll down, and I'll see you on the other side of YUM (Yuma, AZ)...
+Next, the airports of departure and destination. There are 307 of the former and 306 of the latter. For readability I have chosen to display only 30 of each, vertically, and ordered by the maximum value of the delay and no-delay distributions at each airport. The main thing one learns from these charts is that some airports are busier than others, and busyness correlates with delays (see for example ATL-Atlanta, EWR-Newark, and ORD-Chicago).
 
-{% maincolumn "assets/img/blog/RandomForests/FlightDelayFeatures3.png" "Figure 3: Bar charts of departure (left) and destination (right) airports for flights with (orange) and without (blue) delay. The charts are normalized to the same area." %}
+{% maincolumn "assets/img/blog/RandomForests/FlightDelayFeatures3.png" "Figure 3: Bar charts of the top 30 departure (left) and destination (right) airports for flights with (orange) and without (blue) delay. The charts are normalized to the same area." %}
 
 {% marginnote "btt-1" "[Back to Top](#TopOfPage)" %}
 
