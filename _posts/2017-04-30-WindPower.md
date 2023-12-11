@@ -3,6 +3,7 @@ layout: post
 title: "Forecasting Wind Power"
 date: 30 April 2017
 excerpt: "Data collected on the power output of an array of wind turbines provide an interesting case study for machine learning algorithms. I tried a random forest from scikit-learn, the gradient boosting algorithm XGBoost, and a generalized linear model from the R package GAMLSS. Choosing the best model can be surprisingly tricky..."
+number: 9
 comments: true
 ---
 [Revised 9 January 2020]
@@ -58,29 +59,29 @@ Each data record contains the following fields:
 
 As mentioned earlier, there are ten turbines. Turbine power outputs are normalized to their nominal capacities, making TARGETVAR a number between 0 and 1. A histogram of TARGETVAR in the training data set is shown in Figure 1.
 
-{% maincolumn "assets/img/blog/WindTurbines/wind_turbine_outputs.png" "Figure 1: Histogram of turbine power output in the H2O training data set. All ten turbines are combined in this plot. For each turbine, power output is expressed as a fraction of total capacity." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/wind_turbine_outputs.png" "Figure 1: Histogram of turbine power output in the H2O training data set. All ten turbines are combined in this plot. For each turbine, power output is expressed as a fraction of total capacity." %}
 
 The spectrum displays two noteworthy features: a large spike near 0, and a bump near 1. The bump corresponds to turbines working near full capacity. The large spike correlates with low wind velocities. Turbines won't produce any power if the wind speed falls below a threshold known as the *cut-in speed*{% sidenote 'WTSN-2' 'For some basic explanations of the workings of wind turbines, see the [Windpower Program](https://www.wind-power-program.com/turbine_characteristics.htm) website.' %}. The fraction of turbine outputs that are exactly zero is 8.5% for all turbines combined, but varies from 2.4% for turbine 2 to 17.0% for turbine 9.
 
 Figure 2 illustrates the effect of the cut-in speed for turbine 9. Each dot in this figure is the tip of a horizontal wind velocity vector with tail at (0,0). Orange dots correspond to zero turbine output and congregate at low wind velocities. Blue dots correspond to non-zero turbine output and form a donut shape around the orange ones.
 
-{% maincolumn "assets/img/blog/WindTurbines/donut_plots.png" "Figure 2: Scatter plots of zonal versus meridional wind velocity components at heights of 10m (left) and 100m (right) above ground, for turbine 9. Turbine output is zero for orange dots and greater than zero for blue dots. The red cross at the center of each plot indicates zero wind velocity." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/donut_plots.png" "Figure 2: Scatter plots of zonal versus meridional wind velocity components at heights of 10m (left) and 100m (right) above ground, for turbine 9. Turbine output is zero for orange dots and greater than zero for blue dots. The red cross at the center of each plot indicates zero wind velocity." %}
 
-{% marginfigure "Fig03" "assets/img/blog/WindTurbines/H100_vs_H10.png" "Figure 3: Scatter plot of horizontal wind speed at 100m above ground versus that at 10m above ground, in zone 9. (The wind speed units are unknown.)" %} Note how wind velocities tend to be higher at 100m than at 10m. The simplest model for vertical wind profiles is a [power law](https://en.wikipedia.org/wiki/Wind_profile_power_law), according to which the ratio of wind speeds at two different heights is a constant. Figure 3 illustrates this model by showing horizontal wind speeds measured at 100m above ground, versus 10m, in zone 9.  The model is not very good for the data at hand. The ratio between the two wind speeds in the figure varies between about 1.3 and 3.0, suggesting that knowledge of the wind speed at one height provides only limited information about wind speed at another height.
+{% marginfigure "Fig03" "assets/img/blog/009_WindTurbines/H100_vs_H10.png" "Figure 3: Scatter plot of horizontal wind speed at 100m above ground versus that at 10m above ground, in zone 9. (The wind speed units are unknown.)" %} Note how wind velocities tend to be higher at 100m than at 10m. The simplest model for vertical wind profiles is a [power law](https://en.wikipedia.org/wiki/Wind_profile_power_law), according to which the ratio of wind speeds at two different heights is a constant. Figure 3 illustrates this model by showing horizontal wind speeds measured at 100m above ground, versus 10m, in zone 9.  The model is not very good for the data at hand. The ratio between the two wind speeds in the figure varies between about 1.3 and 3.0, suggesting that knowledge of the wind speed at one height provides only limited information about wind speed at another height.
 
 Since the measurements were taken at one-hour intervals, they are serially correlated. Figure 4 illustrates this correlation for the turbine-1 power output.
 
-{% maincolumn "assets/img/blog/WindTurbines/autocorrelations.png" "Figure 4 Left: Scatter plot of turbine 1 output at time t versus turbine 1 output at time t minus one hour. Right: Autocorrelation of turbine 1 outputs for the first 200 lags. The dashed lines indicate the 99% confidence interval on autocorrelation if the latter is purely random." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/autocorrelations.png" "Figure 4 Left: Scatter plot of turbine 1 output at time t versus turbine 1 output at time t minus one hour. Right: Autocorrelation of turbine 1 outputs for the first 200 lags. The dashed lines indicate the 99% confidence interval on autocorrelation if the latter is purely random." %}
 
 Although the data set is structured in such a way that each record associates one of ten turbines with only one set of wind velocity measurements (U10, U100, V10, and V100), it is instructive to see how the power output of a given turbine correlates with wind measurements near other turbines. This is shown in Figure 5 for turbine 1. Note that for this turbine the strongest correlation appears to be with wind speeds measured near turbine 7.
 
-{% fullwidth "assets/img/blog/WindTurbines/power_vs_windspeed.png" "Figure 5: Scatter plots of turbine 1 power output versus horizontal wind speed (the sum in quadrature of U10 and V10). Wind velocity is measured at eight stations located near the ten turbines. Turbines 4 and 5 share a wind measurement station, as do turbines 7 and 8. To facilitate comparison, the x- and y-scales are the same in all subplots." %}
+{% fullwidth "assets/img/blog/009_WindTurbines/power_vs_windspeed.png" "Figure 5: Scatter plots of turbine 1 power output versus horizontal wind speed (the sum in quadrature of U10 and V10). Wind velocity is measured at eight stations located near the ten turbines. Turbines 4 and 5 share a wind measurement station, as do turbines 7 and 8. To facilitate comparison, the x- and y-scales are the same in all subplots." %}
 
 Let's look at this more closely. How do turbine power and horizontal wind speed vary as a function of time? This is shown in Figure 6. Peaks in wind speed correspond to peaks in turbine power, and the effect of the cut-in speed is also visible (periods of zero turbine output associated with low, but non-zero wind speed).
 
 There is also evidence of small random fluctuations on top of broad patterns. Presumably only the broad patterns are significant, being induced by actual changes in wind speed, and the small fluctuations are  measurement errors. For improving turbine output predictions it may help to average out the small fluctuations in measured wind speed, but the fluctuations in measured turbine output represent an irreducible limit on predictability.
 
-{% fullwidth "assets/img/blog/WindTurbines/power_wind_vs_time.png" "Figure 6: Turbine 1 power and zone 7 wind speed, as a function of time in hours, for the first 400 hours in the training data set. The turbine power is expressed as a fraction of total capacity, and the wind speed is rescaled so as to fit in the same plot." %}
+{% fullwidth "assets/img/blog/009_WindTurbines/power_wind_vs_time.png" "Figure 6: Turbine 1 power and zone 7 wind speed, as a function of time in hours, for the first 400 hours in the training data set. The turbine power is expressed as a fraction of total capacity, and the wind speed is rescaled so as to fit in the same plot." %}
 
 This brief exploration of the data set suggests some strategies for analysis:
 
@@ -112,7 +113,7 @@ Another optimization involved implementing a rolling average of wind measurement
 
 It is instructive to compare predicted and observed turbine output distributions for Method 2, separately in the training and testing subsets:
 
-{% maincolumn "assets/img/blog/WindTurbines/wind_turbine_output_train_test_rfr16.png" "Figure 7 top: Fractional turbine power output in the training subset, as observed (green histogram) and modeled in Method 2 (blue histogram). The overlap between the two distributions appears in a blue-green shade. Bottom: same for the testing subset." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/wind_turbine_output_train_test_rfr16.png" "Figure 7 top: Fractional turbine power output in the training subset, as observed (green histogram) and modeled in Method 2 (blue histogram). The overlap between the two distributions appears in a blue-green shade. Bottom: same for the testing subset." %}
 
 The random forest models don't do a very good job of modeling the spike at zero output, or the bump near one. This is shown above for Method 2, but is also true for Method 1.
 
@@ -128,9 +129,9 @@ In an attempt to improve on these numbers I'll use a more powerful machine learn
 
 The following couple of plots show the feature importances in Methods 1 and 2:
 
-{% maincolumn "assets/img/blog/WindTurbines/rfr35_feature_importances.png" "Figure 8: Feature importances for the random forest model in Method 1. Wind speed labels indicate the zone they belong to. For example, the label of the top feature, U100_rm3_6, refers to the zonal wind speed 100 meters above ground near turbine 6, as a rolling mean over 3 measurements. Some hyper-parameter values used for this model are noted on the plot." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/rfr35_feature_importances.png" "Figure 8: Feature importances for the random forest model in Method 1. Wind speed labels indicate the zone they belong to. For example, the label of the top feature, U100_rm3_6, refers to the zonal wind speed 100 meters above ground near turbine 6, as a rolling mean over 3 measurements. Some hyper-parameter values used for this model are noted on the plot." %}
 
-{% maincolumn "assets/img/blog/WindTurbines/rfr16_feature_importances.png" "Figure 9: Feature importances for the random forest model in Method 2. Some hyper-parameter values used for this model are noted on the plot. The ZoneId_n features are binary variables, which equal 1 in records where the wind and turbine measurements were made in zone n." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/rfr16_feature_importances.png" "Figure 9: Feature importances for the random forest model in Method 2. Some hyper-parameter values used for this model are noted on the plot. The ZoneId_n features are binary variables, which equal 1 in records where the wind and turbine measurements were made in zone n." %}
 
 Wind speeds are more important than measurement dates or times, but no single feature stands out by itself.
 
@@ -149,7 +150,7 @@ Proper tuning of the hyperparameters of XGBoost requires some exploration, but i
 
 Figure 10 compares observed and predicted turbine output distributions in the training and testing subsets.
 
-{% maincolumn "assets/img/blog/WindTurbines/wind_turbine_output_train_test_xgb.png" "Figure 10 top: Fractional turbine power output in the training subset, as observed (green histogram) and modeled by XGBoost (blue histogram). The overlap between the two distributions appears in a blue-green shade. Bottom: same for the testing subset." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/wind_turbine_output_train_test_xgb.png" "Figure 10 top: Fractional turbine power output in the training subset, as observed (green histogram) and modeled by XGBoost (blue histogram). The overlap between the two distributions appears in a blue-green shade. Bottom: same for the testing subset." %}
 
 Note how, in the training subset, modeling of the spike at 0 and the bump near 1 is significantly better than with the random forest models. Unfortunately this does not generalize quite as nicely to the testing subset, which hints at overfitting. In spite of this problem I computed the performance measure for XGBoost on the test set of the public leaderboard of the hackathon. This yielded
 {% math %}
@@ -158,7 +159,7 @@ Note how, in the training subset, modeling of the spike at 0 and the bump near 1
 
 For the record, Figure 11 shows a plot of feature importances, averaged over all turbines.
 
-{% maincolumn 'assets/img/blog/WindTurbines/xgb35_feature_importances.png' 'Figure 11: Feature importances for the XGBoost model, averaged over all turbines. Feature labels are the same as those in Figure 8.' %}
+{% maincolumn 'assets/img/blog/009_WindTurbines/xgb35_feature_importances.png' 'Figure 11: Feature importances for the XGBoost model, averaged over all turbines. Feature labels are the same as those in Figure 8.' %}
 
 XGBoost makes better use of the "DAYOFYEAR" and "HOUR" features than the random forest models. Here for example, "DAYOFYEAR" is the third most important feature, whereas in random forest models it scores below all the wind velocity measurements.
 
@@ -227,7 +228,7 @@ y_{\rm pred} = p_{0}\times 0 + p_{1}\times 1 + (1-p_{0}-p_{1})\times \mu.
 
 Figure 12 illustrates the performance of this model on the training and testing subsets. In both cases two plots are shown: the predicted turbine output distribution superimposed on the observed one, and a QQ plot. The QQ plot is a convenient way to check residuals in the case of a non-Gaussian response variable distribution. For a good fit the points on the QQ plot line up along the diagonal.
 
-{% fullwidth "assets/img/blog/WindTurbines/wind_turbine_output_train_test_gamlss.png" "Figure 12 left: Fractional turbine power output in the training and testing subsets, as observed (green histogram) and as predicted by the GAMLSS model (blue histogram). The overlap between the two distributions appears in a blue-green shade. Right: QQ plots for the same training and testing subsets." %}
+{% fullwidth "assets/img/blog/009_WindTurbines/wind_turbine_output_train_test_gamlss.png" "Figure 12 left: Fractional turbine power output in the training and testing subsets, as observed (green histogram) and as predicted by the GAMLSS model (blue histogram). The overlap between the two distributions appears in a blue-green shade. Right: QQ plots for the same training and testing subsets." %}
 
 The fits are not very good; they fail to capture important features at both ends of the turbine power spectrum. However the fit to the testing subset does not appear to be worse than that to the training subset, suggesting that whatever features do get captured will generalize.
 
@@ -284,7 +285,7 @@ There is a way to improve even further on these results, by a technique known as
 
 Figure 13 compares predicted and actual turbine 1 power during the second week of the public leaderboard for the bottom four models.
 
-{% maincolumn "assets/img/blog/WindTurbines/pred_actual_vs_time.png" "Figure 13: Actual and predicted turbine 1 power output during the second week of the public leaderboard, for the four best models." %}
+{% maincolumn "assets/img/blog/009_WindTurbines/pred_actual_vs_time.png" "Figure 13: Actual and predicted turbine 1 power output during the second week of the public leaderboard, for the four best models." %}
 
 Here are some lessons that can be drawn from the  whole exercise:
 

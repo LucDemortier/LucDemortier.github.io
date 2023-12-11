@@ -39,8 +39,6 @@ page:
   extension: md
 
 collections:
-  projects:
-    output: true
   papers:
     output: true
 

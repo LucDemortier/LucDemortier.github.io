@@ -35,7 +35,7 @@ This page contains two sections, the first one listing papers on [statistical is
 <a name="ExperimentalParticlePhysics"></a>
 <h2 class="content-listing-header sans">Papers on Experimental Particle Physics
 <a href= "#TopOfPage" style="float: right; font-style: normal; font-weight: normal; font-size: 50%; font-family: Palatino; line-height: normal;">Back to Top</a></h2>
-{% newthought 'A list of all refereed publications' %} can be obtained via INSPIRE, please click <a href="https://inspirehep.net/search?p=find a demortier and tc p">here</a> (a total of 1191 as of 16 October 2017).
+{% newthought 'A list of all refereed publications' %} can be obtained via INSPIRE, please click <a href="https://inspirehep.net/search?p=find a demortier and tc p">here</a> (a total of 1201 as of 10 December 2023).
 
 You can also list by **journal**:
 - <a href="https://inspirehep.net/search?p=find j Phys.Rev.Lett. and a demortier">Physical Review Letters,</a>

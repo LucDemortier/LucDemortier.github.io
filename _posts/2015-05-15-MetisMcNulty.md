@@ -1,9 +1,11 @@
 ---
-layout: page
-title:  "Project McNulty: Estimating the Risk of Heart Disease"
-nav_exclude: true
-date: 15-May-2015
+layout: post
+title:  "Metis Project McNulty: Estimating the Risk of Heart Disease"
+date: 15 May 2015
 excerpt: What a single data set can teach us about indicators of heart disease...
+number: 3
+comments: true
+nav_exclude: false
 ---
 
 My third project at the spring 2015 Metis data science bootcamp involved estimating the probability of heart disease for patients admitted to a hospital emergency room with symptoms of chest pain.  
@@ -147,7 +149,7 @@ The 14 attributes are described in the table below; the last row ("num") is the 
 
 To gain some insight into the power of these attributes to discriminate between disease (num>0) and no disease (num=0), let's look at their distributions over the corresponding subsamples (139 patients with disease, 160 without).  This is shown in Figure 1 below:
 
-{% fullwidth "assets/img/HeartDisease/mcnulty_fig1.png" "Figure 1: Histograms and bar charts of the 14 attributes in the heart disease data set, for patients with (red) and without (green) the disease.  All distributions are normalized to unit area in order to emphasize differences in shape." %}
+{% fullwidth "assets/img/blog/003_HeartDisease/mcnulty_fig1.png" "Figure 1: Histograms and bar charts of the 14 attributes in the heart disease data set, for patients with (red) and without (green) the disease.  All distributions are normalized to unit area in order to emphasize differences in shape." %}
 
 These plots show with various degrees of "obviousness" that people with heart disease tend to be older and male, and have higher blood pressure, higher cholesterol levels, lower maximum heart rate under the Thalium stress test, etc., than people without the disease.  One way to quantify this degree of obviousness is to measure the discrepancy between the "disease" and "no-disease" distributions for each attribute.  This can be done with the so-called intrinsic discrepancy between two probability distributions {% m %}p_{1}{% em %} and {% m %}p_{2}{% em %}, which is based on information theory and is defined by{% sidenote 1 'See for example J. Bernardo, "[Reference Analysis](https://www.uv.es/~bernardo/RefAna.pdf)", Handbook of Statistics 25 (D. K. Dey and C. R. Rao, eds.), 17-90, Elsevier, 2005.' %}:
 {% math %} \delta\{p_{1},p_{2}\}\;=\;\min\Big\{ \int p_{1}(x)\,\log\frac{p_{1}(x)}{p_{2}(x)}\,dx,\; \int p_{2}(x)\,\log\frac{p_{2}(x)}{p_{1}(x)}\,dx \Big\}, {% endmath %}
@@ -232,7 +234,7 @@ Age is not part of the optimal set of features, and the coefficients of all sele
 
 ## Model Accuracy
 
-{% marginfigure "FIG-2" "assets/img/HeartDisease/LogRegProbabilities.png" "Figure 2: Histograms of logistic regression probabilities for the entire Cleveland data set.  The red histogram is for patients with heart disease, the green one for patients without the disease." %}  Figure 2 shows histograms of logistic regression probabilities for the Cleveland data set, the data I used for training the model.  To classify a patient as having the disease, I require the logistic probability to be at least 50%.  This is a standard choice, and from the figure it seems reasonable.  Other choices are of course possible, especially if one is more concerned about one type of classification error than another.
+{% marginfigure "FIG-2" "assets/img/blog/003_HeartDisease/LogRegProbabilities.png" "Figure 2: Histograms of logistic regression probabilities for the entire Cleveland data set.  The red histogram is for patients with heart disease, the green one for patients without the disease." %}  Figure 2 shows histograms of logistic regression probabilities for the Cleveland data set, the data I used for training the model.  To classify a patient as having the disease, I require the logistic probability to be at least 50%.  This is a standard choice, and from the figure it seems reasonable.  Other choices are of course possible, especially if one is more concerned about one type of classification error than another.
 
 I used the full Cleveland data set to fit the logistic regression model, leaving out no data for an independent test of the model.  Even the reduced set of features in the final optimization does not allow to extend the data set with the other databases (Hungary, Long Beach, or Switzerland), because one or more of the "slope", "ca", and "thal" attributes are consistently missing values in those.  
 
@@ -249,4 +251,4 @@ The coefficients listed in Table 4 can be used to construct a simple interactive
 
 The analysis flow of this study is shown in Figure 3 below.  The analysis code can be found in [my GitHub repository](https://github.com/LucDemortier/HeartDiseaseStudy).
 
-{% maincolumn "assets/img/HeartDisease/HD_AnalysisFlow.jpg" "Figure 3: Analysis flow for the Heart Disease study." %}
+{% maincolumn "assets/img/blog/003_HeartDisease/HD_AnalysisFlow.jpg" "Figure 3: Analysis flow for the Heart Disease study." %}

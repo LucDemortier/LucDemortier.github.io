@@ -3,12 +3,13 @@ layout: full-width-post
 title: "The Eternal Sunshine of Causal Thinking"
 date: 9 May 2016
 excerpt: "A review of Samantha Kleinberg's latest book, \"WHY: A Guide to Finding and Using Causes\"."
+number: 6
 comments: true
 ---
 
 When scientists claim discoveries, they talk about evidence. Evidence requires statistical reasoning, but what is this reasoning based on? The underlying beliefs are that observations have causes, that we have methods to identify those causes, and that we can inoculate ourselves against misleading evidence and cognitive biases. These are strong beliefs, involving difficult issues about which few scientists are truly knowledgeable. Fortunately we now have two new books to learn from, both written by Samantha Kleinberg: ["Causality, Probability, and Time," Cambridge University Press (2013)](https://www.amazon.com/dp/1107026482), and ["Why: A Guide to Finding and Using Causes," O'Reilly Media (2016)](https://www.amazon.com/dp/1491949643).  The first book was written for an audience with knowledge of statistics and probability theory, whereas the second has no mathematics in it, only text and graphs.  This is the one I'm reviewing here.
 
-{% fullwidth "assets/img/blog/Causality/SK_Books.jpg" "" %}
+{% fullwidth "assets/img/blog/006_Causality/SK_Books.jpg" "" %}
 
 Causality is so basic to our way of thinking and acting that its conundrums show up everywhere, and this ubiquity makes it also hard to define.  Already in the first chapter the author warns us that no definition of causality covers all cases, and each definition has counter-examples that another does not. We don’t even know if causality is a fundamental building block of the world we live in, or a structure we impose on it. There is no unified theory of causes, nor a foolproof method for finding them. The last chapter reiterates this notion that "causality is still an unsolved problem".  In between these warnings the reader will find extensive discussions of how we learn about causes; how correlation relates to causation; the importance of timing; observation versus experimentation; computation; explanation; and the transition from causal understanding to decisions, policies, and interventions.
 

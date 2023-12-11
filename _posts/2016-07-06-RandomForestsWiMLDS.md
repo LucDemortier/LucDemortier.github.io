@@ -3,6 +3,7 @@ layout: post
 title: "Predicting Flight Delays with a Random Forest"
 date: 6 July 2016
 excerpt: "Following up on a workshop on random forests organized by the NYC meetup group <em>Women in Machine Learning and Data Science</em>."
+number: 7
 comments: true
 ---
 
@@ -38,17 +39,17 @@ The purpose of the exercise is to construct a predictor of the binary delay vari
 
 To gain some insight into the features it is helpful to plot their normalized distributions separately for the "delay" and "no-delay" cases. This is shown below in Figures 1, 2, and 3.  Because of their normalization, these plots have a simple statistical interpretation: at any point along the X-axis, the ratio of the two distributions is a likelihood ratio. The top-left panel of Figure 1 for example, indicates that the likelihood of a delay increased from 2004 to 2007.
 
-{% fullwidth "assets/img/blog/RandomForests/FlightDelayFeatures1.png" "Figure 1: Histograms of the year, month, day of month, day of week, departure time, and flight distance of the flights in the airline data set, for flights with (orange) and without (blue) delay. All distributions are normalized to unit area in order to emphasize differences in shape." %}
+{% fullwidth "assets/img/blog/007_RandomForests/FlightDelayFeatures1.png" "Figure 1: Histograms of the year, month, day of month, day of week, departure time, and flight distance of the flights in the airline data set, for flights with (orange) and without (blue) delay. All distributions are normalized to unit area in order to emphasize differences in shape." %}
 
 Several other effects are visible in these plots: delays tend to be more likely during summer months and in December, in the second half of any given month, in the middle of the week, and at the end of the day. Short flights seem less likely to be delayed than long ones. Perhaps the sharpest difference between delay and no-delay is exhibited by the histogram of departure times.
 
 The remaining features are categorical, and their distributions can be represented with bar charts.  First the airline codes, ordered alphabetically. There are 23 of them:
 
-{% maincolumn "assets/img/blog/RandomForests/FlightDelayFeatures2.png" "Figure 2: Bar chart of airline codes for flights with (orange) and without (blue) delay. The charts are normalized to the same area." %}
+{% maincolumn "assets/img/blog/007_RandomForests/FlightDelayFeatures2.png" "Figure 2: Bar chart of airline codes for flights with (orange) and without (blue) delay. The charts are normalized to the same area." %}
 
-Next, the airports of departure and destination. There are 307 of the former and 306 of the latter. For readability I have chosen to display only 30 of each, vertically, and ordered by the maximum value of the delay and no-delay distributions at each airport. The main thing one learns from these charts is that some airports are busier than others, and busyness correlates with delays (see for example ATL-Atlanta, EWR-Newark, and ORD-Chicago).
+Next, the airports of departure and destination. There are 307 of the former and 306 of the latter, so these are long charts. For readability I have chosen to display them vertically, and ordered alphabetically. The main thing one learns from these charts is that some airports are busier than others, and busyness correlates with delays (see for example ATL-Atlanta, EWR-Newark, and ORD-Chicago), but not in a systematic way (DFW-Dallas/Fort Worth, IAH-Houston, and LAX-Los Angeles). Enjoy the scroll down, and I’ll see you on the other side of YUM (Yuma, AZ)…
 
-{% maincolumn "assets/img/blog/RandomForests/FlightDelayFeatures3.png" "Figure 3: Bar charts of the top 30 departure (left) and destination (right) airports for flights with (orange) and without (blue) delay. The charts are normalized to the same area." %}
+{% maincolumn "assets/img/blog/007_RandomForests/FlightDelayFeatures3a.png" "Figure 3: Bar charts of departure (left) and destination (right) airports for flights with (orange) and without (blue) delay. The charts are normalized to the same area." %}
 
 {% marginnote "btt-1" "[Back to Top](#TopOfPage)" %}
 
@@ -167,13 +168,13 @@ From this matrix we can estimate some of the standard quantities that are used t
 
 All the above numbers are relative to a 50% threshold on the output of the classifier.  Here is how this output is distributed, separately for delayed and non-delayed flights, in the training and test samples:
 
-{% maincolumn "assets/img/blog/RandomForests/RF_probabilities.png" "Figure 4: Histograms of the classifier output for delayed flights (orange) and non-delayed flights (blue), in the training subsample (left) and the testing subsample (right)." %}
+{% maincolumn "assets/img/blog/007_RandomForests/RF_probabilities.png" "Figure 4: Histograms of the classifier output for delayed flights (orange) and non-delayed flights (blue), in the training subsample (left) and the testing subsample (right)." %}
 
 The histograms are centered around 50% because I set the parameter "class_weight" to "balanced_subsample" in scikit-learn's random forest classifier. Had I not done so, the histograms would have been centered around the fraction of positives in the dataset, which is about 20%, and all bins above 50% would have been empty. As a result the precision and sensitivity would have been zero, and the specificity 100%, due to the 50% threshold on the classifier output.
 
 For predicting flight delays, thresholds other than 50% can be chosen from the left panel of Figure 5. The queue rate is the fraction of instances that pass the threshold cut. As the threshold increases, fewer true positives pass the cut, leading to a decrease in recall that follows the decrease in queue rate. On the other hand the purity of the sample of instances passing the cut increases, as shown by the precision curve.
 
-{% maincolumn "assets/img/blog/RandomForests/PRQ2_belts.png" "Figure 5: Precision, recall, and queue rate for flight delay predictions, as a function of the threshold on the classifier output. Left: Result obtained from the test sample. Right: Medians and 90% confidence belts obtained from 50 random splittings of the original data set." %}
+{% maincolumn "assets/img/blog/007_RandomForests/PRQ2_belts.png" "Figure 5: Precision, recall, and queue rate for flight delay predictions, as a function of the threshold on the classifier output. Left: Result obtained from the test sample. Right: Medians and 90% confidence belts obtained from 50 random splittings of the original data set." %}
 
 Note how the precision curve in the left panel becomes more jagged for thresholds above 0.60. This is due to a lack of statistics, as can be inferred from the right panel of Figure 4. To explore the variability of the precision, recall, and queue-rate curves as a function of threshold, I generated independent random forest models from 50 different random splittings of the original data set into training and test subsets (still maintaining a 70/30 ratio). I used this ensemble of models to compute and draw median curves and 90% confidence belts, which are shown in Figure 5's right panel.
 
@@ -181,9 +182,9 @@ The confidence belts are generally quite narrow, the only exception being the pr
 
 As mentioned earlier, our random forest classifier uses 642 features (after converting categorical features to binary ones). It is therefore interesting to check which ones are important, and how much impact important features have compared to the other ones. Scikit-learn provides a RandomForestClassifier attribute to extract feature importances. Each feature importance measures the decrease in classification accuracy when the corresponding feature values are randomly permuted over all trees in the forest.
 
-{% maincolumn "assets/img/blog/RandomForests/FeatureImportances.png" "Figure 6: Bar chart of feature importances, as obtained from scikit-learn's random forest classifier." %}
+{% maincolumn "assets/img/blog/007_RandomForests/FeatureImportances.png" "Figure 6: Bar chart of feature importances, as obtained from scikit-learn's random forest classifier." %}
 
-{% marginfigure "Fig7" "assets/img/blog/RandomForests/ROC.png" "Figure 7: Receiver Operating Characteristic for the random forest classifier used to predict flight delays. The curve is shown both for the training data set (orange) and the testing data set (blue)." %}Figure 6 shows that departure time is by far the most important feature, in agreement with the intrinsic discrepancy calculation shown earlier.
+{% marginfigure "Fig7" "assets/img/blog/007_RandomForests/ROC.png" "Figure 7: Receiver Operating Characteristic for the random forest classifier used to predict flight delays. The curve is shown both for the training data set (orange) and the testing data set (blue)." %}Figure 6 shows that departure time is by far the most important feature, in agreement with the intrinsic discrepancy calculation shown earlier.
 
 The last plot I'd like to show is that of the Receiver Operating Characteristic (ROC). This is a plot of the true positive rate versus the false positive rate, and is shown in Figure 7. The orange curve is the ROC calculated on the data set on which the random forest was trained, whereas the blue curve was obtained from the testing data set. The area under the orange ROC is 0.786, that under the blue ROC 0.717. The fact that both curves are not too far from each other indicates that there is little overfitting.
 

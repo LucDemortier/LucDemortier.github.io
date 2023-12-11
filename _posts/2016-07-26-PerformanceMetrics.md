@@ -3,6 +3,7 @@ layout: full-width-post
 title: "Taking the Confusion out of the Confusion Matrix"
 date: 26 July 2016
 excerpt: "How Bayes' theorem helps organize the bewildering array of performance metrics that can be estimated from a classifier's confusion matrix."
+number: 8
 comments: true
 ---
 [Revised 21 September 2017, 24 December 2019, 18 January 2021]
@@ -120,7 +121,7 @@ The precision, for example, quantifies the predictive value of a positive label 
 
 Figure 1 shows how the posterior probabilities {% m %}\mathit{ppv}{% em %}, {% m %}\mathit{npv}{% em %}, {% m %}\mathit{fdr}{% em %} and {% m %}\mathit{for}{% em %} are related to the likelihoods {% m %}S_{e}{% em %}, {% m %}S_{p}{% em %}, {% m %}\alpha{% em %} and {% m %}\beta{% em %} via Bayes' theorem:
 
-{% fullwidth "assets/img/blog/ConfusionMatrix/FourBayesTheorems.png" "Figure 1: For each combination of class and label, Bayes' theorem connects the corresponding performance metrics of a classifier." %}
+{% fullwidth "assets/img/blog/008_ConfusionMatrix/FourBayesTheorems.png" "Figure 1: For each combination of class and label, Bayes' theorem connects the corresponding performance metrics of a classifier." %}
 
 Note that if the operating point of the classifier is chosen in such a way that {% m %}p_{0} = \pi_{0}{% em %}, we'll have {% m %}\mathit{ppv} = S_{e}{% em %}, {% m %}\mathit{npv} = S_{p}{% em %}, and {% m %}\mathit{fdr}\times \mathit{for} = \alpha\times \beta{% em %}.
 <br>
@@ -233,7 +234,7 @@ As mentioned earlier, classifiers usually produce a score {% m %}q{% em %} to qu
 <a name="ROC"></a>
 ### 6.1 The Receiver Operating Characteristic (ROC)
 The **Receiver Operating Characteristic**, or **ROC**, is defined as the curve of true positive rate versus false positive rate (or sensitivity versus one-minus-specificity). An example is shown in the figure below:
-{% maincolumn "assets/img/blog/ConfusionMatrix/scores_distribution_and_roc.png" "Left: arbitrary classifier score distributions used for illustration. Right: corresponding ROC curve, obtained by varying the classifier threshold over the range of scores. In this example the area under the ROC is about 0.815." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/scores_distribution_and_roc.png" "Left: arbitrary classifier score distributions used for illustration. Right: corresponding ROC curve, obtained by varying the classifier threshold over the range of scores. In this example the area under the ROC is about 0.815." %}
 Note how the main diagonal line {% m %}S_{e} = 1 - S_{p}{% em %} serves as baseline in the ROC plot, in accordance with the classifier usefulness condition {% m %}S_{e} \gt 1 - S_{p}{% em %} discussed in [section 5](#ClassifierUsefulness).
 
 The area under the ROC curve, or **AUROC**, is a performance metric that's independent of prevalence and does not require a choice of threshold {% m %}q_{T}{% em %} on the classifier score {% m %}q{% em %}. In other words, it does not depend on the chosen operating point of the classifier. It can be shown that the AUROC is equal to the probability for a random positive instance to be scored higher than a random negative instance.
@@ -253,11 +254,11 @@ where the expectation values are over an ensemble of identical classifiers with 
 <a name="PRC"></a>
 ### 6.2 The Precision-Recall Curve (PRC)
 In cases where there is severe class imbalance in the data, the ROC may give too optimistic a view of classifier performance, because the true and false positive rates are both independent of prevalence, whereas precision deteriorates at low prevalence. It may therefore be preferable to plot a precision versus recall curve (or PRC). In the two illustrations below, the class distributions are the same, and only the class-1 prevalence is different. It can be seen that the ROC is independent of prevalence and looks quite good. On the other hand, the precision versus recall curve shows that the classifier performance leaves quite a bit to be desired in the case of imbalanced data. One can also calculate the area under the precision versus recall curve (or AUPRC) to summarize this effect.
-{% maincolumn "assets/img/blog/ConfusionMatrix/scores_distribution_roc_prc_0.png" "Left: classifier score distributions in a balanced dataset. Center: ROC. Right: PRC. The areas under the ROC and the PRC are both about 0.92." %}
-{% maincolumn "assets/img/blog/ConfusionMatrix/scores_distribution_roc_prc_1.png" "Left: classifier score distributions in a strongly imbalanced dataset. Center: ROC. Right: PRC. In this case the area under the ROC is still about 0.92 whereas that under the PRC is now 0.66." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/scores_distribution_roc_prc_0.png" "Left: classifier score distributions in a balanced dataset. Center: ROC. Right: PRC. The areas under the ROC and the PRC are both about 0.92." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/scores_distribution_roc_prc_1.png" "Left: classifier score distributions in a strongly imbalanced dataset. Center: ROC. Right: PRC. In this case the area under the ROC is still about 0.92 whereas that under the PRC is now 0.66." %}
 
 In accordance with the classifier usefulness conditions discussed in [section 5](#ClassifierUsefulness), there are two baselines for the precision-recall curve. One is the horizontal line {% m %}\mathit{ppv} = \pi_{1}{% em %}, and the other is the curve of precision versus queue rate, since the latter is a baseline for the recall (just imagine plotting recall versus precision, where queue rate would be the natural baseline, and then flip the plot back to precision versus recall). This second baseline requires some care, however, as illustrated in the following example:
-{% maincolumn "assets/img/blog/ConfusionMatrix/scores_distribution_roc_prc_2.png" "Left: classifier score distributions in an imbalanced dataset where class-0 instances extend beyond the class-1 distribution. Center: ROC. Right: PRC. The area under the ROC is ~0.94, and the area under the PRC is ~0.58." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/scores_distribution_roc_prc_2.png" "Left: classifier score distributions in an imbalanced dataset where class-0 instances extend beyond the class-1 distribution. Center: ROC. Right: PRC. The area under the ROC is ~0.94, and the area under the PRC is ~0.58." %}
 
 It is important to understand that the curves discussed in this section don't show functional relationships, but rather operating characteristics. Consider the plot of precision versus recall for example. The definition of precision implies that, functionally, it is an increasing function of recall. This is easy to see:
 {% math %}
@@ -284,7 +285,7 @@ In order to avoid bias, the maximization of {% m %}F_{\beta}{% em %} or {% m %}J
 ## 8. Performance metric estimation
 The performance metrics can be estimated from a two-by-two contingency table known as the confusion matrix. It is obtained by applying the classifier to a test data set different from the training data set. Here is standard notation for this matrix:
 
-{% fullwidth "assets/img/blog/ConfusionMatrix/ConfusionMatrix.png" 'Figure 2: Estimated confusion matrix. The notation tp stands for "number of true positives", fn for "number of false negatives", and so on.' %}
+{% fullwidth "assets/img/blog/008_ConfusionMatrix/ConfusionMatrix.png" 'Figure 2: Estimated confusion matrix. The notation tp stands for "number of true positives", fn for "number of false negatives", and so on.' %}
 
 The rows correspond to class labels, the columns to true classes. We then have the following approximations:
 {% math %}
@@ -329,19 +330,19 @@ For classifiers that generate scores it is useful to understand how various metr
 
 Case 1: Balanced, high-statistics dataset, with class-1 scores mostly above class-0 scores
 
-{% maincolumn "assets/img/blog/ConfusionMatrix/trends_5000_5000_01.png" "The recall and queue rate both decrease, whereas the precision increases. As noted previously, if the classifier threshold is chosen such that queue rate equals prevalence, precision will equal recall." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/trends_5000_5000_01.png" "The recall and queue rate both decrease, whereas the precision increases. As noted previously, if the classifier threshold is chosen such that queue rate equals prevalence, precision will equal recall." %}
 
 Case 2: Balanced, high-statistics dataset, with class-1 scores mostly *below* class-0 scores
 
-{% maincolumn "assets/img/blog/ConfusionMatrix/trends_5000_5000_10.png" "Compared to Case 1 the recall is still decreasing with threshold, but the precision is now decreasing instead of increasing. The baselines are now <em>above</em> their corresponding metrics, indicating that the classifier is misleading." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/trends_5000_5000_10.png" "Compared to Case 1 the recall is still decreasing with threshold, but the precision is now decreasing instead of increasing. The baselines are now <em>above</em> their corresponding metrics, indicating that the classifier is misleading." %}
 
 Case 3: Balanced, low-statistics dataset, with class-1 scores mostly above class-0 scores
 
-{% maincolumn "assets/img/blog/ConfusionMatrix/trends_0020_0020_01.png" "The curves are essentially the same as for Case 1, but with pronounced statistical fluctuations. Note that the recall never fluctuates up: it stays even or decreases. In contrast, the precision fluctuates both up and down." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/trends_0020_0020_01.png" "The curves are essentially the same as for Case 1, but with pronounced statistical fluctuations. Note that the recall never fluctuates up: it stays even or decreases. In contrast, the precision fluctuates both up and down." %}
 
 Case 4: Imbalanced, high-statistics dataset, with class-1 scores mostly above class-0 scores
 
-{% maincolumn "assets/img/blog/ConfusionMatrix/trends_9500_0500_01.png" "Compared to Case 1, the recall hasn't changed, but its baseline, the queue rate, has shifted down as a whole. The precision has also shifted down." %}
+{% maincolumn "assets/img/blog/008_ConfusionMatrix/trends_9500_0500_01.png" "Compared to Case 1, the recall hasn't changed, but its baseline, the queue rate, has shifted down as a whole. The precision has also shifted down." %}
 
 See appendix [11.2](#MetricsVsThreshold) for a more detailed explanation of the above trends.
 

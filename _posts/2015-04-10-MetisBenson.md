@@ -1,11 +1,13 @@
 ---
 layout: post
-title:  "Project Benson: MTA Data"
-nav_exclude: true
+title: "Metis Project Benson: MTA Data"
 date: 10 April 2015
 excerpt: MTA data help a green-energy company deploy sign-up teams in the city...
+number: 1
+comments: true
+nav_exclude: false
 ---
-My first data science project in the Metis bootcamp was a team project, for which I worked with [Marco Lunardi](https://marcolunardi.github.io/), [Ha Luu](https://hbl15.github.io/), and [Gina Soileau](https://gfsoileau.github.io/).  {% marginfigure "Fig-0" "assets/img/MTAforGreenEnergy/MTA.png" "" %} We were given some fascinating and extensive [MTA](https://new.mta.info/agency/new-york-city-transit) data, and our task was to find and demonstrate some use for it.  All in a couple of days.  So we brainstormed!  What would be a good question to ask, and how would the MTA data help us provide an answer?  Our ideas included advising the NYPD on where to station officers, or where and when to schedule backpack searches; advising the city on where to install racks for [Citi Bike](https://citibikenyc.com/how-it-works), and advising a company or a political organization on where to station sign-up teams.  
+My first data science project in the Metis bootcamp was a team project, for which I worked with [Marco Lunardi](https://marcolunardi.github.io/), [Ha Luu](https://hbl15.github.io/), and [Gina Soileau](https://gfsoileau.github.io/).  {% marginfigure "Fig-0" "assets/img/blog/001_MTAforGreenEnergy/MTA.png" "" %} We were given some fascinating and extensive [MTA](https://new.mta.info/agency/new-york-city-transit) data, and our task was to find and demonstrate some use for it.  All in a couple of days.  So we brainstormed!  What would be a good question to ask, and how would the MTA data help us provide an answer?  Our ideas included advising the NYPD on where to station officers, or where and when to schedule backpack searches; advising the city on where to install racks for [Citi Bike](https://citibikenyc.com/how-it-works), and advising a company or a political organization on where to station sign-up teams.  
 
 In the end we went with the latter idea.  We created a fictional green-energy company called "Blue Sky Energy Corporation", and imagined that they want to deploy sign-up teams in high-traffic areas across the city to maximize new subscriptions to their green-energy supply service.  Among other options, they are considering placing teams near the busiest subway stations.
 
@@ -43,7 +45,7 @@ For this project we used MTA data for the week of March 28 to April 3, 2015.  Th
 
 Figure 1 displays information about MTA commuter volume, by station and by day.
 
-{% fullwidth "assets/img/MTAforGreenEnergy/MTA_volume.png" "Figure 1 Left: Top ten busiest subway stations in NYC for the week of March 28 to April 3, 2015; Right: Commuter volume by day, for the top ten busiest subway stations.  The bar colors on the left map to the line colors on the right." %}
+{% fullwidth "assets/img/blog/001_MTAforGreenEnergy/MTA_volume.png" "Figure 1 Left: Top ten busiest subway stations in NYC for the week of March 28 to April 3, 2015; Right: Commuter volume by day, for the top ten busiest subway stations.  The bar colors on the left map to the line colors on the right." %}
 
 The left panel is a bar chart of the ten busiest subway stations in the city.  For each of these stations, the right panel shows the commuter volume as a function of day of the week, starting with Saturday, March 28, 2015.
 
