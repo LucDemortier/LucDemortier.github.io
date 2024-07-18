@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <a name="TopOfPage"></a>
+  <title>Metis Project Fletcher: Machine Learning with Tweets</title>
+  <meta name="description" content="How to identify topics by clustering documents, or cluster documents by modeling topics...">
+
+  <!-- Google Fonts loaded here depending on setting in _data/options.yml true loads font, blank does not-->
+   
+     <link href='//fonts.googleapis.com/css?family=Lato:400,400italic' rel='stylesheet' type='text/css'>
+   
+
+   <!-- Load up MathJax script if needed ... specify in /_data/options.yml file-->
+   
+     <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+   
+
+  <link rel="stylesheet" href="/css/tufte.css">
+
+  <link rel="canonical" href="http://lucdemortier.github.io/articles/15/MetisFletcher">
+  <link rel="alternate" type="application/rss+xml" title="Light on Data" href="http://lucdemortier.github.io/feed.xml" />
+
+  <!-- Load up the favicons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/assets/img/favicons/manifest.json">
+  <link rel="mask-icon" href="/assets/img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="/assets/img/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/assets/img/favicons/mstile-144x144.png">
+  <meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Load up Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-78138990-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+</head>
+
+  <body>
+    <!--- Header and nav template site-wide -->
+<header>
+    <nav class="group">
+		<a href="/"><img class="badge" src="/assets/img/avatars/LightOnData5.jpg" alt="CH"></a>
+
+    
+
+    
+        
+            
+                <a href="/feed.xml"></a>
+            
+        
+    
+        
+            
+                <a href="/">blog</a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    <a href="/papers/index">papers</a>
+                
+            
+        
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    
+
+    
+        <a href="/about/">about</a>
+    
+
+	</nav>
+</header>
+
+    <article class="group">
+      <h1>Metis Project Fletcher: Machine Learning with Tweets</h1>
+<p class="subtitle">May 29, 2015</p>
+
+
+<p>For the fourth project of the Metis Data Science bootcamp, the only requirement was to include some kind of text processing.  An intriguing aspect of text processing is the existence of two classes of methods, with little explanation of how they are related.  Both classes require one to map documents to numerical vectors in a high-dimensional space (through a bag-of-words or Tf-Idf transformation), but one class uses purely algebraic methods whereas the other uses probabilistic tools:</p>
+
+<ul>
+  <li>
+    <p><strong>Algebraic</strong> methods use cosine similarity to measure the semantic relatedness of two documents.  Examples of such methods include K-Means and Latent Semantic Indexing (LSI).</p>
+  </li>
+  <li>
+    <p><strong>Probabilistic</strong> methods start from a probabilistic model for the relationship between topics, documents, and words.  Examples are Latent Dirichlet Allocation (LDA) and Hierarchical Dirichlet Process (HDP).</p>
+  </li>
+</ul>
+
+<p>Suppose for example that we are asked to identify the topics discussed in a corpus of documents.  One possible approach in the algebraic class is to cluster the documents with K-means, and identify topics with the top terms used in each cluster.  In the probabilistic class one could use Latent Dirichlet Allocation (LDA) to find the underlying topics of the corpus, and then associate each document with the topic that has the highest probability for that document.  In this way we obtain both topics and clusters from each method and we can compare them.  This is what I attempted to do with a collection of tweets about yoga…</p>
+
+<h2 id="the-data-tweets-about-yoga">The Data: Tweets about Yoga</h2>
+
+<p>All tweets collected for this analysis were created in a 24-hour period starting at 17:00 (EDT) on May 26, 2015 (Figure 1).  A total of 10,138 tweets with the keyword “yoga” were collected and stored in a Mongo database.</p>
+
+<figure><figcaption>Figure 1: Creation times (in 2015) of the tweets collected for the present analysis.  The wide gap in the middle represents a period during which data collection was disabled.</figcaption><img src="/assets/img/blog/004_TweetsYoga/Tweet_Times.png" /></figure>
+
+<p>Using Python’s guess_language module, only tweets in English were kept, reducing the total to 7,244.  After removing duplicates, 4,779 distinct tweets were left for analysis.  To get some insight into the duplicates, I histogrammed in Figure 2 the number of “emissions” per tweet:</p>
+
+<figure><figcaption>Figure 2: Number of emissions per tweet, for the collection of yoga tweets used in this analysis.</figcaption><img src="/assets/img/blog/004_TweetsYoga/Tweet_Emissions.png" /></figure>
+
+<p>The tweet with the largest number of emissions (238) was an invitation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"RT @mohitfreedom: #LetsStayfree and be #SultansOfStyle
+at @IndianEmbassyUS Yoga Day celebrations of PM of #India
+@narendramodi https://t.co/…"
+</code></pre></div></div>
+
+<p>The RT tag at the beginning signals that this is a retweet, and the ellipsis at the end indicates truncation (at least partly due to Twitter inserting the retweet tag).</p>
+
+<p>Python provides the TextBlob module to estimate the subjectivity and polarity of a text.  Subjectivity is expressed on a scale from 0 to 1, whereas polarity goes from -1 to +1.  Being akin to mood, polarity can be negative, neutral, or positive.  Figure 3 shows a plot of subjectivity versus polarity for all 4,779 distinct tweets in the analysis.  The distribution is skewed towards positive polarity, but positive tweets tend to be more subjective.  Almost all tweets with zero subjectivity (1,656) have zero polarity (1,649).</p>
+
+<figure><figcaption>Figure 3: Scatter plot of subjectivity versus polarity for the tweets used in the analysis, with projections.  Note the log scale on the y-axes of the projections.</figcaption><img src="/assets/img/blog/004_TweetsYoga/Subj_vs_Pol.png" /></figure>
+
+<p>To prepare the tweets for further processing I tokenized them, removed the “stopwords”, stemmed the remaining tokens (words), added n-grams<label for="1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="1" class="margin-toggle" /><span class="sidenote">n-grams are contiguous sequences of n tokens.  I chose to work with 1-grams, 2-grams, and 3-grams. </span>, and removed n-grams that appear in more than a fraction <code class="language-plaintext highlighter-rouge">max_df=0.80</code> of all tweets, or in less than a fraction <code class="language-plaintext highlighter-rouge">min_df=0.01</code>.  Here is an example tweet and how it changes after each of these operations:</p>
+
+<p><em>Original tweet:</em> <br /><code class="language-plaintext highlighter-rouge">"I think I'm going to wear yoga pants to the office tomorrow."</code></p>
+
+<p><em>After tokenization:</em> <br /><code class="language-plaintext highlighter-rouge">['i', 'think', 'i', "'m", 'going', 'to', 'wear', 'yoga', 'pants', 'to', 'the', 'office', 'tomorrow']</code></p>
+
+<p><em>After removing stop words:</em> <br /><code class="language-plaintext highlighter-rouge">['think', 'going', 'wear', 'yoga', 'pants', 'office', 'tomorrow']</code></p>
+
+<p><em>After stemming:</em> <br /><code class="language-plaintext highlighter-rouge">['think', 'go', 'wear', 'yoga', 'pant', 'offic', 'tomorrow']</code></p>
+
+<p><em>After adding 2- and 3-grams:</em> <br /><code class="language-plaintext highlighter-rouge">['think', 'go', 'wear', 'yoga', 'pant', 'offic', 'tomorrow', 'think go', 'go wear', 'wear yoga', 'yoga pant', 'pant offic', 'offic tomorrow', 'think go wear', 'go wear yoga', 'wear yoga pant', 'yoga pant offic', 'pant offic tomorrow']</code></p>
+
+<p><em>After removing n-grams with too large or too small a frequency:</em> <br /><code class="language-plaintext highlighter-rouge">['think', 'go', 'wear', 'pant', 'tomorrow', 'wear yoga', 'wear yoga pant', 'yoga pant']</code></p>
+
+<p>Note how the word <code class="language-plaintext highlighter-rouge">'yoga'</code> by itself disappears after the last step, due to its obviously high frequency in a corpus of tweets about yoga, but remains present as part of 2- and 3-grams.  The distinct n-grams remaining in the corpus after this series of operations are referred to as “features”.  The number of these features depends on the pruning parameters <code class="language-plaintext highlighter-rouge">min_df</code> and <code class="language-plaintext highlighter-rouge">max_df</code> as illustrated in Figure 4.  As mentioned earlier I chose <code class="language-plaintext highlighter-rouge">min_df=1%</code> and <code class="language-plaintext highlighter-rouge">max_df=80%</code>, which yielded a total of 127 features.</p>
+
+<figure><figcaption>Figure 4: Total number of features in this analysis's tweet corpus as a function of the pruning parameters min_df and max_df.  The final settings for the analysis are marked in red and yield 127 features.</figcaption><img src="/assets/img/blog/004_TweetsYoga/model_features.png" /></figure>
+
+<p>For the final pre-processing step I applied a Tf-Idf transformation.  This converts the remaining n-grams within each tweet into numbers that reflect their frequency within the tweet and the inverse of their frequency within the entire corpus.  Effectively, the original tweet corpus has been mapped into a <code class="language-plaintext highlighter-rouge">127 X 4,779</code> matrix of numbers, that is, into 4,779 vectors in a 127-dimensional space.</p>
+
+<h2 id="multidimensional-scaling">Multidimensional Scaling</h2>
+
+<p>How can we visualize such a high-dimensional space and the tweet vectors it contains?  This is where a tool known as multidimensional scaling (MDS) comes in handy.  MDS maps the 127 coordinates of each tweet into two coordinates than can be plotted on the page.  The mapping attempts to preserve inter-tweet distances by minimizing the sum of squares of the differences between the distances in 127-dimensional space and the corresponding distances in 2-dimensional space:</p>
+
+<figure><figcaption>Figure 5: Multidimensional scaling representation of the 127-dimensional space of tweets.  Each dot is one of the 4,779 yoga tweets collected for analysis.</figcaption><img src="/assets/img/blog/004_TweetsYoga/mds_tweet_space.png" /></figure>
+
+<p>A careful look at Figure 5 reveals some structure.  For example, just right of bottom center is a cluster of dots separated from the rest by a semicircular gap.  Two additional clusters can be discerned near the border on the left and upper left.  Before trying to interpret these clusters it is helpful to examine how well distances in 2-D space correlate with true distances in 127-D space.  The following plot illustrates this with a random sample of 40,000 distances from the total of <span>​<script type="math/tex">\frac{4,779\times 4,778}{2}</script></span> = 11,417,031 inter-tweet distances:</p>
+
+<figure><figcaption>Figure 6, left: 2-D distances between tweets versus 127-D distances; right: distribution of 2-D distances when the 127-D distance is 1.</figcaption><img src="/assets/img/blog/004_TweetsYoga/intertweet_distances.png" /></figure>
+
+<p>It is important to realize here that the 127-D distances are not true distances, but rather cosine similarities, which do not obey the triangle inequality and are bounded above by 1.  This being said, the dark-blue band near the bottom in the plot on the left does indicate some correlation between distances in the two spaces, amid substantial noise.  The “plume” of inter-tweet distances above the correlation band shows that, when we try to visualize clusters, we can expect some tweets belonging to a cluster to appear some distance away from that cluster.  Conversely, the right-hand plot shows that a small fraction of tweets that are well separated in 127-D space may appear close in 2-D space.  Hence the 2-D visualization of a cluster may be contaminated by unrelated tweets.</p>
+
+<h2 id="clustering-with-k-means">Clustering with K-Means</h2>
+
+<p>Like many clustering algorithms, K-means assumes that the number of clusters present in the data is known in advance. It starts with some (possibly random) locations for the cluster means, and associates each point in the data set to the closest cluster mean.  The cluster means are then recomputed, and the process is repeated until the clusters are stable.</p>
+
+<p>For the tweets dataset I certainly didn’t know the number of clusters in advance, but it turns out the algorithm is pretty good at identifying plausible clusters anyway.  Assuming that the number of clusters is five, here is the result:</p>
+
+<figure><figcaption>Figure 7: Multidimensional scaling representation of five K-means clusters in the yoga tweets data set.</figcaption><img src="/assets/img/blog/004_TweetsYoga/km_clusters_5.png" /></figure>
+
+<p>The K-means visualization with MDS works remarkably well for five clusters, in the sense that it identifies four of the most “obvious” clusters, and then throws everything else in the fifth cluster.  The names I gave to the clusters in the legend of Figure 7 are attempts to summarize the most common n-grams found in the clustered tweets.  For each cluster, the top n-grams as well as the number of tweets belonging to it are listed below:</p>
+
+<p><strong>Yoga Wear:</strong> <code class="language-plaintext highlighter-rouge">["pants", "yoga pants", "wear", "wear yoga pants", "wear yoga"]</code>, <strong>436</strong> tweets.</p>
+
+<p><strong>Yoga Class:</strong> <code class="language-plaintext highlighter-rouge">["class", "yoga class", "free", "going", "start", "join", "fitness", "today"]</code>, <strong>346</strong> tweets.</p>
+
+<p><strong>Meditation:</strong> <code class="language-plaintext highlighter-rouge">["meditate", "yoga meditate", "mudra", "yoga meditate mudra", "meditate mudra", "mind", "day", "going", "free", "relaxation"]</code>, <strong>231</strong> tweets.</p>
+
+<p><strong>Hot Yoga:</strong> <code class="language-plaintext highlighter-rouge">["hot", "hot yoga", "class", "follow", "tonight", "practice"]</code>, <strong>136</strong> tweets.</p>
+
+<p><strong>Everything Else:</strong> <code class="language-plaintext highlighter-rouge">["day", "get", "practice", "love", "poses", "time", "fitness", "today"]</code>, <strong>3630</strong> tweets.</p>
+
+<p>As one increases the number of clusters, K-means keeps finding solutions (it always will), but the visualization becomes less compelling for higher-order clusters.  Here is, for example, the result for 20 clusters:</p>
+
+<figure><figcaption>Figure 8: Multidimensional scaling representation of 20 K-means clusters in the yoga tweets data set.</figcaption><img src="/assets/img/blog/004_TweetsYoga/km_clusters_20.png" /></figure>
+
+<p>The five previously found clusters are still present, although with some minor contamination from other clusters.  The cluster numbers in the legend of Figure 8 correspond to decreasing order of cluster population.  The only exception is the very last cluster, labeled “Everything Else”, which is in fact the most populous one (2261 tweets) and appears to just fill the background in this visualization.</p>
+
+<p>The top K-Means clusters by population do seem to reveal topics.  Let’s now try a second approach, where we start from topics and then identify clusters.</p>
+
+<h2 id="topic-modeling-with-latent-dirichlet-allocation-lda">Topic Modeling with Latent Dirichlet Allocation (LDA)</h2>
+
+<p>Latent Dirichlet Allocation models documents as probability distributions over topics, and topics as probability distributions over terms (n-grams).  The pre-processing of tweets for LDA is similar to that for MDS and K-Means.  The only difference is that we don’t use the “Idf” part of the Tf-Idf transformation, that is, terms within tweets are not weighted by their inverse document frequency.</p>
+
+<p>Similar to K-Means, the LDA algorithm requires the user to specify the number of topics present in the corpus of documents, which is not a trivial issue.  We’ll test the waters by setting the number of topics to five.  To map topics into clusters of tweets, we associate each tweet with its most probable topic (recall that with LDA each tweet is a probability distribution over topics).  Here is the result:</p>
+
+<figure><figcaption>Figure 9: Multidimensional scaling representation of five LDA topics in the yoga tweets data set.</figcaption><img src="/assets/img/blog/004_TweetsYoga/lda_topics_5.png" /></figure>
+
+<p>Compared with K-Means (Figure 7), LDA clusters have ‘blurry’ edges (see how Topic 0 leaks across the wide gap surrounding the K-Means “Yoga Wear” cluster).  In addition, some LDA clusters are mixtures of K-Means clusters.  For example, “Topic 1” is a mixture of the “Yoga Class” and “Hot Yoga” clusters of Figure 7, plus at least one other cluster.</p>
+
+<p>One possible solution to the mixture and blurriness problems is to specify a larger number of topics for LDA to disentangle.  Here is the result for 20 topics:</p>
+
+<figure><figcaption>Figure 10: Multidimensional scaling representation of 20 LDA topics in the yoga tweets data set.  Topics are ordered by decreasing tweet population of the corresponding clusters.</figcaption><img src="/assets/img/blog/004_TweetsYoga/lda_topics_20.png" /></figure>
+
+<p>Cluster sharpness has improved considerably.  For comparison with K-Means, here is LDA’s description of the four clusters common to Figures 10 and 7 (each feature below is “multiplied” by its LDA probability under the corresponding topic; probabilities should add up to 1 for each topic, but for brevity only the most significant features are listed):</p>
+
+<p><strong>Topic 1:</strong> <code class="language-plaintext highlighter-rouge">0.3745*"pants" + 0.3516*"yoga pants" + 0.0959*"wear" + 0.0449*"say" + 0.0418*"leggings"</code>, <strong>434</strong> tweets.</p>
+
+<p><strong>Topic 2:</strong> <code class="language-plaintext highlighter-rouge">0.3248*"class" + 0.2096*"yoga class" + 0.1148*"going" + 0.1013*"body" + 0.0889*"try"</code>, <strong>408</strong> tweets.</p>
+
+<p><strong>Topic 9:</strong> <code class="language-plaintext highlighter-rouge">0.3127*"meditate" + 0.1822*"yoga meditate" + 0.1070*"mudra" + 0.0988*"yoga meditate mudra" + 0.0988*"meditate mudra"</code>, <strong>198</strong> tweets.</p>
+
+<p><strong>Topic 8:</strong> <code class="language-plaintext highlighter-rouge">0.3185*"hot" + 0.2417*"look" + 0.2174*"hot yoga" + 0.1481*"studio"</code>, <strong>201</strong> tweets.</p>
+
+<p>The top features per topic/cluster in LDA and K-Means overlap to a large degree, although not completely.</p>
+
+<p>A second possible solution to the mixture and blurriness problems is to “seed” LDA topics.  For example, we know from our K-Means analysis that there are topics associated with yoga wear, yoga classes, meditation, and hot yoga.  By a priori reweighing appropriate model features we can get LDA to sharpen these topics.  Here is the result for five topics, after reweighing the features <code class="language-plaintext highlighter-rouge">"pant"</code> and <code class="language-plaintext highlighter-rouge">"wear"</code> for Topic 1, <code class="language-plaintext highlighter-rouge">"class"</code> and <code class="language-plaintext highlighter-rouge">"free"</code> for Topic 2, <code class="language-plaintext highlighter-rouge">"medit"</code> and <code class="language-plaintext highlighter-rouge">"mudra"</code> for Topic 3, and <code class="language-plaintext highlighter-rouge">"hot"</code> for Topic 4, by a factor of 500 to 1 with respect to the other features:</p>
+
+<figure><figcaption>Figure 11: Multidimensional scaling representation of five seeded LDA topics in the yoga tweets data set.  Topics are ordered by decreasing tweet population of the corresponding clusters.</figcaption><img src="/assets/img/blog/004_TweetsYoga/lda_topics_5_s500.png" /></figure>
+
+<p>Cluster definition is much better here than on Figure 9, and is almost as good as the K-Means result of Figure 7.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>In K-Means, the top n-grams attached to a cluster can be used to identify a topic associated with that cluster.  In LDA, by grouping documents for which a given topic has the highest probability, one can associate a cluster with that topic.  This mapping between topics and clusters can be used to compare K-Means and LDA.</p>
+
+<p>Although K-Means requires specification of the number of clusters present in the data, it seems good at identifying well-defined clusters, even if the specified number of clusters is well below the actual number.  This is not the case with LDA, which is very sensitive to the specified number of topics.  On the other hand, LDA allows the user to seed a topic with a prior distribution over features (n-grams).</p>
+
+<p>By making the input number of LDA topics sufficiently large, or by seeding topics, it is possible to obtain reasonable agreement between LDA and K-Means.</p>
+
+<h2 id="technical-note">Technical Note</h2>
+
+<p>The analysis flow of this study is shown in Figure 12 below.  The analysis code can be found in <a href="https://github.com/LucDemortier/MachineLearningWithTweets">my GitHub repository</a>.</p>
+
+<figure><figcaption>Figure 12: Analysis flow of the tweets study, together with the data science tools used.</figcaption><img src="/assets/img/blog/004_TweetsYoga/YogaTweets_AnalysisFlow.jpg" /></figure>
+
+
+    </article>
+    <span class="print-footer">Metis Project Fletcher: Machine Learning with Tweets - May 29, 2015 - luc demortier</span>
+    <footer>
+  <hr class="slender">
+
+  <ul class="footer-links">
+    <li><a href="mailto:luc.demortier@gmail.com"><span class="icon-mail"></span></a></li>
+    
+      <li>
+        <a href="//github.com/LucDemortier"><span class="icon-github"></span></a>
+      </li>
+    
+      <li>
+        <a href="//www.twitter.com/ThisOneLuc"><span class="icon-twitter"></span></a>
+      </li>
+    
+      <li>
+        <a href="//linkedin.com/in/lucdemortier"><span class="icon-linkedin"></span></a>
+      </li>
+    
+      <li>
+        <a href="/feed.xml"><span class="icon-rss2"></span></a>
+      </li>
+    
+  </ul>
+
+  <div class="credits">
+    <span>&copy; 2024 &nbsp;&nbsp;LUC DEMORTIER</span>
+  </div>
+
+  
+    <hr class="slender"><br><br>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+          var disqus_config = function () {
+              this.page.url = "http://lucdemortier.github.io/articles/15/MetisFletcher";
+              this.page.identifier = "/articles/15/MetisFletcher";
+          };
+
+          (function() {  // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.src = '//lightondata.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+          })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//lightondata.disqus.com/count.js" async></script>
+  
+
+</footer>
+
+  </body>
+</html>

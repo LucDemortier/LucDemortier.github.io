@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <a name="TopOfPage"></a>
+  <title>Metis Project McNulty: Estimating the Risk of Heart Disease</title>
+  <meta name="description" content="What a single data set can teach us about indicators of heart disease...">
+
+  <!-- Google Fonts loaded here depending on setting in _data/options.yml true loads font, blank does not-->
+   
+     <link href='//fonts.googleapis.com/css?family=Lato:400,400italic' rel='stylesheet' type='text/css'>
+   
+
+   <!-- Load up MathJax script if needed ... specify in /_data/options.yml file-->
+   
+     <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+   
+
+  <link rel="stylesheet" href="/css/tufte.css">
+
+  <link rel="canonical" href="http://lucdemortier.github.io/articles/15/MetisMcNulty">
+  <link rel="alternate" type="application/rss+xml" title="Light on Data" href="http://lucdemortier.github.io/feed.xml" />
+
+  <!-- Load up the favicons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/assets/img/favicons/manifest.json">
+  <link rel="mask-icon" href="/assets/img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="/assets/img/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/assets/img/favicons/mstile-144x144.png">
+  <meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Load up Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-78138990-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+</head>
+
+  <body>
+    <!--- Header and nav template site-wide -->
+<header>
+    <nav class="group">
+		<a href="/"><img class="badge" src="/assets/img/avatars/LightOnData5.jpg" alt="CH"></a>
+
+    
+
+    
+        
+            
+                <a href="/feed.xml"></a>
+            
+        
+    
+        
+            
+                <a href="/">blog</a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    <a href="/papers/index">papers</a>
+                
+            
+        
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    
+
+    
+        <a href="/about/">about</a>
+    
+
+	</nav>
+</header>
+
+    <article class="group">
+      <h1>Metis Project McNulty: Estimating the Risk of Heart Disease</h1>
+<p class="subtitle">May 15, 2015</p>
+
+
+<p>My third project at the spring 2015 Metis data science bootcamp involved estimating the probability of heart disease for patients admitted to a hospital emergency room with symptoms of chest pain.</p>
+
+<h2 id="the-heart-disease-data">The Heart Disease Data</h2>
+
+<p>I used the heart disease data set available from the <a href="https://archive.ics.uci.edu/ml/datasets/Heart+Disease">UC Irvine Machine Learning Repository</a>.  This data set dates from 1988 and consists of four databases: Cleveland (303 instances), Hungary (294), Switzerland (123), and Long Beach VA (200).  Each database provides 76 attributes, including the predicted attribute.  There are many missing attribute values.  In addition, the Cleveland data set became <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/WARNING">corrupted</a> after the loss of a computing node, and the surviving data set contains only 14 attributes per instance.  Counting only instances with non-missing values for these 14 attributes, the total for all four databases is 299 instances (297 from Cleveland alone).  This is the data set I will be using, and for simplicity I will be referring to it as the Cleveland data set.</p>
+
+<p>The 14 attributes are described in the table below; the last row (“num”) is the attribute to be predicted.</p>
+
+<p><label for="TB-1" class="margin-toggle"> ⊕</label><input type="checkbox" id="TB-1" class="margin-toggle" /><span class="marginnote">Table 1: Attributes of the heart disease patients in the Cleveland data set; the last row (heart disease status) is the response variable; the type column indicates whether an attribute is binary (bin), integer (int), categorical (cat), or continuous (con). </span></p>
+
+<div class="table-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: left">attribute</th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: left">description</th>
+      <th style="text-align: left">type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">1.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">age</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Age in years</td>
+      <td style="text-align: left">int</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">sex</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Female or male</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">3.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">cp</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Chest pain type (typical angina, atypical angina, non-angina, or asymptomatic angina)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">4.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">trestbps</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Resting blood pressure (mm Hg)</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">5.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">chol</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Serum cholesterol (mg/dl)</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">6.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">fbs</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Fasting blood sugar (&lt; 120 mg/dl or &gt; 120 mg/dl)</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">7.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">restecg</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Resting electrocardiography results (normal, ST-T wave abnormality, or left ventricular hypertrophy)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">8.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">thalach</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Max. heart rate achieved during thalium stress test</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">9.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">exang</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Exercise induced angina (yes or no)</td>
+      <td style="text-align: left">bin</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">10.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">oldpeak</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">ST depression induced by exercise relative to rest</td>
+      <td style="text-align: left">con</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">11.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">slope</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Slope of peak exercise ST segment (upsloping, flat, or downsloping)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">12.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">ca</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Number of major vessels colored by fluoroscopy</td>
+      <td style="text-align: left">int</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">13.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">thal</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Thalium stress test result (normal, fixed defect, or reversible defect)</td>
+      <td style="text-align: left">cat</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">14.</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">num</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: left">Heart disease status: number of major vessels with &gt;50% narrowing (0,1,2,3, or 4)</td>
+      <td style="text-align: left">int</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>To gain some insight into the power of these attributes to discriminate between disease (num&gt;0) and no disease (num=0), let’s look at their distributions over the corresponding subsamples (139 patients with disease, 160 without).  This is shown in Figure 1 below:</p>
+
+<figure class="fullwidth"><img src="/assets/img/blog/003_HeartDisease/mcnulty_fig1.png" /><figcaption>Figure 1: Histograms and bar charts of the 14 attributes in the heart disease data set, for patients with (red) and without (green) the disease.  All distributions are normalized to unit area in order to emphasize differences in shape.</figcaption></figure>
+
+<p>These plots show with various degrees of “obviousness” that people with heart disease tend to be older and male, and have higher blood pressure, higher cholesterol levels, lower maximum heart rate under the Thalium stress test, etc., than people without the disease.  One way to quantify this degree of obviousness is to measure the discrepancy between the “disease” and “no-disease” distributions for each attribute.  This can be done with the so-called intrinsic discrepancy between two probability distributions <span>​<script type="math/tex">p_{1}</script></span> and <span>​<script type="math/tex">p_{2}</script></span>, which is based on information theory and is defined by<label for="1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="1" class="margin-toggle" /><span class="sidenote">See for example J. Bernardo, “<a href="https://www.uv.es/~bernardo/RefAna.pdf">Reference Analysis</a>”, Handbook of Statistics 25 (D. K. Dey and C. R. Rao, eds.), 17-90, Elsevier, 2005. </span>:</p>
+<div class="mathblock"><script type="math/tex; mode=display"> \delta\{p_{1},p_{2}\}\;=\;\min\Big\{ \int p_{1}(x)\,\log\frac{p_{1}(x)}{p_{2}(x)}\,dx,\; \int p_{2}(x)\,\log\frac{p_{2}(x)}{p_{1}(x)}\,dx \Big\}, </script></div>
+<p>provided one of the integrals is finite.  For discrete distributions such as those in Figure 1, the integrals become sums.  After sorting them in decreasing order, the intrinsic discrepancies between disease and no-disease for the first 13 attributes in Table 1 are as follows:</p>
+
+<p><label for="TB-2" class="margin-toggle"> ⊕</label><input type="checkbox" id="TB-2" class="margin-toggle" /><span class="marginnote">Table 2: Intrinsic discrepancies between the disease and no-disease distributions of the attributes in the Cleveland data set. </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Attribute</th>
+      <th style="text-align: center">Intrinsic Discrepancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Thalium stress test result [thal]</td>
+      <td style="text-align: center">0.609</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Chest pain type [cp]</td>
+      <td style="text-align: center">0.584</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">No. of major vessels colored by fluoroscopy [ca]</td>
+      <td style="text-align: center">0.479</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Max. heart rate during thalium stress test [thalach]</td>
+      <td style="text-align: center">0.456</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ST depression induced by exercise [oldpeak]</td>
+      <td style="text-align: center">0.420</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Exercise induced angina [exang]</td>
+      <td style="text-align: center">0.353</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Slope of peak exercise ST segment [slope]</td>
+      <td style="text-align: center">0.312</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Age [age]</td>
+      <td style="text-align: center">0.199</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Sex [sex]</td>
+      <td style="text-align: center">0.156</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Resting electrocardiography results [restecg]</td>
+      <td style="text-align: center">0.059</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Resting blood pressure [trestbp]</td>
+      <td style="text-align: center">0.033</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Serum cholesterol [chol]</td>
+      <td style="text-align: center">0.031</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Fasting blood sugar [fbs]</td>
+      <td style="text-align: center">0.000</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>These results give us some idea about which features would be valuable for inclusion in a machine learning model, but it should be remembered that they do not take correlations into account.  Thus they are more useful as a benchmark, or to answer the question of which test one should choose if one had the resources to perform only one.</p>
+
+<h2 id="the-logistic-model-feature-selection-and-fit">The Logistic Model: Feature Selection and Fit</h2>
+
+<p>Since the Cleveland data set has limited statistics, I won’t try to predict all the categories of the heart disease status feature, but only whether or not heart disease is present (num&gt;0 or num=0).  I’ll be using logistic regression, which has the advantage of providing a probability estimate for the prediction.</p>
+
+<p>What is the optimal set of attributes that should be used?  And how should we define optimality?</p>
+
+<p>If we fit the simplest logistic model (log-odds linear in both the parameters and the features) to the Cleveland data, we would expect, based on Figure 1, that the coefficients of the age, blood pressure, and serum cholesterol features will be positive, whereas the coefficient of the maximum heart rate feature [thalach] will be negative.  Here is what we actually find:</p>
+
+<p><label for="TB-3" class="margin-toggle"> ⊕</label><input type="checkbox" id="TB-3" class="margin-toggle" /><span class="marginnote">Table 3: Fit to the Cleveland data of a logistic model with the first thirteen attributes of Table 1.  Results for only four out of the thirteen features are shown.  For each feature listed in the first column, the table shows the values of the fitted coefficient and standard error (columns 2 and 3), as well as their ratio (the z-value in column 4). </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Feature</th>
+      <th style="text-align: right">Coefficient</th>
+      <th style="text-align: right">Standard Error</th>
+      <th style="text-align: right">Z-Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">age</td>
+      <td style="text-align: right">-0.12</td>
+      <td style="text-align: right">0.22</td>
+      <td style="text-align: right">-0.55</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">trestbps</td>
+      <td style="text-align: right">0.43</td>
+      <td style="text-align: right">0.20</td>
+      <td style="text-align: right">2.17</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">chol</td>
+      <td style="text-align: right">0.22</td>
+      <td style="text-align: right">0.21</td>
+      <td style="text-align: right">1.06</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">thalach</td>
+      <td style="text-align: right">-0.42</td>
+      <td style="text-align: right">0.26</td>
+      <td style="text-align: right">-1.63</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The great surprise is that the coefficient of the age feature is negative, as if older people had a lower risk of heart disease!  This is not the whole story however.  The standard error on the age coefficient is quite large; it certainly allows for the true value of that coefficient to be zero or even positive: <span>​<script type="math/tex"> -0.12 \pm 0.22 </script></span> means that, with 68% confidence, the true age coefficient is between -0.34 and 0.10.  This is also indicated by the z-value of -0.55, which is too small to provide convincing evidence that we actually need the age feature to account for the heart disease status of patients in the Cleveland data set.</p>
+
+<p>The technical reason for this glitch is two-fold: the features in the Cleveland data set are correlated, and the sample size is too small to determine all the feature coefficients with sufficient precision.  This means that we need to be extra careful in selecting features for the final model.  One approach is to loop over all combinations<label for="2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="2" class="margin-toggle" /><span class="sidenote">The Cleveland data set provides thirteen features per patient, four of which are categorical (not including binary ones). When the categorical features are converted into binary “dummies” for fitting purposes, the total list of features expands to eighteen.  This yields 2<sup>18</sup>=262,144 possible combinations to check! </span> of features and select the one that yields the highest accuracy (defined as the fraction of times the logistic regression classifier correctly predicts the heart disease status of a patient).  Unfortunately this approach does not take precision into account: It simply assumes that we have a large enough sample to determine precisely the coefficient of any selected feature.  Sure enough, when I tried this approach, the age feature was included with a negative coefficient!</p>
+
+<p>A better approach for this problem<label for="SN-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="SN-3" class="margin-toggle" /><span class="sidenote">See section 4.4.2, pg. 124, of Trevor Hastie, Robert Tibshirani, and Jerome Friedman, <a href="https://statweb.stanford.edu/~tibs/ElemStatLearn/">“The Elements of Statistical Learning: Data Mining, Inference, and Prediction”</a>, Second Edition, Springer Series in Statistics (2009). </span> is to start with all features included, and then eliminate one by one features whose fitted coefficient is not significantly different from zero.  The order of elimination should be such that the model deviance  remains the lowest possible (defined as minus twice the log-likelihood of the model, the deviance is the function minimized by the fitter to obtain the feature coefficients).  Here is what the pseudo-code for this approach looks like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1.  Start by including all the features in the model.
+ 2.  Fit the model and extract the deviance.
+ 3.  Does any feature have a coefficient with z-value
+     less than 2?
+ 4.  If yes:
+ 5.      For each such feature still in the model:
+ 6.          remove the feature,
+ 7.          refit,
+ 8.          recompute the deviance, and
+ 9.          replace the feature.
+10.      Eliminate the feature whose removal caused
+         the smallest change in deviance.
+11.      Go back to step 2.
+12.  If no:
+13.      Exit.
+</code></pre></div></div>
+
+<p>The output of this algorithm is the largest subset of features whose fit coefficients are at least two standard deviations away from zero, and such that the total change in fit deviance is the smallest possible.  When applied to the logistic regression model for the Cleveland data, nine features are selected, five of which are binary variables coming from three of the original categorical attributes.  This is the fit result:</p>
+
+<p><label for="TB-4" class="margin-toggle"> ⊕</label><input type="checkbox" id="TB-4" class="margin-toggle" /><span class="marginnote">Table 4: Final results of a fit to the Cleveland data of a logistic regression model with the optimal subset of features.  The bottom five features are binary variables resulting from three of the original categorical attributes in Table 1.  For example, “cp: typical angina” is 1 when the chest pain type is typical angina and 0 otherwise. </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Feature</th>
+      <th style="text-align: right">Coefficient</th>
+      <th style="text-align: right">Standard Error</th>
+      <th style="text-align: right">Z-Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">sex</td>
+      <td style="text-align: right">1.44</td>
+      <td style="text-align: right">0.39</td>
+      <td style="text-align: right">3.69</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">trestbps</td>
+      <td style="text-align: right">0.44</td>
+      <td style="text-align: right">0.18</td>
+      <td style="text-align: right">2.48</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">thalach</td>
+      <td style="text-align: right">-0.44</td>
+      <td style="text-align: right">0.22</td>
+      <td style="text-align: right">-2.04</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ca</td>
+      <td style="text-align: right">3.80</td>
+      <td style="text-align: right">0.74</td>
+      <td style="text-align: right">5.17</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cp: typical angina</td>
+      <td style="text-align: right">-2.23</td>
+      <td style="text-align: right">0.62</td>
+      <td style="text-align: right">-3.58</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cp: atypical angina</td>
+      <td style="text-align: right">-1.27</td>
+      <td style="text-align: right">0.51</td>
+      <td style="text-align: right">-2.49</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cp: non-angina</td>
+      <td style="text-align: right">-2.11</td>
+      <td style="text-align: right">0.44</td>
+      <td style="text-align: right">-4.86</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">slope: upsloping</td>
+      <td style="text-align: right">-1.47</td>
+      <td style="text-align: right">0.38</td>
+      <td style="text-align: right">-3.84</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">thal: reversible defect</td>
+      <td style="text-align: right">1.50</td>
+      <td style="text-align: right">0.38</td>
+      <td style="text-align: right">3.93</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Age is not part of the optimal set of features, and the coefficients of all selected features have a z-value of at least 2 (in absolute value).  Note also that the top four attributes by order of intrinsic discrepancy (thal, cp, ca, and thalach, see Table 2) are part of this final selection.</p>
+
+<h2 id="model-accuracy">Model Accuracy</h2>
+
+<p><label for="FIG-2" class="margin-toggle">⊕</label><input type="checkbox" id="FIG-2" class="margin-toggle" /><span class="marginnote"><img class="fullwidth" src="/assets/img/blog/003_HeartDisease/LogRegProbabilities.png" /><br />Figure 2: Histograms of logistic regression probabilities for the entire Cleveland data set.  The red histogram is for patients with heart disease, the green one for patients without the disease.</span>  Figure 2 shows histograms of logistic regression probabilities for the Cleveland data set, the data I used for training the model.  To classify a patient as having the disease, I require the logistic probability to be at least 50%.  This is a standard choice, and from the figure it seems reasonable.  Other choices are of course possible, especially if one is more concerned about one type of classification error than another.</p>
+
+<p>I used the full Cleveland data set to fit the logistic regression model, leaving out no data for an independent test of the model.  Even the reduced set of features in the final optimization does not allow to extend the data set with the other databases (Hungary, Long Beach, or Switzerland), because one or more of the “slope”, “ca”, and “thal” attributes are consistently missing values in those.</p>
+
+<p>To obtain unbiased estimates of the accuracy, precision, and recall properties of the logistic model I used a three-way cross-validation procedure.  I divided the Cleveland dataset randomly into three almost equal parts. For each part, I trained the model on the other two parts combined and measured its properties on the part not used for training.  This gave three unbiased estimates of the desired model properties, which were then averaged.  Note that the training included both the feature selection and the model fit.  For the accuracy (fraction of disease or no-disease predictions that are correct) I found <span>​<script type="math/tex">(79.6 \pm 1.4)\% </script></span>.  For the precision I found <span>​<script type="math/tex">(82.7 \pm 6.6)\% </script></span> (fraction of disease predictions that are correct) and <span>​<script type="math/tex">(78.6 \pm 2.7)\% </script></span> (fraction of no-disease predictions that are correct).  Finally, for the recall the numbers are <span>​<script type="math/tex">(73.0 \pm 4.1)\% </script></span> (fraction of disease cases that are correctly identified) and <span>​<script type="math/tex">(86.0 \pm 6.2)\% </script></span> (fraction of no-disease cases that are correctly identified).</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>The coefficients listed in Table 4 can be used to construct a simple interactive application for predicting heart disease (for maximum accuracy I used the full Cleveland data set to determine these coefficients).  The result is shown below (adjust the sliders to see how the corresponding attribute values affect the risk of heart disease):</p>
+<p> &nbsp; </p>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+
+      #parent {
+          border: 1px solid #000;
+          width: 90%;
+          margin-left: auto;
+          margin-right: 10%;
+          color: #0900C4;
+          background-color: lightyellow;
+          font: Helvetica;
+          font-size: 12pt;
+      }
+
+      #wrapper .child1{
+          float: left;
+          width: 85%;
+      }
+
+      #wrapper .child2 {
+          margin-left: 88%;
+          margin-top: 5%;
+      }
+
+      div.clear {
+          clear: both;
+      }
+
+      table.naked_table {
+        width: 100%;
+        margin-left: -20px;
+        border: none;
+        border-collapse: separate;
+        border-spacing: 30px 20px;
+      }
+
+      table.naked_table td.input_slider {
+        text-align: left;
+      }
+
+      .hd-slider-width {
+        width: 70%;
+      }
+
+      .hd-number-width {
+        width: 20%;
+      }
+
+      form.slider_input {
+        width: 130%;
+      }
+
+      label.before_slider {
+        display: inline-block;
+        width: 100%;
+        padding-left: 0;
+        margin-left: 0;
+        text-align: right;
+      }
+
+    </style>
+  </head>
+
+<body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<div id="parent"> <!-- Main Div -->
+
+  <div id="wrapper">
+
+    <center>
+    <h1 style="color: maroon">Heart Disease Predictor</h1>
+    </center>
+
+    <div class="child1">
+
+      <table class="naked_table">
+      <tr>
+      <td>
+        <label class="before_slider">
+               Sex (0=female,1=male)</label></td>
+      <td class="input_slider">
+        <form class="slider_input">
+          <input type="range" class="hd-slider-width" name="amountRange" min="0" max="1" step="1" value="0" id="nSex1" oninput="this.form.amountInput.value=this.value" />
+          <input type="number" class="hd-number-width" name="amountInput" min="0" max="1" step="1" value="0" id="nSex2" oninput="this.form.amountRange.value=this.value" />
+        </form></td>
+      </tr>
+
+      <tr>
+      <td><label for="nRestbp" class="before_slider">
+                 Resting Blood Pressure (94 - 200 mmHg)</label></td>
+      <td class="input_slider">
+        <form class="slider_input">
+          <input type="range" class="hd-slider-width" name="amountRange" min="94" max="200" step="all" value="94" id="nRestbp1" oninput="this.form.amountInput.value=this.value" />
+          <input type="number" class="hd-number-width" name="amountInput" min="94" max="200" step="all" value="94" id="nRestbp2" oninput="this.form.amountRange.value=this.value" />
+        </form></td>
+      </tr>
+
+      <tr>
+      <td><label for="nThalach" class="before_slider">
+                 Thalium Stress Test Maximum Heart Rate (71 - 202)</label></td>
+      <td class="input_slider">
+        <form class="slider_input">
+          <input type="range" class="hd-slider-width" name="amountRange" min="71" max="202" step="all" value="71" id="nThalach1" oninput="this.form.amountInput.value=this.value" />
+          <input type="number" class="hd-number-width" name="amountInput" min="71" max="202" step="all" value="71" id="nThalach2" oninput="this.form.amountRange.value=this.value" />
+        </form></td>
+      </tr>
+
+      <tr>
+      <td><label for="nCa" class="before_slider">
+                 Number of Major Vessels Colored by Fluoroscopy (0 - 3)</label></td>
+      <td class="input_slider">
+        <form class="slider_input">
+          <input type="range" class="hd-slider-width" name="amountRange" min="0" max="3" step="all" value="0" id="nCa1" oninput="this.form.amountInput.value=this.value" />
+          <input type="number" class="hd-number-width" name="amountInput" min="0" max="3" step="all" value="0" id="nCa2" oninput="this.form.amountRange.value=this.value" />
+        </form></td>
+      </tr>
+
+      <tr>
+      <td><label for="nCp" class="before_slider">
+                 Chest Pain Type (1=typical angina, 2=atypical angina, 3=non-angina, 4=asymptomatic angina)</label></td>
+      <td class="input_slider">
+        <form class="slider_input">
+          <input type="range" class="hd-slider-width" name="amountRange" min="1" max="4" step="1" value="1" id="nCp1" oninput="this.form.amountInput.value=this.value" />
+          <input type="number" class="hd-number-width" name="amountInput" min="1" max="4" step="1" value="1" id="nCp2" oninput="this.form.amountRange.value=this.value" />
+        </form></td>
+      </tr>
+
+      <tr>
+      <td><label for="nSlope" class="before_slider">
+                 Peak Exercise ST Segment (0=flat or downsloping, 1=upsloping)</label></td>
+      <td class="input_slider">
+        <form class="slider_input">
+          <input type="range" class="hd-slider-width" name="amountRange" min="0" max="1" step="1" value="0" id="nSlope1" oninput="this.form.amountInput.value=this.value" />
+          <input type="number" class="hd-number-width" name="amountInput" min="0" max="1" step="1" value="0" id="nSlope2" oninput="this.form.amountRange.value=this.value" />
+        </form></td>
+      </tr>
+
+      <tr>
+      <td><label for="nThal" class="before_slider">
+                 Thalium Test: (0=normal or fixed defect, 1=reversible defect)</label></td>
+      <td class="input_slider">
+        <form class="slider_input">
+          <input type="range" class="hd-slider-width" name="amountRange" min="0" max="1" step="1" value="0" id="nThal1" oninput="this.form.amountInput.value=this.value" />
+          <input type="number" class="hd-number-width" name="amountInput" min="0" max="1" step="1" value="0" id="nThal2" oninput="this.form.amountRange.value=this.value" />
+        </form></td>
+      </tr>
+
+      <tr>
+      <td></td>
+      <td class="input_slider">
+          <input type="button" style="color: #0900C4" value="Reset All Sliders" onclick="updateOne(val01,-1)" />
+      </td>
+      </tr>
+
+      </table>
+
+      </div>
+
+    <div class="child2">
+
+      <script>
+
+        var width  = 100;
+        var height = 400;
+
+        var holder = d3.select(".child2")
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height);
+
+        // draw a rectangle
+        var y0 = 20;
+        var height0 = 380;
+        holder.append("rect")
+            .attr("x", 5)
+            .attr("y", y0+height0)
+            .style("fill", "rgb(0,255,0)")
+            .attr("height", 0)
+            .attr("width", 90);
+
+        // draw a container rectangle
+        holder.append("rect")
+        	.attr("x", 5)
+        	.attr("y", y0)
+        	.style("fill", "none")
+        	.style("stroke", "lightblue")
+        	.style("stroke-width",4)
+        	.attr("height",height0)
+        	.attr("width",90);
+
+        // add text inside rectangle
+        holder.append("text")
+        	.text("0.00%")
+        	.attr("x",12)
+        	.attr("y",y0+height0-10)
+        	.attr("fill","black")
+          .attr("font-family","Verdana")
+          .attr("font-size","20");
+
+        // initialize
+        var val01 = document.getElementById("nSex1").value;
+        var val02 = document.getElementById("nRestbp1").value;
+        var val03 = document.getElementById("nThalach1").value;
+        var val04 = document.getElementById("nCa1").value;
+        var val05 = document.getElementById("nCp1").value;
+        var val06 = document.getElementById("nSlope1").value;
+        var val07 = document.getElementById("nThal1").value;
+        updateOne(val01,0);
+
+        // Check for changes in the inputs and update output bar
+        d3.select("#nSex1").on("input", function() {updateOne(+this.value,1);});
+        d3.select("#nSex2").on("input", function() {updateOne(+this.value,1);});
+        d3.select("#nRestbp1").on("input", function() {updateOne(+this.value,2);});
+        d3.select("#nRestbp2").on("input", function() {updateOne(+this.value,2);});
+        d3.select("#nThalach1").on("input", function() {updateOne(+this.value,3);});
+        d3.select("#nThalach2").on("input", function() {updateOne(+this.value,3);});
+        d3.select("#nCa1").on("input", function() {updateOne(+this.value,4);});
+        d3.select("#nCa2").on("input", function() {updateOne(+this.value,4);});
+        d3.select("#nCp1").on("input", function() {updateOne(+this.value,5);});
+        d3.select("#nCp2").on("input", function() {updateOne(+this.value,5);});
+        d3.select("#nSlope1").on("input", function() {updateOne(+this.value,6);});
+        d3.select("#nSlope2").on("input", function() {updateOne(+this.value,6);});
+        d3.select("#nThal1").on("input", function() {updateOne(+this.value,7);});
+        d3.select("#nThal2").on("input", function() {updateOne(+this.value,7);});
+
+        // Update the heart disease probability
+        function updateOne(value,index) {
+
+          if (index == 1) {
+            val01 = value;
+          } else if (index == 2) {
+            val02 = value;
+          } else if (index == 3) {
+            val03 = value;
+          } else if (index == 4) {
+            val04 = value;
+          } else if (index == 5) {
+            val05 = value;
+          } else if (index == 6) {
+            val06 = value;
+          } else if (index == 7) {
+            val07 = value;
+          } else if (index == -1) {
+            // Set everything back to default state:
+            val01 = document.getElementById("nSex1").defaultValue;
+            document.getElementById("nSex1").value = val01;
+            document.getElementById("nSex2").value = val01;
+            val02 = document.getElementById("nRestbp1").defaultValue;
+            document.getElementById("nRestbp1").value = val02;
+            document.getElementById("nRestbp2").value = val02;
+            val03 = document.getElementById("nThalach1").defaultValue;
+            document.getElementById("nThalach1").value = val03;
+            document.getElementById("nThalach2").value = val03;
+            val04 = document.getElementById("nCa1").defaultValue;
+            document.getElementById("nCa1").value = val04;
+            document.getElementById("nCa2").value = val04;
+            val05 = document.getElementById("nCp1").defaultValue;
+            document.getElementById("nCp1").value = val05;
+            document.getElementById("nCp2").value = val05;
+            val06 = document.getElementById("nSlope1").defaultValue;
+            document.getElementById("nSlope1").value = val06;
+            document.getElementById("nSlope2").value = val06;
+            val07 = document.getElementById("nThal1").defaultValue;
+            document.getElementById("nThal1").value = val07;
+            document.getElementById("nThal2").value = val07;
+          }
+
+          // Standardize the continuous features:
+          var srbp_val     = (val02-131.7157)/17.7478;
+          var sthalach_val = (val03-149.3278)/23.1211;
+          var sca_val      = (val04-0.6722)/3.0;
+
+          // Disentangle the categorical features:
+          var cp_contr = 0.0;
+          if (val05 == 1) {
+            cp_contr = -2.2318;
+          } else if (val05 == 2) {
+            cp_contr = -1.2681;
+          } else if (val05 == 3) {
+            cp_contr = -2.1124;
+          }
+          var slope_contr = 0.0;
+          if (val06 == 1) {slope_contr = -1.4726;}
+          var thal_contr = 0.0;
+          if(val07 == 1) {thal_contr = 1.5009;}
+
+          // Compute log-odds, then probability:
+          var scprod = 1.4361*val01 + 0.4415*srbp_val - 0.4431*sthalach_val + 3.7984*sca_val + cp_contr + slope_contr + thal_contr;
+          var drec   = 1.0/(1.0+Math.exp(-scprod));
+          var drecs  = height0*drec;
+          drec       *= 100;
+
+          // Update plot:
+          rcolor     = percentToRGB(drec);
+          holder.select("rect")
+            .attr("y",y0+height0-drecs)
+            .attr("height",drecs)
+            .style("fill", rcolor);
+
+          holder.select("text")
+            .text(function(){return parseFloat(Math.round(drec * 100) / 100).toFixed(2)+"%";});
+
+        }
+
+        function percentToRGB(percent) {
+            if (percent === 100) {
+                percent = 99
+            }
+            var r, g, b;
+
+            if (percent < 50) {
+                // green to yellow
+                r = Math.floor(255 * (percent / 50));
+                g = 255;
+
+            } else {
+                // yellow to red
+                r = 255;
+                g = Math.floor(255 * ((50 - percent % 50) / 50));
+            }
+            b = 0;
+
+            return "rgb(" + r + "," + g + "," + b + ")";
+        }
+
+        </script>
+
+    </div>
+
+  </div>
+
+  <div class="clear"></div>
+
+  </div>
+</body>
+
+<p> &nbsp; </p>
+
+<h2 id="technical-note">Technical Note</h2>
+
+<p>The analysis flow of this study is shown in Figure 3 below.  The analysis code can be found in <a href="https://github.com/LucDemortier/HeartDiseaseStudy">my GitHub repository</a>.</p>
+
+<figure><figcaption>Figure 3: Analysis flow for the Heart Disease study.</figcaption><img src="/assets/img/blog/003_HeartDisease/HD_AnalysisFlow.jpg" /></figure>
+
+
+    </article>
+    <span class="print-footer">Metis Project McNulty: Estimating the Risk of Heart Disease - May 15, 2015 - luc demortier</span>
+    <footer>
+  <hr class="slender">
+
+  <ul class="footer-links">
+    <li><a href="mailto:luc.demortier@gmail.com"><span class="icon-mail"></span></a></li>
+    
+      <li>
+        <a href="//github.com/LucDemortier"><span class="icon-github"></span></a>
+      </li>
+    
+      <li>
+        <a href="//www.twitter.com/ThisOneLuc"><span class="icon-twitter"></span></a>
+      </li>
+    
+      <li>
+        <a href="//linkedin.com/in/lucdemortier"><span class="icon-linkedin"></span></a>
+      </li>
+    
+      <li>
+        <a href="/feed.xml"><span class="icon-rss2"></span></a>
+      </li>
+    
+  </ul>
+
+  <div class="credits">
+    <span>&copy; 2024 &nbsp;&nbsp;LUC DEMORTIER</span>
+  </div>
+
+  
+    <hr class="slender"><br><br>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+          var disqus_config = function () {
+              this.page.url = "http://lucdemortier.github.io/articles/15/MetisMcNulty";
+              this.page.identifier = "/articles/15/MetisMcNulty";
+          };
+
+          (function() {  // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.src = '//lightondata.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+          })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//lightondata.disqus.com/count.js" async></script>
+  
+
+</footer>
+
+  </body>
+</html>
