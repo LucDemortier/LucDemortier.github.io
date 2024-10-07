@@ -1,0 +1,219 @@
+I"!!<h1 class="content-listing-header sans">Papers</h1>
+<p>This page contains two sections, the first one listing papers on <a href="#StatisticalIssues">statistical issues</a> and the second one papers on <a href="#ExperimentalParticlePhysics">experimental particle physics</a>.</p>
+<hr class="slender" />
+
+<p>&nbsp;</p>
+
+<p><a name="StatisticalIssues"></a></p>
+<h2 class="content-listing-header sans">Papers on Statistical Issues<a href="#TopOfPage" style="float: right; font-style: normal; font-weight: normal; font-size: 50%; font-family: Palatino; line-height: normal;">Back to Top</a></h2>
+<p><span class="newthought">Pages in this section</span>  summarize papers I wrote on various statistical problems. While this work was mainly intended for an audience of experimental particle physicists, its scope is more general.  The topics investigated cover hypothesis testing, confidence interval construction, fitting techniques, nuisance parameters, frequentist versus Bayesian statistics, and more.</p>
+
+<ul class="content-listing">
+  
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2014-08-26-p0vsp1"><h3 class="contrast">Testing Hypotheses in Particle Physics: Plots of p<sub>0</sub> Versus p<sub>1</sub></h3></a>
+          <br /><span class="smaller">August 26, 2014</span>  <br />
+          <div>
+          (With Louis Lyons)
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2013-06-10-HEPDataAnalysis"><h3 class="contrast">Interval Estimation</h3></a>
+          <br /><span class="smaller">June 10, 2013</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2011-09-27b-BernardoDiscussion"><h3 class="contrast">Discussion with José Bernardo on Bayesian Reference Analysis</h3></a>
+          <br /><span class="smaller">September 27, 2011</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2011-09-27a-BanffSummary"><h3 class="contrast">Open Issues in the Wake of Banff 2010</h3></a>
+          <br /><span class="smaller">September 27, 2011</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2010-08-02-refPriors"><h3 class="contrast">Reference Priors for High Energy Physics</h3></a>
+          <br /><span class="smaller">August 2, 2010</span>  <br />
+          <div>
+          (With Supriya Jain and Harrison Prosper)
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2010-02-12-ConvolutionHistograms"><h3 class="contrast">Error Estimates for the Bin Contents of a Convolution Histogram</h3></a>
+          <br /><span class="smaller">February 12, 2010</span>  <br />
+          <div>
+          (With Luca Lista)
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2009-03-31-TASI_Lectures"><h3 class="contrast">Dealing with Data: Signals, Backgrounds, and Statistics</h3></a>
+          <br /><span class="smaller">March 31, 2009</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2008-04-08-pulls"><h3 class="contrast">Everything You Always Wanted to Know About Pulls</h3></a>
+          <br /><span class="smaller">April 8, 2008</span>  <br />
+          <div>
+          (With Louis Lyons)
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2007-06-27-nuisanceParameters"><h3 class="contrast">P-Values and Nuisance Parameters</h3></a>
+          <br /><span class="smaller">June 27, 2007</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2006_05_16b_refAnalysis"><h3 class="contrast">Bayesian Reference Analysis</h3></a>
+          <br /><span class="smaller">May 16, 2006</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2006_05_16a_genFrequentism"><h3 class="contrast">Generalized Frequentist Methods for Calculating P-Values and Confidence Intervals</h3></a>
+          <br /><span class="smaller">May 16, 2006</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/2003-12-16-ensembles"><h3 class="contrast">Constructing Ensembles of Pseudo-Experiments</h3></a>
+          <br /><span class="smaller">December 16, 2003</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/1999-09-08-topMassCombination"><h3 class="contrast">Combining the Top Quark Mass Results for Run 1 from CDF and D0</h3></a>
+          <br /><span class="smaller">September 8, 1999</span>  <br />
+          <div>
+          (With Raymond Hall, Richard Hughes, Boaz Klima, Robert Roser, and Mark Strovink)
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/1999-04-28-FitMethods"><h3 class="contrast">Equivalence of the Best-Fit and Covariance-Matrix Methods for Comparing Binned Data with a Model in the Presence of Correlated Systematic Uncertainties</h3></a>
+          <br /><span class="smaller">April 28, 1999</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+      
+          <li class="listing">
+          <hr class="slender" />
+          <a href="/papers/1995-11-20-tailDeviations"><h3 class="contrast">Assessing the Significance of a Deviation in the Tail of a Distribution</h3></a>
+          <br /><span class="smaller">November 20, 1995</span>  <br />
+          <div>
+          
+          
+          </div>
+          </li>
+      
+  
+</ul>
+
+<p><a name="ExperimentalParticlePhysics"></a></p>
+<h2 class="content-listing-header sans">Papers on Experimental Particle Physics
+<a href="#TopOfPage" style="float: right; font-style: normal; font-weight: normal; font-size: 50%; font-family: Palatino; line-height: normal;">Back to Top</a></h2>
+<p><span class="newthought">A list of all refereed publications</span>  can be obtained via INSPIRE, please click <a href="https://inspirehep.net/search?p=find a demortier and tc p">here</a> (a total of 1201 as of 10 December 2023).</p>
+
+<p>You can also list by <strong>journal</strong>:</p>
+<ul>
+  <li><a href="https://inspirehep.net/search?p=find j Phys.Rev.Lett. and a demortier">Physical Review Letters,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find j PHRVA and a demortier">Physical Review C or D,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find j Phys.Lett.B and a demortier">Physics Letters B,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find j JHEP and a demortier">Journal of High Energy Physics,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find j Eur.Phys.J.C and a demortier">European Physics Journal C,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find j J.Phys. and a demortier">Journal of Physics G,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find j Nucl.Instrum.Meth. and a demortier">Nuclear Instruments and Methods in Physics Research,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find j JINST and a demortier">Journal of Instrumentation,</a></li>
+</ul>
+
+<p>or by <strong>experiment</strong>:</p>
+<ul>
+  <li><a href="https://inspirehep.net/search?p=find a demortier and cn cdf and tc p">CDF,</a></li>
+  <li><a href="https://inspirehep.net/search?p=find a demortier and cn cms and tc p">CMS.</a></li>
+</ul>
+:ET
