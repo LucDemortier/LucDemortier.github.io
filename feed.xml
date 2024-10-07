@@ -1,30 +1,103 @@
----
-layout: null
----
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>{{ site.title | xml_escape }}</title>
-    <description>{{ site.description | xml_escape }}</description>
-    <link>{{ site.url }}{{ site.baseurl }}/</link>
-    <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml"/>
-    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
-    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
-    <generator>Jekyll v{{ jekyll.version }}</generator>
-    {% for post in site.posts limit:10 %}
+    <title>Light on Data</title>
+    <description>A blog by a physicist turned data scientist</description>
+    <link>http://lucdemortier.github.io/</link>
+    <atom:link href="http://lucdemortier.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 06 Oct 2024 20:58:38 -0400</pubDate>
+    <lastBuildDate>Sun, 06 Oct 2024 20:58:38 -0400</lastBuildDate>
+    <generator>Jekyll v4.2.2</generator>
+    
       <item>
-        <title>{{ post.title | xml_escape }}</title>
-        <description>{{ post.excerpt | xml_escape }}</description>
-        <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
-        <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
-        <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
-        {% for tag in post.tags %}
-        <category>{{ tag | xml_escape }}</category>
-        {% endfor %}
-        {% for cat in post.categories %}
-        <category>{{ cat | xml_escape }}</category>
-        {% endfor %}
+        <title>Forecasting Wind Power</title>
+        <description>Data collected on the power output of an array of wind turbines provide an interesting case study for machine learning algorithms. I tried a random forest from scikit-learn, the gradient boosting algorithm XGBoost, and a generalized linear model from the R package GAMLSS. Choosing the best model can be surprisingly tricky...</description>
+        <pubDate>Sun, 30 Apr 2017 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/17/WindPower</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/17/WindPower</guid>
+        
+        
       </item>
-    {% endfor %}
+    
+      <item>
+        <title>Taking the Confusion out of the Confusion Matrix</title>
+        <description>How Bayes&apos; theorem helps organize the bewildering array of performance metrics that can be estimated from a classifier&apos;s confusion matrix.</description>
+        <pubDate>Tue, 26 Jul 2016 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/16/PerformanceMetrics</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/16/PerformanceMetrics</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Predicting Flight Delays with a Random Forest</title>
+        <description>Following up on a workshop on random forests organized by the NYC meetup group &lt;em&gt;Women in Machine Learning and Data Science&lt;/em&gt;.</description>
+        <pubDate>Wed, 06 Jul 2016 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/16/RandomForestsWiMLDS</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/16/RandomForestsWiMLDS</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>The Eternal Sunshine of Causal Thinking</title>
+        <description>A review of Samantha Kleinberg&apos;s latest book, &quot;WHY: A Guide to Finding and Using Causes&quot;.</description>
+        <pubDate>Mon, 09 May 2016 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/16/WhyReview</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/16/WhyReview</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Metis Project Kojak: The Practice of Yoga in the City</title>
+        <description>See how yoga businesses compare in New York City and Los Angeles ...or go straight to the maps&amp;#58;</description>
+        <pubDate>Thu, 25 Jun 2015 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/15/MetisKojak</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/15/MetisKojak</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Metis Project Fletcher: Machine Learning with Tweets</title>
+        <description>How to identify topics by clustering documents, or cluster documents by modeling topics...</description>
+        <pubDate>Fri, 29 May 2015 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/15/MetisFletcher</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/15/MetisFletcher</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Metis Project McNulty: Estimating the Risk of Heart Disease</title>
+        <description>What a single data set can teach us about indicators of heart disease...</description>
+        <pubDate>Fri, 15 May 2015 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/15/MetisMcNulty</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/15/MetisMcNulty</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Metis Project Luther: Movies and Stars</title>
+        <description>Can we use the star value of a movie&apos;s cast to predict revenue?</description>
+        <pubDate>Fri, 24 Apr 2015 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/15/MetisLuther</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/15/MetisLuther</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Metis Project Benson: MTA Data</title>
+        <description>MTA data help a green-energy company deploy sign-up teams in the city...</description>
+        <pubDate>Fri, 10 Apr 2015 00:00:00 -0400</pubDate>
+        <link>http://lucdemortier.github.io/articles/15/MetisBenson</link>
+        <guid isPermaLink="true">http://lucdemortier.github.io/articles/15/MetisBenson</guid>
+        
+        
+      </item>
+    
   </channel>
 </rss>

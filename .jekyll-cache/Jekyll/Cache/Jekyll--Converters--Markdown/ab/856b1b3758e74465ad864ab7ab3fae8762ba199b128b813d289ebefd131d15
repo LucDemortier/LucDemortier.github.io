@@ -1,4 +1,0 @@
-I"í<p>Several standard statistical tests can be used to quantify the significance of a deviation in the tail of a measured distribution. We study the bias introduced in these tests due to binning of the data, variation of the range over which the data are tested, and systematic uncertainties. Monte Carlo methods to compute correct significance levels are described. The results are applied to a comparison of the Run 1A inclusive jet cross section <span>â€‹<script type="math/tex">d\sigma/dE_{T}</script></span> with NLO QCD calculations.</p>
-
-<p>This paper was initially distributed as an internal note to the CDF collaboration at Fermilab. You can download it <a href="http://localhost:4000/assets/papers/cdf3419_tail_deviations.pdf">here</a>.</p>
-:ET

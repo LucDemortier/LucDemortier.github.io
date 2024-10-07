@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <a name="TopOfPage"></a>
+  <title>Forecasting Wind Power</title>
+  <meta name="description" content="Data collected on the power output of an array of wind turbines provide an interesting case study for machine learning algorithms. I tried a random forest fr...">
+
+  <!-- Google Fonts loaded here depending on setting in _data/options.yml true loads font, blank does not-->
+   
+     <link href='//fonts.googleapis.com/css?family=Lato:400,400italic' rel='stylesheet' type='text/css'>
+   
+
+   <!-- Load up MathJax script if needed ... specify in /_data/options.yml file-->
+   
+     <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+   
+
+  <link rel="stylesheet" href="/css/tufte.css">
+
+  <link rel="canonical" href="http://lucdemortier.github.io/articles/17/WindPower">
+  <link rel="alternate" type="application/rss+xml" title="Light on Data" href="http://lucdemortier.github.io/feed.xml" />
+
+  <!-- Load up the favicons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/assets/img/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/assets/img/favicons/manifest.json">
+  <link rel="mask-icon" href="/assets/img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="/assets/img/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/assets/img/favicons/mstile-144x144.png">
+  <meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Load up Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-78138990-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+</head>
+
+  <body>
+    <!--- Header and nav template site-wide -->
+<header>
+    <nav class="group">
+		<a href="/"><img class="badge" src="/assets/img/avatars/LightOnData5.jpg" alt="CH"></a>
+
+    
+
+    
+        
+            
+                <a href="/feed.xml"></a>
+            
+        
+    
+        
+            
+                <a href="/">blog</a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    <a href="/papers/index">papers</a>
+                
+            
+        
+    
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    
+
+    
+        <a href="/about/">about</a>
+    
+
+	</nav>
+</header>
+
+    <article class="group">
+      <h1>Forecasting Wind Power</h1>
+<p class="subtitle">April 30, 2017</p>
+
+
+<p>[Revised 9 January 2020]</p>
+
+<p><label for="WTMN-1" class="margin-toggle"> ⊕</label><input type="checkbox" id="WTMN-1" class="margin-toggle" /><span class="marginnote"><strong>Contents:</strong> <br /><a href="#TheChallenge">1. The Hackathon's Challenge</a> <br /><a href="#WindTurbineDataSet">2. The Wind Turbine Data Set</a> <br /><a href="#RandomForestAnalysis">3. Random Forest Analysis</a> <br /><a href="#XGBoost">4. Gradient Boosting with XGBoost</a> <br /><a href="#GeneralizedAdditiveModel">5. A Generalized Linear Model</a> <br /><a href="#Summary">6. Summary and Private Leaderboard</a> <br /><a href="#TechnicalNote">7. Technical Note</a> </span>
+On July 19 and 20, 2016, the <a href="https://open.h2o.ai/nyc.html">H2O Open Tour</a> came to the <a href="https://en.wikipedia.org/wiki/IAC_Building">IAC building</a> in New York City to present their product and foster community with the help of tutorials, talks, social events, and a <a href="https://datahack.analyticsvidhya.com/contest/h2o-open-tour-nyc-hackathon/">hackathon</a>. The hackathon was interesting, so that I (sporadically) continued working on it after the conference. This post summarizes my findings.</p>
+
+<p><a name="TheChallenge"></a></p>
+
+<h2 id="the-hackathons-challenge">The Hackathon’s Challenge</h2>
+
+<p>The challenge was to predict the power output of an array of ten wind turbines using nearby wind velocity measurements. Each turbine was associated with a wind station that delivered four measurements: <a href="https://en.wikipedia.org/wiki/Zonal_and_meridional">zonal and meridional wind velocities</a> at heights of 10 and 100 meters above ground (the heights of the turbines themselves were not provided).</p>
+
+<p>The entire hackathon data set contained 168,000 <em>hourly</em> measurements made between January 1, 2012 and December 1, 2013 (100 weeks). Each measurement consisted of one turbine power output, plus the four associated wind measurements, plus a time stamp. Here is how the data set was split into training and testing parts:</p>
+
+<p><label for="WTMN-2" class="margin-toggle"> ⊕</label><input type="checkbox" id="WTMN-2" class="margin-toggle" /><span class="marginnote">Table 1: Data sets used for the H2O hackathon in July 2016. The two leaderboard data sets were used for testing and did not reveal turbine power outputs. </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Data Set</th>
+      <th style="text-align: center">Data-Taking Period</th>
+      <th style="text-align: center">Number of observations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Training</td>
+      <td style="text-align: center">01/01/2012 - 07/31/2013</td>
+      <td style="text-align: center">138,710</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Public Leaderboard</td>
+      <td style="text-align: center">08/01/2013 - 09/30/2013</td>
+      <td style="text-align: center">14,640</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Private Leaderboard</td>
+      <td style="text-align: center">10/01/2013 - 12/01/2013</td>
+      <td style="text-align: center">14,650</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The performance measure used to evaluate contributions was the <a href="https://www.analyticsvidhya.com/blog/2016/02/7-important-model-evaluation-error-metrics/">root-mean-square error (RMSE)</a>, i.e. the square root of the average squared difference between predicted and observed turbine outputs.</p>
+
+<p>At the hackathon<label for="WTSN-0" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-0" class="margin-toggle" /><span class="sidenote">A note about terminology: to train models I split the hackathon training data set into a subset for training (typically via cross-validation) and a subset for testing. For brevity I will refer to “the training (or testing) subset of the hackathon training data set” as “the training (or testing) subset”. I will also abbreviate mention of “the entire hackathon training data set” into “the training data set”. </span> I tried a random forest, which gave decent results. Later I improved on these by doing some feature engineering and using a more powerful learning algorithm. In the remainder of this post I describe the data set, feature engineering, and results obtained with a random forest and the gradient boosting algorithm known as XGBoost. I also try a generalized linear model based on a simplified information set; this gives surprisingly good results. I finish with a summary and technical note.</p>
+
+<p><label for="btt-1" class="margin-toggle"> ⊕</label><input type="checkbox" id="btt-1" class="margin-toggle" /><span class="marginnote"><a href="#TopOfPage">Back to Top</a> </span></p>
+
+<p><a name="WindTurbineDataSet"></a></p>
+
+<h2 id="the-wind-turbine-data-set">The Wind Turbine Data Set</h2>
+
+<p>The data set<label for="WTSN-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-1" class="margin-toggle" /><span class="sidenote">Tao Hong, Pierre Pinson, Shu Fan, Hamidreza Zareipour, Alberto Troccoli and Rob J. Hyndman, “Probabilistic energy forecasting: Global Energy Forecasting Competition 2014 and beyond”, International Journal of Forecasting, vol.32, no.3, pp 896-913, July-September, 2016. </span> was originally provided on the <a href="https://blog.drhongtao.com/2017/03/gefcom2014-load-forecasting-data.html">Energy Forecasting blog of Dr. Tao Hong</a>.</p>
+
+<p>Each data record contains the following fields:</p>
+
+<p><label for="WTMN-3" class="margin-toggle"> ⊕</label><input type="checkbox" id="WTMN-3" class="margin-toggle" /><span class="marginnote">Table 2: Features of the wind turbine data set. The zonal and meridional wind velocities are orthogonal vector components, so that their sum in quadrature equals the magnitude of the horizontal wind velocity. The response variable of interest is TARGETVAR. </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: left">Feature</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">1.</td>
+      <td style="text-align: left">ID</td>
+      <td style="text-align: left">Measurement ID</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2.</td>
+      <td style="text-align: left">ZONEID</td>
+      <td style="text-align: left">Zone id: an integer between 1 and 10</td>
+    </tr>
+    <tr>
+      <td style="text-align: right"> </td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">(A zone comprises one wind turbine and</td>
+    </tr>
+    <tr>
+      <td style="text-align: right"> </td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">one wind velocity measurement station.)</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">3.</td>
+      <td style="text-align: left">TIMESTAMP</td>
+      <td style="text-align: left">Date and time of measurement</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">4.</td>
+      <td style="text-align: left">TARGETVAR</td>
+      <td style="text-align: left">Turbine power output, a number between 0 and 1</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">5.</td>
+      <td style="text-align: left">U10</td>
+      <td style="text-align: left">Zonal wind velocity 10 meters above ground</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">6.</td>
+      <td style="text-align: left">V10</td>
+      <td style="text-align: left">Meridional wind velocity 10 meters above ground</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">7.</td>
+      <td style="text-align: left">U100</td>
+      <td style="text-align: left">Zonal wind velocity 100 meters above ground</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">8.</td>
+      <td style="text-align: left">V100</td>
+      <td style="text-align: left">Meridional wind velocity 100 meters above ground</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>As mentioned earlier, there are ten turbines. Turbine power outputs are normalized to their nominal capacities, making TARGETVAR a number between 0 and 1. A histogram of TARGETVAR in the training data set is shown in Figure 1.</p>
+
+<figure><figcaption>Figure 1: Histogram of turbine power output in the H2O training data set. All ten turbines are combined in this plot. For each turbine, power output is expressed as a fraction of total capacity.</figcaption><img src="/assets/img/blog/009_WindTurbines/wind_turbine_outputs.png" /></figure>
+
+<p>The spectrum displays two noteworthy features: a large spike near 0, and a bump near 1. The bump corresponds to turbines working near full capacity. The large spike correlates with low wind velocities. Turbines won’t produce any power if the wind speed falls below a threshold known as the <em>cut-in speed</em><label for="WTSN-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-2" class="margin-toggle" /><span class="sidenote">For some basic explanations of the workings of wind turbines, see the <a href="https://www.wind-power-program.com/turbine_characteristics.htm">Windpower Program</a> website. </span>. The fraction of turbine outputs that are exactly zero is 8.5% for all turbines combined, but varies from 2.4% for turbine 2 to 17.0% for turbine 9.</p>
+
+<p>Figure 2 illustrates the effect of the cut-in speed for turbine 9. Each dot in this figure is the tip of a horizontal wind velocity vector with tail at (0,0). Orange dots correspond to zero turbine output and congregate at low wind velocities. Blue dots correspond to non-zero turbine output and form a donut shape around the orange ones.</p>
+
+<figure><figcaption>Figure 2: Scatter plots of zonal versus meridional wind velocity components at heights of 10m (left) and 100m (right) above ground, for turbine 9. Turbine output is zero for orange dots and greater than zero for blue dots. The red cross at the center of each plot indicates zero wind velocity.</figcaption><img src="/assets/img/blog/009_WindTurbines/donut_plots.png" /></figure>
+
+<p><label for="Fig03" class="margin-toggle">⊕</label><input type="checkbox" id="Fig03" class="margin-toggle" /><span class="marginnote"><img class="fullwidth" src="/assets/img/blog/009_WindTurbines/H100_vs_H10.png" /><br />Figure 3: Scatter plot of horizontal wind speed at 100m above ground versus that at 10m above ground, in zone 9. (The wind speed units are unknown.)</span> Note how wind velocities tend to be higher at 100m than at 10m. The simplest model for vertical wind profiles is a <a href="https://en.wikipedia.org/wiki/Wind_profile_power_law">power law</a>, according to which the ratio of wind speeds at two different heights is a constant. Figure 3 illustrates this model by showing horizontal wind speeds measured at 100m above ground, versus 10m, in zone 9.  The model is not very good for the data at hand. The ratio between the two wind speeds in the figure varies between about 1.3 and 3.0, suggesting that knowledge of the wind speed at one height provides only limited information about wind speed at another height.</p>
+
+<p>Since the measurements were taken at one-hour intervals, they are serially correlated. Figure 4 illustrates this correlation for the turbine-1 power output.</p>
+
+<figure><figcaption>Figure 4 Left: Scatter plot of turbine 1 output at time t versus turbine 1 output at time t minus one hour. Right: Autocorrelation of turbine 1 outputs for the first 200 lags. The dashed lines indicate the 99% confidence interval on autocorrelation if the latter is purely random.</figcaption><img src="/assets/img/blog/009_WindTurbines/autocorrelations.png" /></figure>
+
+<p>Although the data set is structured in such a way that each record associates one of ten turbines with only one set of wind velocity measurements (U10, U100, V10, and V100), it is instructive to see how the power output of a given turbine correlates with wind measurements near other turbines. This is shown in Figure 5 for turbine 1. Note that for this turbine the strongest correlation appears to be with wind speeds measured near turbine 7.</p>
+
+<figure class="fullwidth"><img src="/assets/img/blog/009_WindTurbines/power_vs_windspeed.png" /><figcaption>Figure 5: Scatter plots of turbine 1 power output versus horizontal wind speed (the sum in quadrature of U10 and V10). Wind velocity is measured at eight stations located near the ten turbines. Turbines 4 and 5 share a wind measurement station, as do turbines 7 and 8. To facilitate comparison, the x- and y-scales are the same in all subplots.</figcaption></figure>
+
+<p>Let’s look at this more closely. How do turbine power and horizontal wind speed vary as a function of time? This is shown in Figure 6. Peaks in wind speed correspond to peaks in turbine power, and the effect of the cut-in speed is also visible (periods of zero turbine output associated with low, but non-zero wind speed).</p>
+
+<p>There is also evidence of small random fluctuations on top of broad patterns. Presumably only the broad patterns are significant, being induced by actual changes in wind speed, and the small fluctuations are  measurement errors. For improving turbine output predictions it may help to average out the small fluctuations in measured wind speed, but the fluctuations in measured turbine output represent an irreducible limit on predictability.</p>
+
+<figure class="fullwidth"><img src="/assets/img/blog/009_WindTurbines/power_wind_vs_time.png" /><figcaption>Figure 6: Turbine 1 power and zone 7 wind speed, as a function of time in hours, for the first 400 hours in the training data set. The turbine power is expressed as a fraction of total capacity, and the wind speed is rescaled so as to fit in the same plot.</figcaption></figure>
+
+<p>This brief exploration of the data set suggests some strategies for analysis:</p>
+
+<ol>
+  <li>
+    <p>Use <em>all</em> wind measurements for predicting each turbine output. Since there are eight wind velocity measurement stations and four measurements per station, this yields 32 features for predicting turbine output.</p>
+  </li>
+  <li>
+    <p>From the time stamp it may be useful to extract separately year, day of the year, and hour. This could help tease out effects due to daily and seasonal wind patterns. Once we extract time stamp components, two issues arise w.r.t. training models. The first one is data type: are time stamp components numerical or categorical, and how should they be presented to the model? Should we apply one-hot encoding? The second issue is the cyclical nature of the hour and day features. Hour 24 of one day is adjacent to hour 1 of the next day, just as day 365 of one year is adjacent to day 1 of the next year. Should we transform these features to make this adjacency numerically true, and if so, how?</p>
+  </li>
+  <li>
+    <p>Since the observed wind speeds exhibit fluctuations due to measurement error (Figure 6), we may be able to improve precision by computing a rolling window average. In other words, to predict turbine output at time t, use an average of wind speed measurements at times t, t-1, t-2, etc. Exactly how many measurements to include should be determined by looking at the desired performance measure, i.e. the RMSE. Note that if we compute a rolling window average and then randomly split the dataset into training and testing subsets, measurements in the testing subset may be correlated with measurements in the training subset. For example, if we average over three measurements, it is possible that for some t the average of t-1, t, t+1 belongs to the training subset, whereas the average of t, t+1, t+2 belongs to the testing subset. The same problem arises with k-fold cross-validation. A possible solution is to do <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html">time-series splitting</a>.</p>
+  </li>
+  <li>
+    <p>How should we handle the peak at zero turbine output? Would it help to split the machine learning problem into a classification first (zero turbine output versus nonzero turbine output), followed by a regression on the nonzero outputs?</p>
+  </li>
+</ol>
+
+<p><label for="btt-2" class="margin-toggle"> ⊕</label><input type="checkbox" id="btt-2" class="margin-toggle" /><span class="marginnote"><a href="#TopOfPage">Back to Top</a> </span></p>
+
+<p><a name="RandomForestAnalysis"></a></p>
+
+<h2 id="random-forest-analysis">Random Forest Analysis</h2>
+
+<p>In random forest regression one is averaging a large number of regression trees. Each tree is trained on a resampled version of the training data set, and each tree node is split on a random subset of the features. I tried two methods for presenting the data to the model:</p>
+
+<ul>
+  <li>
+    <p><strong>Method 1</strong> is to transform the data so that each record contains all 32 wind speed measurements made at a given time<label for="WTSN-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-3" class="margin-toggle" /><span class="sidenote">The original data set contains all 32 wind velocity measurements made <em>every hour</em> during the data-taking period.  These measurements are spread out over different records but there are no missing data. </span>. One can also put the 10 measured turbine outputs in each record, making the prediction target a 10-dimensional vector. The <code class="language-plaintext highlighter-rouge">scikit-learn</code> package can handle multi-dimensional targets, but others (e.g. XGBoost) can’t. In that case I used ZONEID to split the data set into ten subsets, one per turbine, which I modeled independently.</p>
+  </li>
+  <li>
+    <p><strong>Method 2</strong> is to leave the given structure of the data in place (four wind measurements per record), but to convert ZONEID into a categorical variable and apply one-hot encoding to it. This yields nine binary variables, each one indicating whether or not TARGETVAR represents the power output of the turbine in the corresponding zone.<label for="WTSN-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-4" class="margin-toggle" /><span class="sidenote">Technically there are ten binary variables, one per turbine, but the first one is deleted to avoid redundancy (since it corresponds to the nine remaining variables being zero). </span> At most one binary variable can be “on” in any given record.</p>
+  </li>
+</ul>
+
+<p>It should be obvious that method 1 allows the modeling of correlations between a given turbine output and wind speed measurements in other zones, since each record in the transformed data contains <em>all</em> the wind measurements. Such correlations are not modeled with method 2, but this may not matter because the model will be evaluated based on a root mean squared error <em>averaged</em> over all ten turbines.</p>
+
+<p>Note also that method 1 produces a dataset of 13,871 records, each of which contains 35 predictors (<span>​<script type="math/tex"> 8*4 </script></span> wind measurements plus 3 time features: year, day of year, and hour). By contrast, method 2 produces a data set of 138,710 records, each with only 16 predictors (4 wind measurements, 9 zone id flags, and 3 time features). From the point of view of training a machine learning algorithm, method 2 may have an advantage — more data records, fewer predictors per record — that makes it easier to optimize. As a matter of fact, method 2 gave somewhat better results (see below).</p>
+
+<p>Another optimization involved implementing a rolling average of wind measurements to predict turbine output. To select the window size of this rolling average, I tried including 1, 2, 3, and 4 measurements in the average. The best RMSE on the test subset was obtained with 3 measurements. Cross-validation was performed with standard K-fold splitting (not time-series splitting).</p>
+
+<p>It is instructive to compare predicted and observed turbine output distributions for Method 2, separately in the training and testing subsets:</p>
+
+<figure><figcaption>Figure 7 top: Fractional turbine power output in the training subset, as observed (green histogram) and modeled in Method 2 (blue histogram). The overlap between the two distributions appears in a blue-green shade. Bottom: same for the testing subset.</figcaption><img src="/assets/img/blog/009_WindTurbines/wind_turbine_output_train_test_rfr16.png" /></figure>
+
+<p>The random forest models don’t do a very good job of modeling the spike at zero output, or the bump near one. This is shown above for Method 2, but is also true for Method 1.</p>
+
+<p>For method 1, the public leaderboard of the hackathon<label for="WTSN-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-5" class="margin-toggle" /><span class="sidenote">After the hackathon I gained access to the measured turbine powers (as fractions of total capacity) for the public and private testing data sets, see side-note 2. </span> yields:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+{\rm RMSE} \;=\; 0.180311,
+</script></div>
+<p>and for method 2:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+{\rm RMSE} \;=\; 0.167223.
+</script></div>
+<p>In an attempt to improve on these numbers I’ll use a more powerful machine learning algorithm in the next section. Also, I’ll be using method 1 from now on in order to avoid dealing with the ZONEID categorical features.</p>
+
+<p>The following couple of plots show the feature importances in Methods 1 and 2:</p>
+
+<figure><figcaption>Figure 8: Feature importances for the random forest model in Method 1. Wind speed labels indicate the zone they belong to. For example, the label of the top feature, U100_rm3_6, refers to the zonal wind speed 100 meters above ground near turbine 6, as a rolling mean over 3 measurements. Some hyper-parameter values used for this model are noted on the plot.</figcaption><img src="/assets/img/blog/009_WindTurbines/rfr35_feature_importances.png" /></figure>
+
+<figure><figcaption>Figure 9: Feature importances for the random forest model in Method 2. Some hyper-parameter values used for this model are noted on the plot. The ZoneId_n features are binary variables, which equal 1 in records where the wind and turbine measurements were made in zone n.</figcaption><img src="/assets/img/blog/009_WindTurbines/rfr16_feature_importances.png" /></figure>
+
+<p>Wind speeds are more important than measurement dates or times, but no single feature stands out by itself.</p>
+
+<p><label for="btt-3" class="margin-toggle"> ⊕</label><input type="checkbox" id="btt-3" class="margin-toggle" /><span class="marginnote"><a href="#TopOfPage">Back to Top</a> </span></p>
+
+<p><a name="XGBoost"></a></p>
+
+<h2 id="gradient-boosting-with-xgboost">Gradient Boosting with XGBoost</h2>
+
+<p>In gradient boosting models, a weak learner is improved by the sequential addition of more weak learners.  Each learner in the sequence focuses on instances that are not well modeled by the previous learner. To understand how this might work<label for="WTSN-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-6" class="margin-toggle" /><span class="sidenote">See this <a href="https://gormanalysis.com/gradient-boosting-explained/">blog post</a> by Ben Gorman for an insightful introduction to gradient boosting. </span>, consider a regression model for example. The first weak learner attempts to fit the <em>response variable</em> directly, whereas the second weak learner tries to model the <em>residuals</em> of the fit by the first one. Thus the sum of these two learners should be better than the first one alone. The idea of boosting is to keep adding weak learners in this fashion until no further improvement is obtained. In practice, learners in gradient boosting models attempt to model the <em>gradient of a loss function</em>. This is more general than residuals and therefore more useful. Typically, shallow trees are used as weak learners, but the algorithm works with any kind of weak learner.</p>
+
+<p>One of the most popular and powerful implementations of gradient boosting is XGBoost<label for="WTSN-7" class="margin-toggle sidenote-number"></label><input type="checkbox" id="WTSN-7" class="margin-toggle" /><span class="sidenote">Tianqi Chen and Carlos Guestrin, <a href="https://www.kdd.org/kdd2016/papers/files/rfp0697-chenAemb.pdf">“XGBoost: A scalable tree boosting system”</a>, KDD 2016 Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pages 785-794
+(San Francisco, California, USA, August 13-17, 2016). </span>. This package has already been used with much success in several Kaggle competitions. It supplements the basic gradient boosting algorithm with regularization, shrinkage (via a learning rate), data and feature subsampling, and a number of computational optimizations.</p>
+
+<p>Proper tuning of the hyperparameters of XGBoost requires some exploration, but is fairly straightforward. I optimized each turbine separately on a hyperparameter grid, using five-fold cross-validation. For each turbine the training features consisted of all 32 wind speed measurements as well as the year, day of the year, and hour of the observations.</p>
+
+<p>Figure 10 compares observed and predicted turbine output distributions in the training and testing subsets.</p>
+
+<figure><figcaption>Figure 10 top: Fractional turbine power output in the training subset, as observed (green histogram) and modeled by XGBoost (blue histogram). The overlap between the two distributions appears in a blue-green shade. Bottom: same for the testing subset.</figcaption><img src="/assets/img/blog/009_WindTurbines/wind_turbine_output_train_test_xgb.png" /></figure>
+
+<p>Note how, in the training subset, modeling of the spike at 0 and the bump near 1 is significantly better than with the random forest models. Unfortunately this does not generalize quite as nicely to the testing subset, which hints at overfitting. In spite of this problem I computed the performance measure for XGBoost on the test set of the public leaderboard of the hackathon. This yielded</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+{\rm RMSE} \;=\; 0.167607.
+</script></div>
+
+<p>For the record, Figure 11 shows a plot of feature importances, averaged over all turbines.</p>
+
+<figure><figcaption>Figure 11: Feature importances for the XGBoost model, averaged over all turbines. Feature labels are the same as those in Figure 8.</figcaption><img src="/assets/img/blog/009_WindTurbines/xgb35_feature_importances.png" /></figure>
+
+<p>XGBoost makes better use of the “DAYOFYEAR” and “HOUR” features than the random forest models. Here for example, “DAYOFYEAR” is the third most important feature, whereas in random forest models it scores below all the wind velocity measurements.</p>
+
+<p>As suggested earlier, I tried to improve on this result by first classifying turbine outputs as either “equal to zero” or “greater than zero”, and then performing a regression on the latter outputs. Both steps were performed with XGBoost, but no improvement was obtained.</p>
+
+<p><label for="btt-4" class="margin-toggle"> ⊕</label><input type="checkbox" id="btt-4" class="margin-toggle" /><span class="marginnote"><a href="#TopOfPage">Back to Top</a> </span></p>
+
+<p><a name="GeneralizedAdditiveModel"></a></p>
+
+<h2 id="a-generalized-linear-model">A Generalized Linear Model</h2>
+
+<p>For predicting the power output of a wind turbine, one could argue that the only features that matter are the <em>magnitudes</em> of the horizontal wind velocities near the turbines. The directions of the wind velocity vectors shouldn’t matter since a turbine always orients itself to maximize its capture of wind power. The timing of wind measurements could add some useful information due to the cyclic nature of daily and seasonal wind patterns, but this is not expected to be a major effect. By taking the wind velocity magnitudes as the only predictors, it should be possible to simplify the prediction model considerably and perhaps gain some interpretability. The resulting model may not perform better however, since turbulence effects distort wind speed measurements as well as the generation of turbine power.</p>
+
+<p>Ideally one would like to use a linear regression model, but this won’t work here since the response variable is bounded between 0 and 1. A generalized linear model with a two-parameter <a href="https://en.wikipedia.org/wiki/Beta_distribution">beta distribution</a> for the response variable is a better option. Unfortunately the beta distribution does not assign finite probabilities to the boundaries 0 and 1, and in the problem at hand we have a large peak at 0 as well as a few instances at 1 (see Figure 1). A possible solution is to use the so-called “beta inflated distribution”: a mixture of a beta distribution, a peak at 0, and a peak at 1. As far as I know, only R provides a package that can handle this problem, namely <a href="https://www.gamlss.com/">GAMLSS</a>, which stands for “Generalized Additive Models for Location, Scale, and Shape”.</p>
+
+<p>First a word about GAMLSS. This is a very general framework for regression models. In ordinary linear regression the response variable has a normal distribution; its mean is a linear function of the predictor variables and its width is constant (homoscedasticity). In GAMLSS the response variable can have almost any distribution, discrete or continuous, and <em>all</em> the parameters of the response variable distribution (not just the mean) can be modeled via sums of functions (not necessarily linear) of the predictors.</p>
+
+<p>Generalized additive models have the advantages over tree models that they are not random, and that they are faster to train (fit).</p>
+
+<p>To keep things simple, I only used GAMLSS to obtain a generalized <em>linear</em> model. In this type of model, any parameter of the distribution of the response variable <span>​<script type="math/tex">Y</script></span> can be related via a one-to-one link function to a linear combination of the predictors <span>​<script type="math/tex">X_{i}</script></span>. Let’s start with the distribution of <span>​<script type="math/tex">Y</script></span>. As mentioned earlier, I used a beta inflated distribution:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+f(y\mid p_{0}, p_{1}, \alpha, \beta) =
+\begin{cases}
+p_{0} & \textrm{if}\; y=0,\\[1mm]
+(1-p_{0}-p_{1})\; \dfrac{y^{\alpha-1}\, (1-y)^{\beta-1}}{B(\alpha,\beta)} & \textrm{if}\; 0 < y < 1,\\[1mm]
+p_{1} & \textrm{if}\; y=1,
+\end{cases}
+</script></div>
+<p>where <span>​<script type="math/tex">p_{0}, p_{1}</script></span> are probabilities and <span>​<script type="math/tex">\alpha, \beta</script></span> are the beta distribution parameters. In what follows it will be convenient to use an alternative parametrization of this distribution:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+\begin{align}
+\mu    & = \frac{\alpha}{\alpha+\beta}, \\[1mm]
+\sigma & = \frac{1}{\sqrt{1+\alpha+\beta}}, \\[1mm]
+\nu    & = \frac{p_{0}}{1-p_{0}-p_{1}}, \\[1mm]
+\tau   & = \frac{p_{1}}{1-p_{0}-p_{1}}.
+\end{align}
+</script></div>
+
+<p>Next, I linked two parameters of this distribution to linear combinations of the predictors. The first one is the mean <span>​<script type="math/tex">\mu</script></span> of the beta component of the distribution:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+g(\mu) = c_{0} + c_{1} X_{1} + \cdots + c_{p} X_{p},
+</script></div>
+<p>where the <span>​<script type="math/tex">c_{i}</script></span> are fit coefficients and the <span>​<script type="math/tex">X_{i}</script></span> are the predictors (the 16 horizontal wind velocity magnitudes in our problem). The link function <span>​<script type="math/tex">g</script></span> must map a number between 0 and 1 to the entire real line. A standard choice for this is the logit function:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+g(\mu) = \log\left(\frac{\mu}{1-\mu}\right).
+</script></div>
+
+<p>The second parameter I linked is the combination <span>​<script type="math/tex">\nu</script></span> of peak probabilities:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+h(\nu) = d_{0} + d_{1} X_{1} + \cdots + d_{p} X_{p}.
+</script></div>
+<p>The link function <span>​<script type="math/tex">h</script></span> maps a positive number to the real line. A standard choice for this is the natural logarithm:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+h(\nu) = \log(\nu).
+</script></div>
+
+<p>In this way I linked two out of the four parameters of the beta inflated distribution. The remaining two parameters, <span>​<script type="math/tex">\sigma</script></span> and <span>​<script type="math/tex">\tau</script></span>, are assumed independent of the predictors.</p>
+
+<p>The GAMLSS fitter then uses the entire training subset to produce fitted values for the coefficients <span>​<script type="math/tex">c_{0}, c_{1},\ldots,c_{p}</script></span> and <span>​<script type="math/tex">d_{0}, d_{1},\ldots,d_{p}</script></span>, as well as for <span>​<script type="math/tex">\sigma</script></span> and <span>​<script type="math/tex">\tau</script></span>.</p>
+
+<p>Finally, given the fitted coefficients, the link functions <span>​<script type="math/tex">g</script></span> and <span>​<script type="math/tex">h</script></span>, and an instance from the training or testing subset, one can predict values for all four parameters of the distribution of <span>​<script type="math/tex">Y</script></span>. The predicted value of <span>​<script type="math/tex">Y</script></span> is then given by:
+<a name="YpredEquation"></a></p>
+<div class="mathblock"><script type="math/tex; mode=display">
+y_{\rm pred} = p_{0}\times 0 + p_{1}\times 1 + (1-p_{0}-p_{1})\times \mu.
+</script></div>
+
+<p>Figure 12 illustrates the performance of this model on the training and testing subsets. In both cases two plots are shown: the predicted turbine output distribution superimposed on the observed one, and a QQ plot. The QQ plot is a convenient way to check residuals in the case of a non-Gaussian response variable distribution. For a good fit the points on the QQ plot line up along the diagonal.</p>
+
+<figure class="fullwidth"><img src="/assets/img/blog/009_WindTurbines/wind_turbine_output_train_test_gamlss.png" /><figcaption>Figure 12 left: Fractional turbine power output in the training and testing subsets, as observed (green histogram) and as predicted by the GAMLSS model (blue histogram). The overlap between the two distributions appears in a blue-green shade. Right: QQ plots for the same training and testing subsets.</figcaption></figure>
+
+<p>The fits are not very good; they fail to capture important features at both ends of the turbine power spectrum. However the fit to the testing subset does not appear to be worse than that to the training subset, suggesting that whatever features do get captured will generalize.</p>
+
+<p>Here is the root-mean-square error for the public leaderboard of the hackathon:</p>
+<div class="mathblock"><script type="math/tex; mode=display">
+{\rm RMSE} \;=\; 0.167303.
+</script></div>
+<p>This is comparable to the results obtained with random forest models.</p>
+
+<p><label for="btt-5" class="margin-toggle"> ⊕</label><input type="checkbox" id="btt-5" class="margin-toggle" /><span class="marginnote"><a href="#TopOfPage">Back to Top</a> </span></p>
+
+<p><a name="Summary"></a></p>
+
+<h2 id="summary-and-private-leaderboard-results">Summary and Private Leaderboard Results</h2>
+
+<p>Table 3 summarizes the root-mean-square errors obtained for the four models on the public leaderboard of the hackathon.</p>
+
+<p><label for="WTMN-4" class="margin-toggle"> ⊕</label><input type="checkbox" id="WTMN-4" class="margin-toggle" /><span class="marginnote">Table 3: Root-mean-square errors on the public leaderboard for the models described in this post. </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Model</th>
+      <th style="text-align: center">Public Leaderboard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Random Forest 1</td>
+      <td style="text-align: center">0.180311</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Random Forest 2</td>
+      <td style="text-align: center">0.167223</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">XGBoost</td>
+      <td style="text-align: center">0.167607</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GAMLSS</td>
+      <td style="text-align: center">0.167303</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Suppose that the hackathon was still going on, and that you had to choose a model for the (hidden) private leaderboard. Which one would you choose? The winner gets an iPad and a job offer at H2O…</p>
+
+<p>Based on the public leaderboard one could go with either Random Forest 2 or GAMLSS, or even XGBoost. Tough choice? Unfortunately hindsight only adds to the difficulty. Take a look at the private leaderboard:</p>
+
+<p><label for="WTMN-5" class="margin-toggle"> ⊕</label><input type="checkbox" id="WTMN-5" class="margin-toggle" /><span class="marginnote">Table 4: Root-mean-square errors on the public and private leaderboards for the models described in this post. These numbers can be compared with the top private leaderboard score obtained by the winner of the hackathon: RMSE=0.169463. </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Model</th>
+      <th style="text-align: center">Public Leaderboard</th>
+      <th style="text-align: center">Private Leaderboard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Random Forest 1</td>
+      <td style="text-align: center">0.180311</td>
+      <td style="text-align: center">0.178977</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Random Forest 2</td>
+      <td style="text-align: center">0.167223</td>
+      <td style="text-align: center">0.174105</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">XGBoost</td>
+      <td style="text-align: center">0.167607</td>
+      <td style="text-align: center">0.168778</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GAMLSS</td>
+      <td style="text-align: center">0.167303</td>
+      <td style="text-align: center">0.176077</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Random Forest 2 and GAMLSS, the top two winners on the public leaderboard, don’t do so well on the private leaderboard, where XGBoost is the clear winner.</p>
+
+<p>There is a way to improve even further on these results, by a technique known as stacking, where the outputs of several models are used as input to a new model. For simplicity we will choose as new model one that predicts the average of its inputs. We will only use our top three models as inputs: Random Forest 2, XGBoost, and GAMLSS. The result is in the table below:</p>
+
+<p><label for="WTMN-6" class="margin-toggle"> ⊕</label><input type="checkbox" id="WTMN-6" class="margin-toggle" /><span class="marginnote">Table 5: Root-mean-square errors on the public and private leaderboards for all models, including the final stacking model, which averages the outputs of Random Forest 2, XGBoost, and GAMLSS. </span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Model</th>
+      <th style="text-align: center">Public Leaderboard</th>
+      <th style="text-align: center">Private Leaderboard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Random Forest 1</td>
+      <td style="text-align: center">0.180311</td>
+      <td style="text-align: center">0.178977</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Random Forest 2</td>
+      <td style="text-align: center">0.167223</td>
+      <td style="text-align: center">0.174105</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">XGBoost</td>
+      <td style="text-align: center">0.167607</td>
+      <td style="text-align: center">0.168778</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GAMLSS</td>
+      <td style="text-align: center">0.167303</td>
+      <td style="text-align: center">0.176077</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Stacking</td>
+      <td style="text-align: center">0.157353</td>
+      <td style="text-align: center">0.164689</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Figure 13 compares predicted and actual turbine 1 power during the second week of the public leaderboard for the bottom four models.</p>
+
+<figure><figcaption>Figure 13: Actual and predicted turbine 1 power output during the second week of the public leaderboard, for the four best models.</figcaption><img src="/assets/img/blog/009_WindTurbines/pred_actual_vs_time.png" /></figure>
+
+<p>Here are some lessons that can be drawn from the  whole exercise:</p>
+
+<ol>
+  <li>
+    <p>A machine learning algorithm may perform differently depending on how the data are presented to it. This is the only difference between random forest models 1 and 2. The latter is clearly better than the former on the testing set, but this is most likely due to the way the performance measure is constructed (by averaging the RMSE over all turbines).</p>
+  </li>
+  <li>
+    <p>XGBoost is remarkable in its ability to model “singular” features such as the peak near zero turbine output. This is probably because of the way gradient boosting works, each tree acting mostly on instances mismodeled by the previous trees. In contrast, a random forest averages the results of independent trees, and this must have a smoothing effect on singularities. A similar effect is at work with generalized linear regression models (see the <a href="#YpredEquation">equation for <span>​<script type="math/tex">y_{\rm pred}</script></span></a> in the section on GAMLSS: <span>​<script type="math/tex">y_{\rm pred}</script></span> can never be exactly zero since it is a weighted average over the three components of a mixture.) Unfortunately, XGBoost’s ability to model singularities in the training data set was partially the result of overfitting.</p>
+  </li>
+  <li>
+    <p>Generalized linear models are very fast to train, but there may be a tradeoff to consider between training speed and modeling performance.</p>
+  </li>
+  <li>
+    <p>One way to take advantage of time series such as the hourly wind speed data set is to compute a rolling window average to smooth out random fluctuations. Here I used a simple arithmetic average over three consecutive measurements. However, a weighted average might make more sense, where older measurements are weighed down compared to recent ones. One option is the so-called Exponentially Weighted Moving Average, implemented by <a href="https://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-windows">the function <code class="language-plaintext highlighter-rouge">ewm()</code> in pandas</a>.</p>
+  </li>
+</ol>
+
+<p><label for="btt-6" class="margin-toggle"> ⊕</label><input type="checkbox" id="btt-6" class="margin-toggle" /><span class="marginnote"><a href="#TopOfPage">Back to Top</a> </span></p>
+
+<p><a name="TechnicalNote"></a></p>
+
+<h2 id="technical-note">Technical Note</h2>
+
+<p>Python and R Jupyter notebooks for this analysis can be found in <a href="https://github.com/LucDemortier/WindTurbineOutputPrediction">my GitHub repository WindTurbineOutputPrediction</a>.</p>
+
+
+    </article>
+    <span class="print-footer">Forecasting Wind Power - April 30, 2017 - luc demortier</span>
+    <footer>
+  <hr class="slender">
+
+  <ul class="footer-links">
+    <li><a href="mailto:luc.demortier@gmail.com"><span class="icon-mail"></span></a></li>
+    
+      <li>
+        <a href="//github.com/LucDemortier"><span class="icon-github"></span></a>
+      </li>
+    
+      <li>
+        <a href="//www.twitter.com/ThisOneLuc"><span class="icon-twitter"></span></a>
+      </li>
+    
+      <li>
+        <a href="//linkedin.com/in/lucdemortier"><span class="icon-linkedin"></span></a>
+      </li>
+    
+      <li>
+        <a href="/feed.xml"><span class="icon-rss2"></span></a>
+      </li>
+    
+  </ul>
+
+  <div class="credits">
+    <span>&copy; 2024 &nbsp;&nbsp;LUC DEMORTIER</span>
+  </div>
+
+  
+    <hr class="slender"><br><br>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+          var disqus_config = function () {
+              this.page.url = "http://lucdemortier.github.io/articles/17/WindPower";
+              this.page.identifier = "/articles/17/WindPower";
+          };
+
+          (function() {  // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.src = '//lightondata.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+          })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//lightondata.disqus.com/count.js" async></script>
+  
+
+</footer>
+
+  </body>
+</html>
